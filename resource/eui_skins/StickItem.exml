@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="StickItemSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="164eabade2d" ></w:Config>
+	<e:Image id="stickImg" width="113" height="30" x="0" y="0" source="Platformweis_png"/>
+</e:Skin>

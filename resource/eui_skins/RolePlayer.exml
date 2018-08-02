@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="RolePlayerSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="164ea362259" ></w:Config>
+	<e:Group id="gamePage" top="0" bottom="0" left="0" right="0">
+		
+		<e:Group id="playBg" top="0" bottom="0" left="0" right="0" x="0" y="0" scaleX="1" scaleY="1">
+			<e:Image source="Hintergrund_png" top="0" bottom="0" left="0" right="0" width="640"/>
+		</e:Group>
+		<e:Group id="stickList" top="0" bottom="0" left="0" right="0"/>
+		<e:Group id="player1" bottom="0" scaleX="1" scaleY="1" left="0" right="0" top="0">
+			<e:Image id="player" width="91" source="DoodleRechts_png" scaleX="1" scaleY="1" height="89" bottom="206" horizontalCenter="0"/>
+		</e:Group>
+		<e:Group id="playBtnBox" left="0" right="0" top="0" bottom="0">
+			<e:Image id="playBtn" width="106" height="40" x="296" y="261" source="play_again_png"/>
+		</e:Group>
+	</e:Group>
+</e:Skin>

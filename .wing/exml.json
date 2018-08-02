@@ -1,0 +1,10 @@
+{
+    "global": {
+        "globalAutoLayerMarkEnable": true
+    },
+    "164eabade2d": {
+        "path": "..\\resource\\eui_skins\\StickItem.ts",
+        "class": "StickItem",
+        "parentPath": ""
+    }
+}
