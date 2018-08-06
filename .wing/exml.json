@@ -6,5 +6,10 @@
         "path": "..\\resource\\eui_skins\\StickItem.ts",
         "class": "StickItem",
         "parentPath": ""
+    },
+    "1650e9b6881": {
+        "path": "..\\resource\\eui_skins\\FloorSpring.ts",
+        "class": "FloorSpring",
+        "parentPath": ""
     }
 }

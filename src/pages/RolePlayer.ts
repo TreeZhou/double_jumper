@@ -192,12 +192,17 @@ class RolePlayer extends eui.Component {
 	}
 	private createSticket(initY,num) {
 		let stickObj = null;
+		let spring = null;
 			stickObj = new StickItem();
 			stickObj.isHit = false;
 			this.stickList.addChild(stickObj);
 
 			stickObj.$y = initY-(this.distance+stickObj.height) *num;
 			stickObj.$x = Math.random() *(this.stage.stageWidth-stickObj.width);
+			// spring = new FloorSpring();
+			// this.stickList.addChild(spring);
+			// spring.$x = stickObj.$x;
+			// spring.$y = stickObj.$y - spring.height;
 			return stickObj;
 	}
 	private beginAnimateEvent() {

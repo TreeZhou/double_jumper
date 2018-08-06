@@ -166,11 +166,16 @@ var RolePlayer = (function (_super) {
     };
     RolePlayer.prototype.createSticket = function (initY, num) {
         var stickObj = null;
+        var spring = null;
         stickObj = new StickItem();
         stickObj.isHit = false;
         this.stickList.addChild(stickObj);
         stickObj.$y = initY - (this.distance + stickObj.height) * num;
         stickObj.$x = Math.random() * (this.stage.stageWidth - stickObj.width);
+        // spring = new FloorSpring();
+        // this.stickList.addChild(spring);
+        // spring.$x = stickObj.$x;
+        // spring.$y = stickObj.$y - spring.height;
         return stickObj;
     };
     RolePlayer.prototype.beginAnimateEvent = function () {
