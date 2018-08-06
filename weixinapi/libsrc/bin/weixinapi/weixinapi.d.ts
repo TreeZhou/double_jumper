@@ -296,6 +296,8 @@ declare class wx {
       */
      static chooseWXPay( body:Object ):void;
 
+     static onAccelerometerChange(callback:Function);
+
 }
 
 ///////////////////////////////// 常用API的参数结构类
@@ -304,6 +306,9 @@ declare class wx {
  * config 参数结构
  * jsApiList: 所有要调用的 API
  */
+// declare module wx {
+//     function onAccelerometerChange(callback:Function):void;
+// }
 declare class BodyConfig {
     debug:boolean;
     appId:string;

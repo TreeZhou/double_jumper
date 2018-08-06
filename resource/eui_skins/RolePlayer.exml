@@ -4,7 +4,7 @@
 	<e:Group id="gamePage" top="0" bottom="0" left="0" right="0">
 		
 		<e:Group id="playBg" top="0" bottom="0" left="0" right="0" x="0" y="0" scaleX="1" scaleY="1">
-			<e:Image source="Hintergrund_png" top="0" bottom="0" left="0" right="0" width="640"/>
+			<e:Image id="longBg" left="0" right="0" source="longBg_png" height="2048" top="0"/>
 		</e:Group>
 		<e:Group id="stickList" top="0" bottom="0" left="0" right="0"/>
 		<e:Group id="player1" bottom="0" scaleX="1" scaleY="1" left="0" right="0" top="0">

@@ -295,6 +295,11 @@ declare class wx {
       * @param body
       */
      static chooseWXPay( body:Object ):void;
+      /**
+      * 发起一个微信支付请求
+      * @param body
+      */
+    static onAccelerometerChange(callback:Function):void;
 
 }
 
@@ -304,6 +309,9 @@ declare class wx {
  * config 参数结构
  * jsApiList: 所有要调用的 API
  */
+// declare module wx {
+//     function onAccelerometerChange(callback:Function):void;
+// }
 declare class BodyConfig {
     debug:boolean;
     appId:string;

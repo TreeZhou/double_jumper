@@ -12,6 +12,7 @@
     },
     "include": [
         "src",
-        "libs"
+        "libs",
+        "libs/wxTds/wxgame.d.ts"
     ]
 }

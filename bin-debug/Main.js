@@ -181,13 +181,18 @@ var Main = (function (_super) {
         // var bodyConfig: BodyConfig = new BodyConfig();
         // bodyConfig.appId = "wx40be417af5beea7d";
         // bodyConfig.debug = true;
-        // /// ... 其他的配置属性赋值
-        // /// 通过config接口注入权限验证配置
+        /// ... 其他的配置属性赋值
+        /// 通过config接口注入权限验证配置
         // if(wx) {
-        //     wx.config(bodyConfig);
-        //     wx.ready(function() {
-        //     /// 在这里调用微信相关功能的 API
-        //     });
+        //     if(wx.onAccelerometerChange) {
+        //         wx.onAccelerometerChange(function (value){
+        //             console.log('value',value);
+        //         })
+        //     }
+        //     // wx.config(bodyConfig);
+        //     // wx.ready(function() {
+        //     // /// 在这里调用微信相关功能的 API
+        //     // });
         // }
         // let sky = this.createBitmapByName("Hintergrund_png");
         // this.addChild(sky);
