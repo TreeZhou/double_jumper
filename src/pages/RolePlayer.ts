@@ -96,7 +96,7 @@ class RolePlayer extends eui.Component {
 		this.setInitDataGame();  // 设置游戏的开始数据
 		this.initSticket();     // 初始化第一屏的踏板
 		this.setStartAddSpeed();  // 设置涂鸦开始的加速度
-		this.setStartJumpeSpeed();  // 设置涂鸦开始的速度
+		this.setStartJumpeSpeed(this.frameNum);  // 设置涂鸦开始的速度
 		this.beginAnimateEvent();  // 开始动画监听
 		this.orientationEvent();  //　开始监听左右的加速计
 	}
@@ -128,19 +128,23 @@ class RolePlayer extends eui.Component {
 	/**
 	 * 	设置涂鸦的跳跃速度
 	 */
-	private setStartJumpeSpeed(){
+	private setStartJumpeSpeed(frame){
 		// this.jumpStartY = this.stage.$stageHeight*0.6;
 	
 		// this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
 		// this.nowSpeed =	Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum;
-		let frame = this.frameNum;
+		// let frame = this.frameNum;
 		let moveX = Math.abs(this.jumpHeightHight-this.jumpStartY)*2/(frame*(frame+1));
 		this.nowAddSpeed = moveX;
 		// this.nowAddDownSped = moveX;
 		this.nowSpeed =	moveX*frame;
-		this.stickMoveSpeed = (this.stage.$stageHeight-this.jumpStartY)*2/((this.frameNum+1));
-		this.stickAddSpeed= Math.abs(this.stage.$stageHeight-this.jumpStartY)*2/(this.frameNum*(this.frameNum+1));
+
 		console.log('移动',this.jumpHeightHight-this.jumpStartY);
+	}
+	private setStickSpeed(distanceY,frame) {
+		// let frame = this.frameNum; // this.stage.$stageHeight*0.9-this.jumpStartY
+		this.stickMoveSpeed = Math.abs(distanceY)*2/((frame+1));
+		this.stickAddSpeed= Math.abs(distanceY)*2/(frame*(frame+1));
 	}
 	private orientationEvent() {
 		let _self = this;
@@ -324,7 +328,8 @@ class RolePlayer extends eui.Component {
 				// this.isDown = false;
 				this.player.$y = itemMinY - this.player.height;
 				this.JUMP_STATUS = this.JUMP_NORMAL;
-				this.setStartJumpeSpeed();
+				this.setStartJumpeSpeed(this.frameNum);
+				this.setStickSpeed(this.stage.$stageHeight*0.9-this.jumpStartY,this.frameNum);
 				item.isHit = true;
 				console.log('撞击',this.jumpStartY ,item.isHit );
 				for(let j=0;j<len;j++) {
@@ -361,9 +366,11 @@ class RolePlayer extends eui.Component {
 			itemMinY = item.$y;
 			if(itemMinX<(playerX+playerW)&&itemMaxX>playerX&&playerY>=itemMinY&&playerY<=itemMaxY) {   //playerX>itemMinX&&playerX<itemMaxX&&playerY-itemMinY>=0.1&&playerY-itemMaxY<=0.1
 				console.log('碰撞了弹簧');
-				// this.JUMP_STATUS = this.JUMP_SPRING;
+				this.JUMP_STATUS = this.JUMP_SPRING;
 				this.jumpStartY=itemMinY;
-				this.setStartJumpeSpeed();
+				this.setStartJumpeSpeed(this.frameNum*3);
+				this.setStickSpeed(this.stage.$stageHeight*2,this.frameNum*3);
+				item.showOffenSpring();
 				break;
 			}
 		}
@@ -377,7 +384,7 @@ class RolePlayer extends eui.Component {
 			// this.playerIsMove = false;
 			this.endGame = true;
 			this.jumpStartY = this.stage.$stageHeight*2;
-			this.setStartJumpeSpeed();
+			this.setStartJumpeSpeed(this.frameNum);
 			this.nowAddDownSped = this.nowAddDownSped*3;
 		}
 
@@ -458,17 +465,19 @@ class RolePlayer extends eui.Component {
 	}
 	private changeMaObjMoveSpeed() {
 		let speed = 0;
-		switch(this.JUMP_STATUS) {
-			case this.JUMP_NORMAL:
-			this.stickMoveSpeed = this.stickMoveSpeed -this.stickAddSpeed; //Math.abs(this.jumpStartY-this.stage.$stageHeight)/this.frameNum
-			speed  = this.stickMoveSpeed;
-			console.log('移动3',this.stage.$stageHeight-this.jumpStartY);
-			// debugger
-			break;
-			case this.JUMP_SPRING:
-			speed = Math.abs(this.stage.$stageHeight*2)/60; // Math.abs(this.stage.$stageHeight*2)/60 
-			break;
-		}
+		// switch(this.JUMP_STATUS) {
+		// 	case this.JUMP_NORMAL:
+		// 	this.stickMoveSpeed = this.stickMoveSpeed -this.stickAddSpeed; //Math.abs(this.jumpStartY-this.stage.$stageHeight)/this.frameNum
+		// 	speed  = this.stickMoveSpeed;
+		// 	console.log('移动3',this.stage.$stageHeight-this.jumpStartY);
+		// 	// debugger
+		// 	break;
+		// 	case this.JUMP_SPRING:
+		// 	speed = Math.abs(this.stage.$stageHeight*2)/60; // Math.abs(this.stage.$stageHeight*2)/60 
+		// 	break;
+		// }
+		this.stickMoveSpeed = this.stickMoveSpeed -this.stickAddSpeed; //Math.abs(this.jumpStartY-this.stage.$stageHeight)/this.frameNum
+		speed  = this.stickMoveSpeed;
 		return speed;
 	}
 	private checkOverStick() {
