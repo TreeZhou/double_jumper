@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e:Skin class="FloorSpringSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
 	<w:Config id="1650e9b6881" ></w:Config>
-	<e:Group width="38" x="0" y="0">
-		<e:Image id="Federoffen" width="38" source="Federoffen_png" bottom="0" horizontalCenter="0" visible="false"/>
-		<e:Image id="Federzu" source="Federzu_png" bottom="0" horizontalCenter="0" height="21" width="38"/>
+	<e:Group width="28" x="0" y="0">
+		<e:Image id="Federoffen" width="28" source="Federoffen_png" bottom="0" horizontalCenter="0" visible="false"/>
+		<e:Image id="Federzu" source="Federzu_png" bottom="0" horizontalCenter="0" height="21" width="28"/>
 	</e:Group>
 </e:Skin>

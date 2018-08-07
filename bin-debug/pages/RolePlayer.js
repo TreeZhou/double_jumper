@@ -13,15 +13,17 @@ var RolePlayer = (function (_super) {
     function RolePlayer() {
         var _this = _super.call(this) || this;
         _this.jumpStartY = null; // 起跳高度
-        _this.frameNum = 18; //控制帧数的数量
+        _this.frameNum = 20; //控制帧数的数量
         _this.isDown = false; // 判断是否处于下落状态
         _this.distanceInit = 30;
         _this.distance = 30; // 每个块的距离
         _this.playerIsMove = true; // 角色是否可以移动
         _this.endGame = false;
-        _this.stageDistance = 30;
-        // private longBg:eui.Image;
-        _this.stickNum = 20;
+        _this.stageDistance = 30; // 每个阶段的间隔
+        _this.JUMP_STATUS = 1; // 当前跳跃的状态
+        _this.JUMP_NORMAL = 1; // 正常跳跃
+        _this.JUMP_SPRING = 2; // 弹簧跳跃
+        _this.stickNum = 30;
         _this.childList = [];
         _this.stickMoveList = [];
         _this.initAddSpeed = 0.5;
@@ -42,7 +44,7 @@ var RolePlayer = (function (_super) {
         _super.prototype.createChildren.call(this);
         this.percentHeight = 100;
         this.gamePage.percentHeight = 100;
-        this.beginListenEvent();
+        this.beginListenEvent(); //  监听点击开始的按钮
         // egret.Tween.get(this.player).to({x:this.stage.$stageWidth,alpha:1},500);
     };
     /**
@@ -59,40 +61,53 @@ var RolePlayer = (function (_super) {
      * 开始游戏
      */
     RolePlayer.prototype.beginGame = function () {
-        this.setInitDataGame(); // 设置游戏的开始速度
-        this.initSticket();
-        this.setStartAddSpeed();
-        this.setStartJumpeSpeed();
-        this.beginAnimateEvent();
-        this.orientationEvent();
+        this.setInitDataGame(); // 设置游戏的开始数据
+        this.initSticket(); // 初始化第一屏的踏板
+        this.setStartAddSpeed(); // 设置涂鸦开始的加速度
+        this.setStartJumpeSpeed(); // 设置涂鸦开始的速度
+        this.beginAnimateEvent(); // 开始动画监听
+        this.orientationEvent(); //　开始监听左右的加速计
     };
     /**
      * 设置初始值
      */
     RolePlayer.prototype.setInitDataGame = function () {
         this.jumpStartY = this.stage.$stageHeight - this.player.height - 100;
-        this.jumpHeightHight = this.stage.$stageHeight * 0.4;
+        this.jumpHeightHight = this.stage.$stageHeight * 0.55 - this.player.height;
         this.player.visible = true;
         this.distance = this.distanceInit;
         this.playerIsMove = true;
         this.endGame = false;
         this.player.$y = this.stage.$stageHeight * 0.8 - this.player.height;
-        // this.longBg.$y = 0;
+        this.longBg.$y = 0;
+        this.JUMP_STATUS = this.JUMP_NORMAL;
     };
     /**
      * 设置涂鸦的初始加速度
      */
     RolePlayer.prototype.setStartAddSpeed = function () {
-        this.nowAddSpeed = Math.abs(this.jumpHeightHight - this.jumpStartY) / this.frameNum / this.frameNum;
-        this.nowAddDownSped = Math.abs(this.jumpHeightHight - this.jumpStartY) / this.frameNum / this.frameNum;
+        // this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
+        // this.nowAddDownSped = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
+        var frame = this.frameNum * 1.2;
+        var moveX = Math.abs(this.jumpHeightHight - this.jumpStartY) * 2 / (frame * (frame + 1));
+        this.nowAddSpeed = moveX;
+        this.nowAddDownSped = moveX;
     };
     /**
      * 	设置涂鸦的跳跃速度
      */
     RolePlayer.prototype.setStartJumpeSpeed = function () {
-        this.nowAddSpeed = Math.abs(this.jumpHeightHight - this.jumpStartY) / this.frameNum / this.frameNum;
-        // this.initSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum;
-        this.nowSpeed = Math.abs(this.jumpHeightHight - this.jumpStartY) / this.frameNum;
+        // this.jumpStartY = this.stage.$stageHeight*0.6;
+        // this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
+        // this.nowSpeed =	Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum;
+        var frame = this.frameNum;
+        var moveX = Math.abs(this.jumpHeightHight - this.jumpStartY) * 2 / (frame * (frame + 1));
+        this.nowAddSpeed = moveX;
+        // this.nowAddDownSped = moveX;
+        this.nowSpeed = moveX * frame;
+        this.stickMoveSpeed = (this.stage.$stageHeight - this.jumpStartY) * 2 / ((this.frameNum + 1));
+        this.stickAddSpeed = Math.abs(this.stage.$stageHeight - this.jumpStartY) * 2 / (this.frameNum * (this.frameNum + 1));
+        console.log('移动', this.jumpHeightHight - this.jumpStartY);
     };
     RolePlayer.prototype.orientationEvent = function () {
         var _self = this;
@@ -104,24 +119,12 @@ var RolePlayer = (function (_super) {
         }
         else {
             this.orientation = new egret.DeviceOrientation();
-            // this.orientation = new egret.Motion();
-            // window.addEventListener("deviceorientation", this.handleFunc.bind(this), true);
             //添加事件监听器
             this.orientation.addEventListener(egret.Event.CHANGE, this.handleFunc, this);
             //开始监听设备方向变化
             this.orientation.start();
         }
     };
-    // private handleFunc(e:egret.MotionEvent){
-    // 	let move = e.accelerationIncludingGravity.x;
-    // 	console.log('摇动',e.accelerationIncludingGravity.x);
-    // 	if(move>0) {
-    // 		this.speedX = -move *0.8;
-    // 	}else if(move<-0) {
-    // 		this.speedX = -move *0.8;
-    // 	}
-    // 	//e.gamma>
-    // }
     RolePlayer.prototype.handleFunc = function (e) {
         // console.log('摇动',e);
         if (e.gamma > 0) {
@@ -134,29 +137,23 @@ var RolePlayer = (function (_super) {
     RolePlayer.prototype.handleFuncWx = function (res) {
         // console.log('摇动',e);
         // let angle = Math.atan2(-res.x, Math.sqrt(res.y * res.y + res.z * res.z)) * 57.3;
-        console.log();
         if (res.x > 0.01) {
             this.speedX = res.x * this.stage.$stageWidth / 9;
         }
         else if (res.x < -0.01) {
             this.speedX = res.x * this.stage.$stageWidth / 9;
         }
-        // alert(e);
     };
-    // private handleFunc(e){
-    // 	// console.log('摇动',e.gamma);
-    // 	if(e.gamma>0) {
-    // 		this.speedX = e.gamma *0.8;
-    // 	}else if(e.gamma<-0) {
-    // 		this.speedX = e.gamma *0.8;
-    // 	}
-    // }
+    /**
+     * 初始化第一屏的踏板的位置，随机为主
+     */
     RolePlayer.prototype.initSticket = function () {
         var i = 0;
         var y = this.stage.$stageHeight;
         var pedalObj = null;
         while (y > 0) {
             pedalObj = this.createSticket(this.stage.$stageHeight, i);
+            this.createSpring(pedalObj);
             y = pedalObj.$y;
             i++;
         }
@@ -164,6 +161,9 @@ var RolePlayer = (function (_super) {
         this.petalHeight = pedalObj.height;
         console.log('最后一个y', this.lastPetalY);
     };
+    /**
+     * 创建绿色的踏板
+     */
     RolePlayer.prototype.createSticket = function (initY, num) {
         var stickObj = null;
         var spring = null;
@@ -172,17 +172,29 @@ var RolePlayer = (function (_super) {
         this.stickList.addChild(stickObj);
         stickObj.$y = initY - (this.distance + stickObj.height) * num;
         stickObj.$x = Math.random() * (this.stage.stageWidth - stickObj.width);
-        // spring = new FloorSpring();
-        // this.stickList.addChild(spring);
-        // spring.$x = stickObj.$x;
-        // spring.$y = stickObj.$y - spring.height;
         return stickObj;
+    };
+    /**
+     * 创建弹簧
+     */
+    RolePlayer.prototype.createSpring = function (stickObj) {
+        var springObj = new FloorSpring();
+        var random = Math.random();
+        this.springList.addChild(springObj);
+        springObj.$y = stickObj.$y - springObj.height * 0.8;
+        if (random > 0.5) {
+            springObj.$x = stickObj.$x + stickObj.width - springObj.width * 1.2;
+        }
+        else {
+            springObj.$x = stickObj.$x + springObj.width / 2;
+        }
+        return springObj;
     };
     RolePlayer.prototype.beginAnimateEvent = function () {
         this.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
     };
     RolePlayer.prototype.onEnterFrame = function () {
-        // console.log('哈哈',this.player.$y);
+        // this.moveplayerY();
         if (this.playerIsMove) {
             this.moveplayerY();
         }
@@ -192,6 +204,7 @@ var RolePlayer = (function (_super) {
         this.addNewPetals();
         if (this.isDown) {
             this.checkHitMove();
+            this.checkIsHitSpring();
         }
         if (this.endGame) {
             this.gotoMoveBg();
@@ -213,9 +226,10 @@ var RolePlayer = (function (_super) {
         }
         // this.nowSpeed = this.nowSpeed-this.nowAddSpeed;
         this.player.$y = this.player.$y - this.nowSpeed;
-        // if(this.player.$y<this.jumpHeightHight) {
-        // 	this.isDown = true;
-        // }else if((this.player.$y-this.player.width)>this.jumpStartY){
+        if (this.player.$y < this.jumpHeightHight) {
+            console.log('Y', this.player.$y);
+        }
+        // else if((this.player.$y-this.player.width)>this.jumpStartY){
         // 	this.isDown = false;
         // }
         // if(!this.isDown) {
@@ -232,7 +246,7 @@ var RolePlayer = (function (_super) {
         // }
         // if(this.player.$y-this.jumpStartY>0.1) {
         // 	this.player.$y=this.jumpStartY;
-        // 	this.nowSpeed  = this.initSpeed;
+        // 	this.setStartJumpeSpeed();
         // // this.nowSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/120;
         // // this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/120/60;
         // // this.initSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/120;
@@ -264,10 +278,11 @@ var RolePlayer = (function (_super) {
             itemMinX = item.$x - playerW / 3;
             itemMaxY = item.$y + item.height;
             itemMinY = item.$y;
-            if (playerX > itemMinX && playerX < itemMaxX && playerY - itemMinY >= 0.1 && playerY - itemMaxY <= 0.1) {
+            if (playerX >= itemMinX && playerX <= itemMaxX && playerY >= itemMinY && playerY <= itemMaxY) {
                 this.jumpStartY = itemMinY;
                 // this.isDown = false;
-                // this.player.$y = itemMinY - this.player.height;
+                this.player.$y = itemMinY - this.player.height;
+                this.JUMP_STATUS = this.JUMP_NORMAL;
                 this.setStartJumpeSpeed();
                 item.isHit = true;
                 console.log('撞击', this.jumpStartY, item.isHit);
@@ -277,6 +292,33 @@ var RolePlayer = (function (_super) {
                         itemTwo.isHit = false;
                     }
                 }
+                break;
+            }
+        }
+    };
+    RolePlayer.prototype.checkIsHitSpring = function () {
+        var springListChild = this.springList.$children;
+        var len = springListChild.length;
+        var item, itemTwo;
+        var playerX = this.player.$x;
+        var playerY = this.player.$y + this.player.height;
+        var playerW = this.player.width;
+        var playerH = this.player.height;
+        var itemMaxX = null;
+        var itemMinX = null;
+        var itemMaxY = null;
+        var itemMinY = null;
+        for (var i = 0; i < len; i++) {
+            item = springListChild[i];
+            itemMaxX = item.$x + item.width;
+            itemMinX = item.$x;
+            itemMaxY = item.$y + item.height;
+            itemMinY = item.$y;
+            if (itemMinX < (playerX + playerW) && itemMaxX > playerX && playerY >= itemMinY && playerY <= itemMaxY) {
+                console.log('碰撞了弹簧');
+                // this.JUMP_STATUS = this.JUMP_SPRING;
+                this.jumpStartY = itemMinY;
+                this.setStartJumpeSpeed();
                 break;
             }
         }
@@ -303,6 +345,9 @@ var RolePlayer = (function (_super) {
         if (this.player.$y > this.stage.$stageHeight && this.nowSpeed < 0) {
             this.gameOver();
         }
+        else {
+            this.longBg.$y = this.longBg.$y - 10;
+        }
     };
     // private endPlayerMove() {
     // 	this.player.$y = this.player.$y + 30;
@@ -313,25 +358,40 @@ var RolePlayer = (function (_super) {
     RolePlayer.prototype.gameOver = function () {
         this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
         this.player.visible = false;
-        // this.orientation.stop();
         this.playBtnBox.visible = true;
+        if (wx && wx.stopAccelerometer) {
+            wx.stopAccelerometer(function () {
+                console.log('停止监听左右');
+            });
+        }
+        else {
+            this.orientation.stop();
+        }
     };
     RolePlayer.prototype.removeAllStickList = function () {
         this.stickList.removeChildren();
     };
     RolePlayer.prototype.stickMove = function () {
         var list = this.stickList.$children;
+        var springList = this.springList.$children;
+        var springLen = springList.length;
         var len = list.length;
-        var item = null;
+        var item, springItem;
         var speed;
         if ((this.jumpStartY - this.stage.$stageHeight * 0.8) < 0.1 && this.nowSpeed > 0) {
+            speed = this.changeMaObjMoveSpeed();
+            console.log('踏板移动', speed);
+            // debugger;
             for (var i = 0; i < len; i++) {
                 item = list[i];
-                speed = Math.abs(this.jumpStartY - this.stage.$stageHeight) / this.frameNum;
                 item.$y = item.$y + speed; // this.frameNum
                 if (item && item.isHit) {
-                    this.jumpStartY = item.$y - this.player.height;
+                    // this.jumpStartY = item.$y - this.player.height;
                 }
+            }
+            for (var j = 0; j < springLen; j++) {
+                springItem = springList[j];
+                springItem.$y = springItem.$y + speed;
             }
             this.lastPetalY = this.lastPetalY + speed;
         }
@@ -342,6 +402,21 @@ var RolePlayer = (function (_super) {
         // 		this.player.$y = this.stage.$stageHeight*0.9;
         // 	}
         // }
+    };
+    RolePlayer.prototype.changeMaObjMoveSpeed = function () {
+        var speed = 0;
+        switch (this.JUMP_STATUS) {
+            case this.JUMP_NORMAL:
+                this.stickMoveSpeed = this.stickMoveSpeed - this.stickAddSpeed; //Math.abs(this.jumpStartY-this.stage.$stageHeight)/this.frameNum
+                speed = this.stickMoveSpeed;
+                console.log('移动3', this.stage.$stageHeight - this.jumpStartY);
+                // debugger
+                break;
+            case this.JUMP_SPRING:
+                speed = Math.abs(this.stage.$stageHeight * 2) / 60; // Math.abs(this.stage.$stageHeight*2)/60 
+                break;
+        }
+        return speed;
     };
     RolePlayer.prototype.checkOverStick = function () {
         var list = this.stickList.$children;

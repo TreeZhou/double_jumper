@@ -12,7 +12,7 @@ class RolePlayer extends eui.Component {
 	private nowAddDownSped:number;  // 涂鸦向下的加速度，固定的
 	private nowSpeed:number; // 当前那个涂鸦速度
 	private initSpeed:number; //  涂鸦的初始速度
-	private frameNum:number=18;  //控制帧数的数量
+	private frameNum:number=20;  //控制帧数的数量
 	private isDown:boolean=false;  // 判断是否处于下落状态
 	private distanceInit:number=30;
 	private distance:number=30;  // 每个块的距离
@@ -20,13 +20,20 @@ class RolePlayer extends eui.Component {
 	private endGame:boolean=false;
 
 
-	private stageDistance:number=30;
-	private lastPetalY:number;
-	private petalHeight:number;
+	private stageDistance:number=30;  // 每个阶段的间隔
+	private lastPetalY:number;   // 当前最后一个踏板的Y值
+	private petalHeight:number;  // 绿色踏板的高度
+
+	private stickMoveSpeed:number;
+	private stickAddSpeed:number;
 
 	// private pedalObj:StickItem;
 
 	private orientation:any;
+
+	private JUMP_STATUS:number=1;  // 当前跳跃的状态
+	private JUMP_NORMAL:number=1;  // 正常跳跃
+	private JUMP_SPRING:number=2;  // 弹簧跳跃
 
 
 	
@@ -36,10 +43,11 @@ class RolePlayer extends eui.Component {
 	private stickList:eui.Group;
 	private playBtnBox:eui.Group;
 	private playBtn:eui.Image;
-	// private longBg:eui.Image;
+	private longBg:eui.Image;
+	private springList:eui.Group;
 
 
-	private stickNum:number = 20;
+	private stickNum:number = 30;
 	public childList:any = [];
 	private stickMoveList:any=[];
 
@@ -66,7 +74,7 @@ class RolePlayer extends eui.Component {
 
 		this.percentHeight=100;
 		this.gamePage.percentHeight = 100;
-		this.beginListenEvent();
+		this.beginListenEvent();  //  监听点击开始的按钮
 
 		// egret.Tween.get(this.player).to({x:this.stage.$stageWidth,alpha:1},500);
 
@@ -83,42 +91,56 @@ class RolePlayer extends eui.Component {
 	/**
 	 * 开始游戏
 	 */
-	public beginGame() {
+	public beginGame() {  // 开始游戏的入口
 
-		this.setInitDataGame();  // 设置游戏的开始速度
-		this.initSticket();
-		this.setStartAddSpeed();
-		this.setStartJumpeSpeed();
-		this.beginAnimateEvent();
-		this.orientationEvent();
+		this.setInitDataGame();  // 设置游戏的开始数据
+		this.initSticket();     // 初始化第一屏的踏板
+		this.setStartAddSpeed();  // 设置涂鸦开始的加速度
+		this.setStartJumpeSpeed();  // 设置涂鸦开始的速度
+		this.beginAnimateEvent();  // 开始动画监听
+		this.orientationEvent();  //　开始监听左右的加速计
 	}
 	/**
 	 * 设置初始值
 	 */
 	public setInitDataGame(){
 		this.jumpStartY = this.stage.$stageHeight-this.player.height-100;
-		this.jumpHeightHight = this.stage.$stageHeight*0.4;
+		this.jumpHeightHight = this.stage.$stageHeight*0.55-this.player.height;
 		this.player.visible = true;
 		this.distance = this.distanceInit;
 		this.playerIsMove = true;
 		this.endGame = false;
 		this.player.$y = this.stage.$stageHeight*0.8-this.player.height;
-		// this.longBg.$y = 0;
+		this.longBg.$y = 0;
+		this.JUMP_STATUS = this.JUMP_NORMAL;
 	}
 	/**
 	 * 设置涂鸦的初始加速度
 	 */
 	private setStartAddSpeed(){
-		this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
-		this.nowAddDownSped = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
+		// this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
+		// this.nowAddDownSped = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
+		let frame = this.frameNum*1.2;
+		let moveX = Math.abs(this.jumpHeightHight-this.jumpStartY)*2/(frame*(frame+1));
+		this.nowAddSpeed = moveX;
+		this.nowAddDownSped = moveX;
 	}
 	/**
 	 * 	设置涂鸦的跳跃速度
 	 */
 	private setStartJumpeSpeed(){
-		this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
-		// this.initSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum;
-		this.nowSpeed =	Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum;
+		// this.jumpStartY = this.stage.$stageHeight*0.6;
+	
+		// this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
+		// this.nowSpeed =	Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum;
+		let frame = this.frameNum;
+		let moveX = Math.abs(this.jumpHeightHight-this.jumpStartY)*2/(frame*(frame+1));
+		this.nowAddSpeed = moveX;
+		// this.nowAddDownSped = moveX;
+		this.nowSpeed =	moveX*frame;
+		this.stickMoveSpeed = (this.stage.$stageHeight-this.jumpStartY)*2/((this.frameNum+1));
+		this.stickAddSpeed= Math.abs(this.stage.$stageHeight-this.jumpStartY)*2/(this.frameNum*(this.frameNum+1));
+		console.log('移动',this.jumpHeightHight-this.jumpStartY);
 	}
 	private orientationEvent() {
 		let _self = this;
@@ -130,24 +152,12 @@ class RolePlayer extends eui.Component {
 			})
 		}else {
 			this.orientation = new egret.DeviceOrientation();
-			// this.orientation = new egret.Motion();
-			// window.addEventListener("deviceorientation", this.handleFunc.bind(this), true);
 			//添加事件监听器
 			this.orientation.addEventListener(egret.Event.CHANGE,this.handleFunc,this);
 			//开始监听设备方向变化
 			this.orientation.start();
 		}
 	}
-	// private handleFunc(e:egret.MotionEvent){
-	// 	let move = e.accelerationIncludingGravity.x;
-	// 	console.log('摇动',e.accelerationIncludingGravity.x);
-	// 	if(move>0) {
-	// 		this.speedX = -move *0.8;
-	// 	}else if(move<-0) {
-	// 		this.speedX = -move *0.8;
-	// 	}
-	// 	//e.gamma>
-	// }
 	private handleFunc(e:egret.OrientationEvent){
 		// console.log('摇动',e);
 		if(e.gamma>0) {
@@ -159,23 +169,15 @@ class RolePlayer extends eui.Component {
 	private handleFuncWx(res){
 		// console.log('摇动',e);
 		// let angle = Math.atan2(-res.x, Math.sqrt(res.y * res.y + res.z * res.z)) * 57.3;
-		console.log();
 		if(res.x>0.01) {
 			this.speedX = res.x *this.stage.$stageWidth/9;
 		}else if(res.x<-0.01) {
 			this.speedX = res.x*this.stage.$stageWidth/9;
 		}
-		// alert(e);
 	}
-	// private handleFunc(e){
-	// 	// console.log('摇动',e.gamma);
-	// 	if(e.gamma>0) {
-	// 		this.speedX = e.gamma *0.8;
-	// 	}else if(e.gamma<-0) {
-	// 		this.speedX = e.gamma *0.8;
-	// 	}
-	// }
-
+	/**
+	 * 初始化第一屏的踏板的位置，随机为主
+	 */
 	private initSticket() {
 		let i = 0;
 		let y =this.stage.$stageHeight;
@@ -183,6 +185,7 @@ class RolePlayer extends eui.Component {
 
 		while(y>0) {
 			pedalObj = this.createSticket(this.stage.$stageHeight,i);
+			this.createSpring(pedalObj);
 			y = pedalObj.$y;
 			i++;
 		}
@@ -190,6 +193,9 @@ class RolePlayer extends eui.Component {
 		this.petalHeight = pedalObj.height;
 		console.log('最后一个y',this.lastPetalY);
 	}
+	/**
+	 * 创建绿色的踏板
+	 */
 	private createSticket(initY,num) {
 		let stickObj = null;
 		let spring = null;
@@ -199,27 +205,41 @@ class RolePlayer extends eui.Component {
 
 			stickObj.$y = initY-(this.distance+stickObj.height) *num;
 			stickObj.$x = Math.random() *(this.stage.stageWidth-stickObj.width);
-			// spring = new FloorSpring();
-			// this.stickList.addChild(spring);
-			// spring.$x = stickObj.$x;
-			// spring.$y = stickObj.$y - spring.height;
 			return stickObj;
 	}
+	/**
+	 * 创建弹簧
+	 */
+	private createSpring(stickObj) {
+		let springObj = new FloorSpring();
+		let random = Math.random();
+
+		this.springList.addChild(springObj);
+		springObj.$y = stickObj.$y-springObj.height*0.8;
+		if(random>0.5) {
+			springObj.$x = stickObj.$x+stickObj.width-springObj.width*1.2;
+		}else {
+			springObj.$x = stickObj.$x+springObj.width/2;
+		}
+		return springObj;
+	}
+
 	private beginAnimateEvent() {
 		this.addEventListener(egret.Event.ENTER_FRAME,this.onEnterFrame,this);
 	}
 	private onEnterFrame() {
-		// console.log('哈哈',this.player.$y);
+	
+		// this.moveplayerY();
 		if(this.playerIsMove) {
 			this.moveplayerY();
 		}
-
 		this.moveplayerX();
 		this.stickMove();
 		this.checkOverStick();
 		this.addNewPetals();
 		if(this.isDown) {
 			this.checkHitMove();
+			this.checkIsHitSpring();
 		}
 		if(this.endGame) {
 			this.gotoMoveBg();
@@ -246,9 +266,10 @@ class RolePlayer extends eui.Component {
 
 
 
-		// if(this.player.$y<this.jumpHeightHight) {
-		// 	this.isDown = true;
-		// }else if((this.player.$y-this.player.width)>this.jumpStartY){
+		if(this.player.$y<this.jumpHeightHight) {
+			console.log('Y',this.player.$y);
+		}
+		// else if((this.player.$y-this.player.width)>this.jumpStartY){
 		// 	this.isDown = false;
 		// }
 		// if(!this.isDown) {
@@ -265,7 +286,7 @@ class RolePlayer extends eui.Component {
 		// }
 		// if(this.player.$y-this.jumpStartY>0.1) {
 		// 	this.player.$y=this.jumpStartY;
-		// 	this.nowSpeed  = this.initSpeed;
+		// 	this.setStartJumpeSpeed();
 		// // this.nowSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/120;
 		// // this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/120/60;
 		// // this.initSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/120;
@@ -298,10 +319,11 @@ class RolePlayer extends eui.Component {
 			itemMinX = item.$x-playerW/3;
 			itemMaxY = item.$y+item.height;
 			itemMinY = item.$y;
-			if(playerX>itemMinX&&playerX<itemMaxX&&playerY-itemMinY>=0.1&&playerY-itemMaxY<=0.1) {
+			if(playerX>=itemMinX&&playerX<=itemMaxX&&playerY>=itemMinY&&playerY<=itemMaxY) {
 				this.jumpStartY = itemMinY;
 				// this.isDown = false;
-				// this.player.$y = itemMinY - this.player.height;
+				this.player.$y = itemMinY - this.player.height;
+				this.JUMP_STATUS = this.JUMP_NORMAL;
 				this.setStartJumpeSpeed();
 				item.isHit = true;
 				console.log('撞击',this.jumpStartY ,item.isHit );
@@ -315,6 +337,36 @@ class RolePlayer extends eui.Component {
 			}
 		}
 
+	}
+
+	private checkIsHitSpring() {
+		let springListChild = this.springList.$children;
+		let len = springListChild.length;
+		let item,itemTwo;
+		let playerX = this.player.$x;
+		let playerY = this.player.$y+this.player.height;
+		let playerW = this.player.width;
+		let playerH = this.player.height;
+		let itemMaxX =null;
+		let itemMinX = null;
+		let itemMaxY = null;
+		let itemMinY = null;
+
+		
+		for(let i=0;i<len;i++) {
+			item = springListChild[i];
+			itemMaxX = item.$x+item.width;
+			itemMinX = item.$x;
+			itemMaxY = item.$y+item.height;
+			itemMinY = item.$y;
+			if(itemMinX<(playerX+playerW)&&itemMaxX>playerX&&playerY>=itemMinY&&playerY<=itemMaxY) {   //playerX>itemMinX&&playerX<itemMaxX&&playerY-itemMinY>=0.1&&playerY-itemMaxY<=0.1
+				console.log('碰撞了弹簧');
+				// this.JUMP_STATUS = this.JUMP_SPRING;
+				this.jumpStartY=itemMinY;
+				this.setStartJumpeSpeed();
+				break;
+			}
+		}
 	}
 	private checkIsGameOver() {
 		let list = this.stickList.$children;
@@ -339,6 +391,8 @@ class RolePlayer extends eui.Component {
 		// }
 		if(this.player.$y>this.stage.$stageHeight&&	this.nowSpeed<0) {
 			this.gameOver();
+		}else {
+			this.longBg.$y =  this.longBg.$y - 10;
 		}
 
 
@@ -352,27 +406,44 @@ class RolePlayer extends eui.Component {
 	private gameOver() {
 		this.removeEventListener(egret.Event.ENTER_FRAME,this.onEnterFrame,this);
 		this.player.visible = false;
-		// this.orientation.stop();
 		this.playBtnBox.visible = true;
+	
+		if(wx && wx.stopAccelerometer) {
+			wx.stopAccelerometer(function (){
+				console.log('停止监听左右');
+			})
+		}else {
+			this.orientation.stop();
+		}
+
 	}
 	private removeAllStickList() {
 		this.stickList.removeChildren();
 	}
 	private stickMove() {
 		let list = this.stickList.$children;
+		let springList = this.springList.$children;
+		let springLen = springList.length;
 		let len = list.length;
-		let item = null;
+		let item,springItem;
 		let speed;
+
 		
 
 		if((this.jumpStartY-this.stage.$stageHeight*0.8)<0.1 && this.nowSpeed>0) {
+			speed = this.changeMaObjMoveSpeed()
+			console.log('踏板移动',speed);
+			// debugger;
 			for(let i = 0;i<len;i++) {
 				item = list[i];
-				speed = Math.abs(this.jumpStartY-this.stage.$stageHeight)/this.frameNum;
 				item.$y = item.$y +	speed;     // this.frameNum
 				if(item &&　item.isHit) {
-					this.jumpStartY = item.$y - this.player.height;
+					// this.jumpStartY = item.$y - this.player.height;
 				}
+			}
+			for(let j=0;j<springLen;j++) {
+				springItem = springList[j];
+				springItem.$y = springItem.$y +	speed;  
 			}
 			this.lastPetalY = this.lastPetalY + speed;
 		}
@@ -384,6 +455,21 @@ class RolePlayer extends eui.Component {
 		// 	}
 				
 		// }
+	}
+	private changeMaObjMoveSpeed() {
+		let speed = 0;
+		switch(this.JUMP_STATUS) {
+			case this.JUMP_NORMAL:
+			this.stickMoveSpeed = this.stickMoveSpeed -this.stickAddSpeed; //Math.abs(this.jumpStartY-this.stage.$stageHeight)/this.frameNum
+			speed  = this.stickMoveSpeed;
+			console.log('移动3',this.stage.$stageHeight-this.jumpStartY);
+			// debugger
+			break;
+			case this.JUMP_SPRING:
+			speed = Math.abs(this.stage.$stageHeight*2)/60; // Math.abs(this.stage.$stageHeight*2)/60 
+			break;
+		}
+		return speed;
 	}
 	private checkOverStick() {
 		let list = this.stickList.$children;

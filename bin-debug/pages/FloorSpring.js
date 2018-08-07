@@ -19,6 +19,10 @@ var FloorSpring = (function (_super) {
     FloorSpring.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
     };
+    FloorSpring.prototype.showOffenSpring = function () {
+        this.Federoffen.visible = true;
+        this.Federzu.visible = false;
+    };
     return FloorSpring;
 }(eui.Component));
 __reflect(FloorSpring.prototype, "FloorSpring", ["eui.UIComponent", "egret.DisplayObject"]);
