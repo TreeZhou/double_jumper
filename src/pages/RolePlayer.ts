@@ -18,6 +18,8 @@ class RolePlayer extends eui.Component {
 	private distance:number=30;  // 每个块的距离
 	private playerIsMove:boolean= true; // 角色是否可以移动
 	private endGame:boolean=false;
+	private nowStage:number= 1;
+	private nowSpringNumber:number; // 当前显示的弹簧个数
 
 
 	private stageDistance:number=30;  // 每个阶段的间隔
@@ -34,7 +36,28 @@ class RolePlayer extends eui.Component {
 	private JUMP_STATUS:number=1;  // 当前跳跃的状态
 	private JUMP_NORMAL:number=1;  // 正常跳跃
 	private JUMP_SPRING:number=2;  // 弹簧跳跃
+	private STAGE_METER:number=200; // 一屏等于多少米
 
+
+	//  弹簧分阶段出现的阶级
+	private springStageLine:any=[  // 弹簧的分段
+		{
+			minHeight:0,
+			maxHeight:1000,
+			num:10
+		},
+		{
+			minHeight:1001,
+			maxHeight:2000,
+			num:15
+		},
+		{
+			minHeight:2001,
+			maxHeight:5000,
+			num:20
+		},
+	];
+	private springStageNum:any=[];  // 用于存储每个弹簧应该出现的位置
 
 	
 
@@ -79,6 +102,7 @@ class RolePlayer extends eui.Component {
 		// egret.Tween.get(this.player).to({x:this.stage.$stageWidth,alpha:1},500);
 
 	}
+	
 	/**
 	 * 监听点击事件
 	 */
@@ -105,7 +129,7 @@ class RolePlayer extends eui.Component {
 	 */
 	public setInitDataGame(){
 		this.jumpStartY = this.stage.$stageHeight-this.player.height-100;
-		this.jumpHeightHight = this.stage.$stageHeight*0.55-this.player.height;
+		this.jumpHeightHight = this.stage.$stageHeight*0.6-this.player.height;
 		this.player.visible = true;
 		this.distance = this.distanceInit;
 		this.playerIsMove = true;
@@ -113,6 +137,10 @@ class RolePlayer extends eui.Component {
 		this.player.$y = this.stage.$stageHeight*0.8-this.player.height;
 		this.longBg.$y = 0;
 		this.JUMP_STATUS = this.JUMP_NORMAL;
+		this.nowStage = 1;
+		this.springStageNum = [];
+		this.nowSpringNumber = 0;
+		this.getRandomPosition();  // 初始化弹簧的数据
 	}
 	/**
 	 * 设置涂鸦的初始加速度
@@ -123,7 +151,7 @@ class RolePlayer extends eui.Component {
 		let frame = this.frameNum*1.2;
 		let moveX = Math.abs(this.jumpHeightHight-this.jumpStartY)*2/(frame*(frame+1));
 		this.nowAddSpeed = moveX;
-		this.nowAddDownSped = moveX;
+		this.nowAddDownSped = moveX*1.2;
 	}
 	/**
 	 * 	设置涂鸦的跳跃速度
@@ -140,6 +168,20 @@ class RolePlayer extends eui.Component {
 		this.nowSpeed =	moveX*frame;
 
 		console.log('移动',this.jumpHeightHight-this.jumpStartY);
+	}
+	/**
+	 * 像素更换成多少米
+	 */
+	public changeToMeter(y,stage) {
+		let meterNum = null;
+		if(y>0) {
+			meterNum=(this.stage.$stageHeight-y)/this.stage.$stageHeight*this.STAGE_METER+(stage-1)*200;
+		}else {
+			meterNum=(Math.abs(y))/this.stage.$stageHeight*this.STAGE_METER+stage*200;
+		}
+
+
+		return meterNum;
 	}
 	private setStickSpeed(distanceY,frame) {
 		// let frame = this.frameNum; // this.stage.$stageHeight*0.9-this.jumpStartY
@@ -189,7 +231,6 @@ class RolePlayer extends eui.Component {
 
 		while(y>0) {
 			pedalObj = this.createSticket(this.stage.$stageHeight,i);
-			this.createSpring(pedalObj);
 			y = pedalObj.$y;
 			i++;
 		}
@@ -209,7 +250,38 @@ class RolePlayer extends eui.Component {
 
 			stickObj.$y = initY-(this.distance+stickObj.height) *num;
 			stickObj.$x = Math.random() *(this.stage.stageWidth-stickObj.width);
+			stickObj.meter = this.changeToMeter(stickObj.$y,this.nowStage);
+			stickObj.setTypeStick(stickObj.TYPE_BLUE);
+			// console.log('米数',	stickObj.meter ,stickObj.$y);
+			if(this.nowSpringNumber<this.springStageNum.length&& stickObj.TYPE_STATUS === stickObj.TYPE_GREEN) {
+				if(Math.abs(stickObj.meter-this.springStageNum[this.nowSpringNumber])<10) {
+					this.createSpring(stickObj);
+					this.nowSpringNumber++;
+				}
+			}
+		
 			return stickObj;
+	}
+	/**
+	 * 设置弹簧应该出现的每个阶段性位置，用数组存起来
+	 */
+	private getRandomPosition(){
+		let stageLen = this.springStageLine.length;
+		let item,randomNum,list,minStage;
+
+		for(let i=0;i<stageLen;i++) {
+			item = this.springStageLine[i];
+			for(let j=0;j<item.num;j++) {
+				minStage = (item.maxHeight-item.minHeight)/item.num;
+				randomNum = Math.ceil(Math.random()*minStage+item.minHeight+minStage*j);
+				this.springStageNum.push(randomNum);
+			}
+		}
+		list = this.springStageNum.sort(function(a,b){
+			return a-b;
+		})
+		this.springStageNum = list;
+		console.log('阶段的数据',this.springStageNum);
 	}
 	/**
 	 * 创建弹簧
@@ -217,9 +289,12 @@ class RolePlayer extends eui.Component {
 	private createSpring(stickObj) {
 		let springObj = new FloorSpring();
 		let random = Math.random();
+	
+
 
 		this.springList.addChild(springObj);
 		springObj.$y = stickObj.$y-springObj.height*0.8;
+		springObj.meter = this.changeToMeter(springObj.$y ,this.nowStage);
 		if(random>0.5) {
 			springObj.$x = stickObj.$x+stickObj.width-springObj.width*1.2;
 		}else {
@@ -238,11 +313,12 @@ class RolePlayer extends eui.Component {
 			this.moveplayerY();
 		}
 		this.moveplayerX();
-		this.stickMove();
+		this.switchStickMove();
 		this.checkOverStick();
 		this.addNewPetals();
+		this.stickMoveLeftAndRight();
 		if(this.isDown) {
-			this.checkHitMove();
+			this.checkIsStickHit();
 			this.checkIsHitSpring();
 		}
 		if(this.endGame) {
@@ -270,9 +346,9 @@ class RolePlayer extends eui.Component {
 
 
 
-		if(this.player.$y<this.jumpHeightHight) {
-			console.log('Y',this.player.$y);
-		}
+		// if(this.player.$y<this.jumpHeightHight) {
+		// 	console.log('Y',this.player.$y);
+		// }
 		// else if((this.player.$y-this.player.width)>this.jumpStartY){
 		// 	this.isDown = false;
 		// }
@@ -304,7 +380,7 @@ class RolePlayer extends eui.Component {
 			this.player.$x = -this.player.width;
 		}
 	}
-	private checkHitMove() {
+	private checkIsStickHit() {
 		let len = this.stickList.$children.length;
 		let item,itemTwo;
 		let playerX = this.player.$x;
@@ -320,8 +396,8 @@ class RolePlayer extends eui.Component {
 		for(let i=0;i<len;i++) {
 			item = this.stickList.$children[i];
 			itemMaxX = item.$x+item.width-playerW/5;
-			itemMinX = item.$x-playerW/3;
-			itemMaxY = item.$y+item.height;
+			itemMinX = item.$x-playerW/1.9;
+			itemMaxY = item.$y+item.height+Math.abs(this.nowSpeed);
 			itemMinY = item.$y;
 			if(playerX>=itemMinX&&playerX<=itemMaxX&&playerY>=itemMinY&&playerY<=itemMaxY) {
 				this.jumpStartY = itemMinY;
@@ -367,10 +443,11 @@ class RolePlayer extends eui.Component {
 			if(itemMinX<(playerX+playerW)&&itemMaxX>playerX&&playerY>=itemMinY&&playerY<=itemMaxY) {   //playerX>itemMinX&&playerX<itemMaxX&&playerY-itemMinY>=0.1&&playerY-itemMaxY<=0.1
 				console.log('碰撞了弹簧');
 				this.JUMP_STATUS = this.JUMP_SPRING;
-				this.jumpStartY=itemMinY;
+				this.jumpStartY=itemMaxY;
 				this.setStartJumpeSpeed(this.frameNum*3);
 				this.setStickSpeed(this.stage.$stageHeight*2,this.frameNum*3);
 				item.showOffenSpring();
+				
 				break;
 			}
 		}
@@ -383,14 +460,14 @@ class RolePlayer extends eui.Component {
 		if(this.player.$y+this.player.height>=this.stage.$stageHeight) {
 			// this.playerIsMove = false;
 			this.endGame = true;
-			this.jumpStartY = this.stage.$stageHeight*2;
+			this.jumpStartY = this.stage.$stageHeight*1.5;
 			this.setStartJumpeSpeed(this.frameNum);
 			this.nowAddDownSped = this.nowAddDownSped*3;
 		}
 
 	}
 	private gotoMoveBg() {
-		this.removeAllStickList();
+		this.removeAllList();
 		// if(this.longBg.$y+(this.longBg.height-this.stage.$stageHeight)<=60) {
 		// 	this.endPlayerMove();
 		// }else {
@@ -424,8 +501,49 @@ class RolePlayer extends eui.Component {
 		}
 
 	}
-	private removeAllStickList() {
+	private removeAllList() {
 		this.stickList.removeChildren();
+		this.springList.removeChildren();
+	}
+	private switchStickMove() {
+		// let list = this.stickList.$children;
+		// let springList = this.springList.$children;
+		// let springLen = springList.length;
+		// let len = list.length;
+		// let item,springItem;
+		// let speed;
+
+		switch(this.JUMP_STATUS) {
+			case this.JUMP_NORMAL:
+			if((this.jumpStartY-this.stage.$stageHeight*0.8)<0.1 && this.nowSpeed>0) {
+				this.stickMove();
+			}
+			break;
+			case this.JUMP_SPRING:
+			if(this.nowSpeed>0) {
+				this.stickMove();
+			}
+			break;
+		}
+
+		// if((this.jumpStartY-this.stage.$stageHeight*0.8)<0.1 && this.nowSpeed>0) {
+			// speed = this.changeMaObjMoveSpeed()
+			// console.log('踏板移动',speed);
+			// // debugger;
+			// for(let i = 0;i<len;i++) {
+			// 	item = list[i];
+			// 	item.$y = item.$y +	speed;     // this.frameNum
+			// 	if(item &&　item.isHit) {
+			// 		// this.jumpStartY = item.$y - this.player.height;
+			// 	}
+			// }
+			// for(let j=0;j<springLen;j++) {
+			// 	springItem = springList[j];
+			// 	springItem.$y = springItem.$y +	speed;  
+			// }
+			// this.lastPetalY = this.lastPetalY + speed;
+		// }
+
 	}
 	private stickMove() {
 		let list = this.stickList.$children;
@@ -435,34 +553,36 @@ class RolePlayer extends eui.Component {
 		let item,springItem;
 		let speed;
 
-		
-
-		if((this.jumpStartY-this.stage.$stageHeight*0.8)<0.1 && this.nowSpeed>0) {
-			speed = this.changeMaObjMoveSpeed()
-			console.log('踏板移动',speed);
-			// debugger;
-			for(let i = 0;i<len;i++) {
-				item = list[i];
-				item.$y = item.$y +	speed;     // this.frameNum
-				if(item &&　item.isHit) {
-					// this.jumpStartY = item.$y - this.player.height;
-				}
+		speed = this.changeMaObjMoveSpeed()
+		// console.log('踏板移动',speed);
+		// debugger;
+		for(let i = 0;i<len;i++) {
+			item = list[i];
+			item.$y = item.$y +	speed;     // this.frameNum
+			if(item &&　item.isHit) {
+				// this.jumpStartY = item.$y - this.player.height;
 			}
-			for(let j=0;j<springLen;j++) {
-				springItem = springList[j];
-				springItem.$y = springItem.$y +	speed;  
-			}
-			this.lastPetalY = this.lastPetalY + speed;
 		}
-		// else if(this.nowSpeed<0 && this.player.$y+this.player.height>=this.stage.$stageHeight) {
-		// 		for(let i = 0;i<len;i++) {
-		// 		item = list[i];
-		// 		item.$y = item.$y +this.nowSpeed*1.5;
-		// 		this.player.$y = this.stage.$stageHeight*0.9;
-		// 	}
-				
-		// }
+		for(let j=0;j<springLen;j++) {
+			springItem = springList[j];
+			springItem.$y = springItem.$y +	speed;  
+		}
+		this.lastPetalY = this.lastPetalY + speed;
 	}
+	private stickMoveLeftAndRight() {
+		let list = this.stickList.$children;
+		let len = list.length;
+		let item;
+		for(let i = 0;i<len;i++) {
+			item = list[i];
+			if(item.TYPE_STATUS === item.TYPE_BLUE) {
+				item.leftAndRightMove();
+			}
+		}
+	}
+	/**
+	 * 计算地图上物体的移动速度
+	 */
 	private changeMaObjMoveSpeed() {
 		let speed = 0;
 		// switch(this.JUMP_STATUS) {
@@ -527,6 +647,7 @@ class RolePlayer extends eui.Component {
 				y = pedalObj.$y;
 				i++;
 			}
+			this.nowStage++;
 			this.lastPetalY = y-pedalObj.height;
 			this.stageDistance = this.stageDistance +2;
 		}

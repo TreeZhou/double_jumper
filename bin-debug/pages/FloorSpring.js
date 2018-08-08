@@ -11,7 +11,9 @@ r.prototype = e.prototype, t.prototype = new r();
 var FloorSpring = (function (_super) {
     __extends(FloorSpring, _super);
     function FloorSpring() {
-        return _super.call(this) || this;
+        var _this = _super.call(this) || this;
+        _this.meter = 0;
+        return _this;
     }
     FloorSpring.prototype.partAdded = function (partName, instance) {
         _super.prototype.partAdded.call(this, partName, instance);

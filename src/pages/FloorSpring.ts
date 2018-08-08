@@ -4,6 +4,9 @@ class FloorSpring extends eui.Component implements  eui.UIComponent {
 	}
 	private Federzu:eui.Image;
 	private Federoffen:eui.Image;
+	public meter:number=0;
+
+
 	protected partAdded(partName:string,instance:any):void
 	{
 		super.partAdded(partName,instance);
@@ -18,5 +21,5 @@ class FloorSpring extends eui.Component implements  eui.UIComponent {
 		this.Federoffen.visible = true;
 		this.Federzu.visible = false;
 	}
-	
+
 }
