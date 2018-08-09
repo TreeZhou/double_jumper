@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="DoodlePlayerSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="1651d818e93" ></w:Config>
+	<e:Group id="doodle" width="91" height="69" x="45" y="68" anchorOffsetX="45" anchorOffsetY="68">
+		<e:Image id="DoodleNormalLeft" width="91" height="69" x="0" y="0" source="DoodleNormalLeft_png"/>
+		<e:Image width="91" height="69" x="0" y="0" source="DoodleNormalRight_png"/>
+	</e:Group>
+</e:Skin>

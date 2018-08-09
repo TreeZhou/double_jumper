@@ -15,7 +15,7 @@ class RolePlayer extends eui.Component {
 	private frameNum:number=20;  //控制帧数的数量
 	private isDown:boolean=false;  // 判断是否处于下落状态
 	private distanceInit:number=30;
-	private distance:number=30;  // 每个块的距离
+	private distance:number=10;  // 每个块的距离
 	private playerIsMove:boolean= true; // 角色是否可以移动
 	private endGame:boolean=false;
 	private nowStage:number= 1;
@@ -25,6 +25,7 @@ class RolePlayer extends eui.Component {
 	private stageDistance:number=30;  // 每个阶段的间隔
 	private lastPetalY:number;   // 当前最后一个踏板的Y值
 	private petalHeight:number;  // 绿色踏板的高度
+	private preStickY:number;  // 前一个踏板的位置
 
 	private stickMoveSpeed:number;
 	private stickAddSpeed:number;
@@ -40,9 +41,9 @@ class RolePlayer extends eui.Component {
 
 
 	//  弹簧分阶段出现的阶级
-	private springStageLine:any=[  // 弹簧的分段
+	private SPRING_STAGE_LINE:any=[  // 弹簧的分段
 		{
-			minHeight:0,
+			minHeight:200,
 			maxHeight:1000,
 			num:10
 		},
@@ -59,6 +60,19 @@ class RolePlayer extends eui.Component {
 	];
 	private springStageNum:any=[];  // 用于存储每个弹簧应该出现的位置
 
+	// 每个阶段跳板的最大间距
+	private STICK_STAGE_DISTANSE:any=[
+		{
+			minHeight:0,
+			maxHeight:1000,
+			distance:40
+		},
+		{
+			minHeight:1001,
+			maxHeight:2000,
+			distance:45
+		},
+	]　　
 	
 
 	private player:eui.Image;
@@ -131,7 +145,8 @@ class RolePlayer extends eui.Component {
 		this.jumpStartY = this.stage.$stageHeight-this.player.height-100;
 		this.jumpHeightHight = this.stage.$stageHeight*0.6-this.player.height;
 		this.player.visible = true;
-		this.distance = this.distanceInit;
+		// this.distance = this.distanceInit;
+		this.preStickY = this.stage.$stageHeight;
 		this.playerIsMove = true;
 		this.endGame = false;
 		this.player.$y = this.stage.$stageHeight*0.8-this.player.height;
@@ -183,6 +198,26 @@ class RolePlayer extends eui.Component {
 
 		return meterNum;
 	}
+	/**
+	 * 计算当前这个跳板的间距
+	 */
+	private caculateStickDistance(){
+		let distand = null;
+		let meter = this.nowStage*this.STAGE_METER;
+		let list = this.STICK_STAGE_DISTANSE;
+		let len = list.length;
+		
+
+		for(let i=0;i<len;i++) {
+			if(meter>=list[i].minHeight&&meter<=list[i].maxHeight || i>=len-1) {
+				distand = Math.ceil(Math.abs(Math.random()*(list[i].distance-this.distanceInit))+this.distanceInit);
+				break;
+			}
+		}
+		// console.log('距离',distand);
+		return distand;
+
+	}
 	private setStickSpeed(distanceY,frame) {
 		// let frame = this.frameNum; // this.stage.$stageHeight*0.9-this.jumpStartY
 		this.stickMoveSpeed = Math.abs(distanceY)*2/((frame+1));
@@ -230,10 +265,13 @@ class RolePlayer extends eui.Component {
 		let pedalObj = null;
 
 		while(y>0) {
-			pedalObj = this.createSticket(this.stage.$stageHeight,i);
+			pedalObj = this.createSticket(this.preStickY,i);
 			y = pedalObj.$y;
+			this.preStickY = pedalObj.$y;
 			i++;
 		}
+		console.log(this.stickList);
+		// debugger;
 		this.lastPetalY = y-pedalObj.height;
 		this.petalHeight = pedalObj.height;
 		console.log('最后一个y',this.lastPetalY);
@@ -243,15 +281,17 @@ class RolePlayer extends eui.Component {
 	 */
 	private createSticket(initY,num) {
 		let stickObj = null;
+		// let randomPro = Math.random(); initY *num
 		let spring = null;
+		let distance = this.caculateStickDistance();
+
 			stickObj = new StickItem();
 			stickObj.isHit = false;
 			this.stickList.addChild(stickObj);
-
-			stickObj.$y = initY-(this.distance+stickObj.height) *num;
+			stickObj.$y = initY-(distance+stickObj.height) ;
 			stickObj.$x = Math.random() *(this.stage.stageWidth-stickObj.width);
-			stickObj.meter = this.changeToMeter(stickObj.$y,this.nowStage);
-			stickObj.setTypeStick(stickObj.TYPE_BLUE);
+			stickObj.meter = this.changeToMeter(stickObj.$y,this.nowStage);  
+			// stickObj.setRandomStick();
 			// console.log('米数',	stickObj.meter ,stickObj.$y);
 			if(this.nowSpringNumber<this.springStageNum.length&& stickObj.TYPE_STATUS === stickObj.TYPE_GREEN) {
 				if(Math.abs(stickObj.meter-this.springStageNum[this.nowSpringNumber])<10) {
@@ -266,11 +306,11 @@ class RolePlayer extends eui.Component {
 	 * 设置弹簧应该出现的每个阶段性位置，用数组存起来
 	 */
 	private getRandomPosition(){
-		let stageLen = this.springStageLine.length;
+		let stageLen = this.SPRING_STAGE_LINE.length;
 		let item,randomNum,list,minStage;
 
 		for(let i=0;i<stageLen;i++) {
-			item = this.springStageLine[i];
+			item = this.SPRING_STAGE_LINE[i];
 			for(let j=0;j<item.num;j++) {
 				minStage = (item.maxHeight-item.minHeight)/item.num;
 				randomNum = Math.ceil(Math.random()*minStage+item.minHeight+minStage*j);
@@ -576,6 +616,7 @@ class RolePlayer extends eui.Component {
 		for(let i = 0;i<len;i++) {
 			item = list[i];
 			if(item.TYPE_STATUS === item.TYPE_BLUE) {
+				// debugger
 				item.leftAndRightMove();
 			}
 		}
@@ -615,42 +656,37 @@ class RolePlayer extends eui.Component {
 			}	
 			
 		}
-			
-	
 		if(removeChildList.length) {
 			for(let j=0;j<removeChildList.length;j++) {
 				if(removeChildList[j]) {
 					this.stickList.removeChild(removeChildList[j]);
 				}
 
-			}
-			// nowLen = this.stickList.$children.length;
-			// nowList = this.stickList.$children;
-			// for(let k=0;k<removeChildList.length;k++) {
-			// 	this.stickList.addChild(removeChildList[k]);
-			// 	removeChildList[k].$y = 0-this.distance-removeChildList[k].height-Math.abs(this.nowSpeed);
-			// 	removeChildList[k].$x = Math.random()*(this.stage.$stageWidth-removeChildList[k].width);
-			// }
-				
+			}	
 		}
 	}
-
+	 // 当当前的最后那个跳板大于某个值，就创建下一屏的跳板
 	private addNewPetals() {
 		let i = 0;
 		let y =0;
 		let pedalObj = null;
 
+
 		if(this.lastPetalY>this.stageDistance+this.petalHeight) {
-			this.distance = this.distance+5;
+			this.preStickY  = 0;
+			// this.distance = this.distance+5;
+			this.nowStage++;
 			while(y>-this.stage.$stageHeight) {
-				pedalObj = this.createSticket(0,i);
+				pedalObj = this.createSticket(this.preStickY,i);
 				y = pedalObj.$y;
+				this.preStickY = pedalObj.$y;
 				i++;
 			}
-			this.nowStage++;
+		
 			this.lastPetalY = y-pedalObj.height;
 			this.stageDistance = this.stageDistance +2;
 		}
 	}
+
 }
 //implements  eui.UIComponent 

@@ -18,6 +18,7 @@ var StickItem = (function (_super) {
         _this.TYPE_BLUE = 2;
         _this.initSpeed = 2;
         _this.speed = 2;
+        _this.SHOW_PROBABILITY = [0.5, 0.6, 1];
         return _this;
     }
     StickItem.prototype.partAdded = function (partName, instance) {
@@ -25,10 +26,23 @@ var StickItem = (function (_super) {
     };
     StickItem.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
-        this.setTypeStick(this.TYPE_GREEN);
+        this.setRandomStick();
+        // this.setTypeStick(this.TYPE_GREEN);
         // console.log('wode',this);
         this.setInitLeftOrRightMove();
         // this.addEventListener(egret.Event.ENTER_FRAME,this.onEnterFrame,this);
+    };
+    StickItem.prototype.setRandomStick = function () {
+        var randomNum = Math.random();
+        if (randomNum < this.SHOW_PROBABILITY[0]) {
+            this.setTypeStick(this.TYPE_GREEN);
+        }
+        else if (randomNum > this.SHOW_PROBABILITY[0] && randomNum < this.SHOW_PROBABILITY[1]) {
+            this.setTypeStick(this.TYPE_BLUE);
+        }
+        else {
+            this.setTypeStick(this.TYPE_GREEN);
+        }
     };
     StickItem.prototype.setInitLeftOrRightMove = function () {
         var random = Math.random();

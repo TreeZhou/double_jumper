@@ -14,6 +14,8 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 	private initSpeed:number=2;
 	private speed:number=2;
 
+	private SHOW_PROBABILITY:any=[0.5,0.6,1];
+
 
 	protected partAdded(partName:string,instance:any):void
 	{
@@ -24,10 +26,22 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
-		this.setTypeStick(this.TYPE_GREEN);
+		this.setRandomStick();
+		// this.setTypeStick(this.TYPE_GREEN);
 		// console.log('wode',this);
 		this.setInitLeftOrRightMove();
 		// this.addEventListener(egret.Event.ENTER_FRAME,this.onEnterFrame,this);
+	}
+	public setRandomStick() {
+		let randomNum = Math.random();
+		
+		if(randomNum<this.SHOW_PROBABILITY[0]) {
+			this.setTypeStick(this.TYPE_GREEN);
+		}else if(randomNum>this.SHOW_PROBABILITY[0]&&randomNum<this.SHOW_PROBABILITY[1]){
+			this.setTypeStick(this.TYPE_BLUE);
+		}else {
+			this.setTypeStick(this.TYPE_GREEN);
+		}
 	}
 	private setInitLeftOrRightMove() {
 		let random = Math.random();

@@ -16,7 +16,7 @@ var RolePlayer = (function (_super) {
         _this.frameNum = 20; //控制帧数的数量
         _this.isDown = false; // 判断是否处于下落状态
         _this.distanceInit = 30;
-        _this.distance = 30; // 每个块的距离
+        _this.distance = 10; // 每个块的距离
         _this.playerIsMove = true; // 角色是否可以移动
         _this.endGame = false;
         _this.nowStage = 1;
@@ -26,9 +26,9 @@ var RolePlayer = (function (_super) {
         _this.JUMP_SPRING = 2; // 弹簧跳跃
         _this.STAGE_METER = 200; // 一屏等于多少米
         //  弹簧分阶段出现的阶级
-        _this.springStageLine = [
+        _this.SPRING_STAGE_LINE = [
             {
-                minHeight: 0,
+                minHeight: 200,
                 maxHeight: 1000,
                 num: 10
             },
@@ -44,6 +44,19 @@ var RolePlayer = (function (_super) {
             },
         ];
         _this.springStageNum = []; // 用于存储每个弹簧应该出现的位置
+        // 每个阶段跳板的最大间距
+        _this.STICK_STAGE_DISTANSE = [
+            {
+                minHeight: 0,
+                maxHeight: 1000,
+                distance: 40
+            },
+            {
+                minHeight: 1001,
+                maxHeight: 2000,
+                distance: 45
+            },
+        ];
         _this.stickNum = 30;
         _this.childList = [];
         _this.stickMoveList = [];
@@ -96,7 +109,8 @@ var RolePlayer = (function (_super) {
         this.jumpStartY = this.stage.$stageHeight - this.player.height - 100;
         this.jumpHeightHight = this.stage.$stageHeight * 0.6 - this.player.height;
         this.player.visible = true;
-        this.distance = this.distanceInit;
+        // this.distance = this.distanceInit;
+        this.preStickY = this.stage.$stageHeight;
         this.playerIsMove = true;
         this.endGame = false;
         this.player.$y = this.stage.$stageHeight * 0.8 - this.player.height;
@@ -144,6 +158,23 @@ var RolePlayer = (function (_super) {
             meterNum = (Math.abs(y)) / this.stage.$stageHeight * this.STAGE_METER + stage * 200;
         }
         return meterNum;
+    };
+    /**
+     * 计算当前这个跳板的间距
+     */
+    RolePlayer.prototype.caculateStickDistance = function () {
+        var distand = null;
+        var meter = this.nowStage * this.STAGE_METER;
+        var list = this.STICK_STAGE_DISTANSE;
+        var len = list.length;
+        for (var i = 0; i < len; i++) {
+            if (meter >= list[i].minHeight && meter <= list[i].maxHeight || i >= len - 1) {
+                distand = Math.ceil(Math.abs(Math.random() * (list[i].distance - this.distanceInit)) + this.distanceInit);
+                break;
+            }
+        }
+        // console.log('距离',distand);
+        return distand;
     };
     RolePlayer.prototype.setStickSpeed = function (distanceY, frame) {
         // let frame = this.frameNum; // this.stage.$stageHeight*0.9-this.jumpStartY
@@ -193,10 +224,13 @@ var RolePlayer = (function (_super) {
         var y = this.stage.$stageHeight;
         var pedalObj = null;
         while (y > 0) {
-            pedalObj = this.createSticket(this.stage.$stageHeight, i);
+            pedalObj = this.createSticket(this.preStickY, i);
             y = pedalObj.$y;
+            this.preStickY = pedalObj.$y;
             i++;
         }
+        console.log(this.stickList);
+        // debugger;
         this.lastPetalY = y - pedalObj.height;
         this.petalHeight = pedalObj.height;
         console.log('最后一个y', this.lastPetalY);
@@ -206,14 +240,16 @@ var RolePlayer = (function (_super) {
      */
     RolePlayer.prototype.createSticket = function (initY, num) {
         var stickObj = null;
+        // let randomPro = Math.random(); initY *num
         var spring = null;
+        var distance = this.caculateStickDistance();
         stickObj = new StickItem();
         stickObj.isHit = false;
         this.stickList.addChild(stickObj);
-        stickObj.$y = initY - (this.distance + stickObj.height) * num;
+        stickObj.$y = initY - (distance + stickObj.height);
         stickObj.$x = Math.random() * (this.stage.stageWidth - stickObj.width);
         stickObj.meter = this.changeToMeter(stickObj.$y, this.nowStage);
-        stickObj.setTypeStick(stickObj.TYPE_BLUE);
+        // stickObj.setRandomStick();
         // console.log('米数',	stickObj.meter ,stickObj.$y);
         if (this.nowSpringNumber < this.springStageNum.length && stickObj.TYPE_STATUS === stickObj.TYPE_GREEN) {
             if (Math.abs(stickObj.meter - this.springStageNum[this.nowSpringNumber]) < 10) {
@@ -227,10 +263,10 @@ var RolePlayer = (function (_super) {
      * 设置弹簧应该出现的每个阶段性位置，用数组存起来
      */
     RolePlayer.prototype.getRandomPosition = function () {
-        var stageLen = this.springStageLine.length;
+        var stageLen = this.SPRING_STAGE_LINE.length;
         var item, randomNum, list, minStage;
         for (var i = 0; i < stageLen; i++) {
-            item = this.springStageLine[i];
+            item = this.SPRING_STAGE_LINE[i];
             for (var j = 0; j < item.num; j++) {
                 minStage = (item.maxHeight - item.minHeight) / item.num;
                 randomNum = Math.ceil(Math.random() * minStage + item.minHeight + minStage * j);
@@ -513,6 +549,7 @@ var RolePlayer = (function (_super) {
         for (var i = 0; i < len; i++) {
             item = list[i];
             if (item.TYPE_STATUS === item.TYPE_BLUE) {
+                // debugger
                 item.leftAndRightMove();
             }
         }
@@ -556,27 +593,23 @@ var RolePlayer = (function (_super) {
                     this.stickList.removeChild(removeChildList[j]);
                 }
             }
-            // nowLen = this.stickList.$children.length;
-            // nowList = this.stickList.$children;
-            // for(let k=0;k<removeChildList.length;k++) {
-            // 	this.stickList.addChild(removeChildList[k]);
-            // 	removeChildList[k].$y = 0-this.distance-removeChildList[k].height-Math.abs(this.nowSpeed);
-            // 	removeChildList[k].$x = Math.random()*(this.stage.$stageWidth-removeChildList[k].width);
-            // }
         }
     };
+    // 当当前的最后那个跳板大于某个值，就创建下一屏的跳板
     RolePlayer.prototype.addNewPetals = function () {
         var i = 0;
         var y = 0;
         var pedalObj = null;
         if (this.lastPetalY > this.stageDistance + this.petalHeight) {
-            this.distance = this.distance + 5;
+            this.preStickY = 0;
+            // this.distance = this.distance+5;
+            this.nowStage++;
             while (y > -this.stage.$stageHeight) {
-                pedalObj = this.createSticket(0, i);
+                pedalObj = this.createSticket(this.preStickY, i);
                 y = pedalObj.$y;
+                this.preStickY = pedalObj.$y;
                 i++;
             }
-            this.nowStage++;
             this.lastPetalY = y - pedalObj.height;
             this.stageDistance = this.stageDistance + 2;
         }

@@ -6,6 +6,8 @@ declare module skins{
 	class CheckBoxSkin extends eui.Skin{
 	}
 }
+declare class DoodlePlayerSkin extends eui.Skin{
+}
 declare class FloorSpringSkin extends eui.Skin{
 }
 declare module skins{

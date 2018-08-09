@@ -11,5 +11,10 @@
         "path": "..\\resource\\eui_skins\\FloorSpring.ts",
         "class": "FloorSpring",
         "parentPath": ""
+    },
+    "1651d818e93": {
+        "path": "..\\resource\\eui_skins\\DoodlePlayer.ts",
+        "class": "DoodlePlayer",
+        "parentPath": ""
     }
 }

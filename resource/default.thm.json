@@ -15,12 +15,14 @@
 		"eui.ItemRenderer": "resource/eui_skins/ItemRendererSkin.exml",
 		"RolePlayer": "resource/eui_skins/RolePlayer.exml",
 		"StickItem": "resource/eui_skins/StickItem.exml",
-		"FloorSpring": "resource/eui_skins/FloorSpring.exml"
+		"FloorSpring": "resource/eui_skins/FloorSpring.exml",
+		"DoodlePlayer": "resource/eui_skins/DoodlePlayer.exml"
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
 		"resource/eui_skins/ButtonSkin.exml",
 		"resource/eui_skins/CheckBoxSkin.exml",
+		"resource/eui_skins/DoodlePlayer.exml",
 		"resource/eui_skins/FloorSpring.exml",
 		"resource/eui_skins/HScrollBarSkin.exml",
 		"resource/eui_skins/HSliderSkin.exml",
