@@ -12,7 +12,7 @@ class RolePlayer extends eui.Component {
 	private nowAddDownSped:number;  // 涂鸦向下的加速度，固定的
 	private nowSpeed:number; // 当前那个涂鸦速度
 	private initSpeed:number; //  涂鸦的初始速度
-	private frameNum:number=20;  //控制帧数的数量
+	private frameNum:number=22;  //控制帧数的数量
 	private isDown:boolean=false;  // 判断是否处于下落状态
 	private distanceInit:number=30;
 	private distance:number=10;  // 每个块的距离
@@ -70,18 +70,31 @@ class RolePlayer extends eui.Component {
 		{
 			minHeight:1001,
 			maxHeight:2000,
-			distance:45
+			distance:50
+		},
+		{
+			minHeight:2001,
+			maxHeight:4000,
+			distance:60
+		},
+		{
+			minHeight:4001,
+			maxHeight:6000,
+			distance:70
 		},
 	]　　
 	
 
-	private player:eui.Image;
+	private scoreText:eui.Label;
+	private player:DoodlePlayer;
 	private gamePage:eui.Group;
 	private stickList:eui.Group;
 	private playBtnBox:eui.Group;
 	private playBtn:eui.Image;
 	private longBg:eui.Image;
 	private springList:eui.Group;
+	private doodleBox:eui.Group;
+	// private doodlePlayer:eui.Component;
 
 
 	private stickNum:number = 30;
@@ -131,6 +144,7 @@ class RolePlayer extends eui.Component {
 	 */
 	public beginGame() {  // 开始游戏的入口
 
+		this.createDoodle();
 		this.setInitDataGame();  // 设置游戏的开始数据
 		this.initSticket();     // 初始化第一屏的踏板
 		this.setStartAddSpeed();  // 设置涂鸦开始的加速度
@@ -138,12 +152,19 @@ class RolePlayer extends eui.Component {
 		this.beginAnimateEvent();  // 开始动画监听
 		this.orientationEvent();  //　开始监听左右的加速计
 	}
+	// 创建涂鸦
+	private createDoodle() {
+		this.player = new DoodlePlayer();
+		this.doodleBox.addChild(this.player);
+		this.player.$x = this.stage.$stageWidth/2;
+		// console.log('对象',this.player.width,this.player.height,this.player.x,this.player.y,this.player.$x,this.player);
+	}
 	/**
 	 * 设置初始值
 	 */
 	public setInitDataGame(){
 		this.jumpStartY = this.stage.$stageHeight-this.player.height-100;
-		this.jumpHeightHight = this.stage.$stageHeight*0.6-this.player.height;
+		this.jumpHeightHight = this.stage.$stageHeight*0.65-this.player.height;
 		this.player.visible = true;
 		// this.distance = this.distanceInit;
 		this.preStickY = this.stage.$stageHeight;
@@ -155,6 +176,7 @@ class RolePlayer extends eui.Component {
 		this.nowStage = 1;
 		this.springStageNum = [];
 		this.nowSpringNumber = 0;
+		this.scoreText.visible= false;
 		this.getRandomPosition();  // 初始化弹簧的数据
 	}
 	/**
@@ -166,7 +188,7 @@ class RolePlayer extends eui.Component {
 		let frame = this.frameNum*1.2;
 		let moveX = Math.abs(this.jumpHeightHight-this.jumpStartY)*2/(frame*(frame+1));
 		this.nowAddSpeed = moveX;
-		this.nowAddDownSped = moveX*1.2;
+		this.nowAddDownSped = moveX*1.8;
 	}
 	/**
 	 * 	设置涂鸦的跳跃速度
@@ -250,10 +272,12 @@ class RolePlayer extends eui.Component {
 	private handleFuncWx(res){
 		// console.log('摇动',e);
 		// let angle = Math.atan2(-res.x, Math.sqrt(res.y * res.y + res.z * res.z)) * 57.3;
-		if(res.x>0.01) {
+		if(res.x>0) {  // 向右
 			this.speedX = res.x *this.stage.$stageWidth/9;
-		}else if(res.x<-0.01) {
+			this.player.setSideStatus(this.player.SIDE_RIGHT);
+		}else if(res.x<0) {  // 向左
 			this.speedX = res.x*this.stage.$stageWidth/9;
+			this.player.setSideStatus(this.player.SIDE_LEFT);
 		}
 	}
 	/**
@@ -275,7 +299,25 @@ class RolePlayer extends eui.Component {
 		this.lastPetalY = y-pedalObj.height;
 		this.petalHeight = pedalObj.height;
 		console.log('最后一个y',this.lastPetalY);
+		// if(this.nowSpringNumber<this.springStageNum.length&& stickObj.TYPE_STATUS === stickObj.TYPE_GREEN) {
+		// 	if(Math.abs(stickObj.meter-this.springStageNum[this.nowSpringNumber])<30) {
+		// 		// debugger
+		// 		this.createSpring(stickObj);
+		// 		this.nowSpringNumber++;
+		// 	}
+		// }
 	}
+	// private setSpringPosition() {
+	// 	let list = this.stickList.$children;
+	// 	let len = list.length;
+
+	// 	if(len>0) {
+	// 		for(let i=0;i<len;i++) {
+	// 			if(list[i].meter){}
+	// 		}
+	// 	}
+
+	// }
 	/**
 	 * 创建绿色的踏板
 	 */
@@ -294,12 +336,16 @@ class RolePlayer extends eui.Component {
 			// stickObj.setRandomStick();
 			// console.log('米数',	stickObj.meter ,stickObj.$y);
 			if(this.nowSpringNumber<this.springStageNum.length&& stickObj.TYPE_STATUS === stickObj.TYPE_GREEN) {
-				if(Math.abs(stickObj.meter-this.springStageNum[this.nowSpringNumber])<10) {
-					this.createSpring(stickObj);
-					this.nowSpringNumber++;
+				if(this.nowStage*this.STAGE_METER>this.springStageNum[this.nowSpringNumber]&&(this.nowStage-1)*this.STAGE_METER<this.springStageNum[this.nowSpringNumber]) {
+					// debugger
+					let random = Math.random();
+					if(random>0.5) {
+						this.createSpring(stickObj);
+						this.nowSpringNumber++;
+					}
+		
 				}
 			}
-		
 			return stickObj;
 	}
 	/**
@@ -427,6 +473,8 @@ class RolePlayer extends eui.Component {
 		let playerY = this.player.$y+this.player.height;
 		let playerW = this.player.width;
 		let playerH = this.player.height;
+		let playerMinX = this.player.$x + this.player.width*0.27;
+		let playerMaxX = this.player.$x+this.player.width*0.72;
 		let itemMaxX =null;
 		let itemMinX = null;
 		let itemMaxY = null;
@@ -435,14 +483,14 @@ class RolePlayer extends eui.Component {
 		
 		for(let i=0;i<len;i++) {
 			item = this.stickList.$children[i];
-			itemMaxX = item.$x+item.width-playerW/5;
-			itemMinX = item.$x-playerW/1.9;
-			itemMaxY = item.$y+item.height+Math.abs(this.nowSpeed);
+			itemMaxX = item.$x+item.width;
+			itemMinX = item.$x;
+			itemMaxY = item.$y+item.height;
 			itemMinY = item.$y;
-			if(playerX>=itemMinX&&playerX<=itemMaxX&&playerY>=itemMinY&&playerY<=itemMaxY) {
-				this.jumpStartY = itemMinY;
-				// this.isDown = false;
+			//+Math.abs(this.nowSpeed) console.log('跳跃',itemMaxX,itemMinX,itemMaxY,itemMinY,playerY,playerW,playerX>=itemMinX&&playerX<=itemMaxX,playerY>=itemMinY&&playerY<=itemMaxY);
+			if(playerMaxX>=itemMinX&&playerMinX<=itemMaxX&&playerY>=itemMinY&&playerY<=itemMaxY) {
 				this.player.$y = itemMinY - this.player.height;
+				this.jumpStartY = itemMinY;
 				this.JUMP_STATUS = this.JUMP_NORMAL;
 				this.setStartJumpeSpeed(this.frameNum);
 				this.setStickSpeed(this.stage.$stageHeight*0.9-this.jumpStartY,this.frameNum);
@@ -468,6 +516,8 @@ class RolePlayer extends eui.Component {
 		let playerY = this.player.$y+this.player.height;
 		let playerW = this.player.width;
 		let playerH = this.player.height;
+		let playerMinX = this.player.$x + this.player.width*0.27;
+		let playerMaxX = this.player.$x+this.player.width*0.72;
 		let itemMaxX =null;
 		let itemMinX = null;
 		let itemMaxY = null;
@@ -480,14 +530,13 @@ class RolePlayer extends eui.Component {
 			itemMinX = item.$x;
 			itemMaxY = item.$y+item.height;
 			itemMinY = item.$y;
-			if(itemMinX<(playerX+playerW)&&itemMaxX>playerX&&playerY>=itemMinY&&playerY<=itemMaxY) {   //playerX>itemMinX&&playerX<itemMaxX&&playerY-itemMinY>=0.1&&playerY-itemMaxY<=0.1
+			if(itemMinX<playerMaxX&&itemMaxX>playerMinX&&playerY>=itemMinY&&playerY<=itemMaxY) {   //playerX>itemMinX&&playerX<itemMaxX&&playerY-itemMinY>=0.1&&playerY-itemMaxY<=0.1
 				console.log('碰撞了弹簧');
 				this.JUMP_STATUS = this.JUMP_SPRING;
 				this.jumpStartY=itemMaxY;
 				this.setStartJumpeSpeed(this.frameNum*3);
 				this.setStickSpeed(this.stage.$stageHeight*2,this.frameNum*3);
 				item.showOffenSpring();
-				
 				break;
 			}
 		}
@@ -496,15 +545,22 @@ class RolePlayer extends eui.Component {
 		let list = this.stickList.$children;
 		let len = list.length;
 		let item = null;
-
+		
 		if(this.player.$y+this.player.height>=this.stage.$stageHeight) {
 			// this.playerIsMove = false;
+			this.setScoreText();
 			this.endGame = true;
 			this.jumpStartY = this.stage.$stageHeight*1.5;
 			this.setStartJumpeSpeed(this.frameNum);
 			this.nowAddDownSped = this.nowAddDownSped*3;
 		}
 
+	}
+	private setScoreText() {
+		this.scoreText.text = '分数：' + Math.ceil(this.changeToMeter(this.jumpStartY,this.nowStage));
+	}
+	private showScoreText() {
+		this.scoreText.visible = true;
 	}
 	private gotoMoveBg() {
 		this.removeAllList();
@@ -531,7 +587,8 @@ class RolePlayer extends eui.Component {
 		this.removeEventListener(egret.Event.ENTER_FRAME,this.onEnterFrame,this);
 		this.player.visible = false;
 		this.playBtnBox.visible = true;
-	
+		this.doodleBox.removeChildren();
+		this.showScoreText();
 		if(wx && wx.stopAccelerometer) {
 			wx.stopAccelerometer(function (){
 				console.log('停止监听左右');
@@ -684,7 +741,7 @@ class RolePlayer extends eui.Component {
 			}
 		
 			this.lastPetalY = y-pedalObj.height;
-			this.stageDistance = this.stageDistance +2;
+			// this.stageDistance = this.stageDistance +2;
 		}
 	}
 
