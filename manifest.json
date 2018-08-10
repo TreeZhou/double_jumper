@@ -16,7 +16,8 @@
 		"bin-debug/ThemeAdapter.js",
 		"bin-debug/pages/DoodlePlayer.js",
 		"bin-debug/pages/FloorSpring.js",
-		"bin-debug/pages/RolePlayer.js",
+		"bin-debug/pages/GameFirstPage.js",
+		"bin-debug/pages/GamePage.js",
 		"bin-debug/pages/StickItem.js"
 	]
 }

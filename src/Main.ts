@@ -30,6 +30,7 @@
 class Main extends eui.UILayer {
 
     public static instance: Main;
+    public static gamePage:GamePage;
     protected createChildren(): void {
         super.createChildren();
 
@@ -76,6 +77,7 @@ class Main extends eui.UILayer {
             await this.loadTheme();
             await RES.loadGroup("preload", 0, loadingView);
             await RES.loadGroup("playtest",0);
+            await RES.loadGroup("playFirstPage",0);
             this.stage.removeChild(loadingView);
         }
         catch (e) {
@@ -104,7 +106,7 @@ class Main extends eui.UILayer {
      */
     protected createGameScene(): void {
         Main.instance = this;
-        let RolePlayer2 = new RolePlayer();   
+        let RolePlayer2 = new GameFirstPage();   
         // console.log('对象', Main.instance  );
         this.addChild(RolePlayer2);
         // console.log(wx)

@@ -16,5 +16,15 @@
         "path": "..\\resource\\eui_skins\\DoodlePlayer.ts",
         "class": "DoodlePlayer",
         "parentPath": ""
+    },
+    "16521e8d6fb": {
+        "path": "..\\resource\\skins\\GameFirstPage.ts",
+        "class": "GameFirstPage",
+        "parentPath": ""
+    },
+    "165228be5ab": {
+        "path": "..\\resource\\skins\\GamePage.ts",
+        "class": "GamePage",
+        "parentPath": ""
     }
 }

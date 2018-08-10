@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="GameFirstPageSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="16521e8d6fb" ></w:Config>
+	<e:Group top="0" left="0" right="0" bottom="0">
+		<e:Group left="0" right="0" top="0" bottom="0">
+			<e:Image id="firstPageBG" source="firstPageBG_png" scaleX="1" scaleY="1" left="0" right="0" top="0" bottom="0" x="0" y="0"/>
+		</e:Group>
+		<e:Group id="rankBtn" scaleX="1" scaleY="1" x="42" y="754">
+			<e:Image id="rankBtnBG" width="195" height="179" x="0" y="0" source="rankBtn_png"/>
+		</e:Group>
+		<e:Group id="shopBtn" x="286" y="696">
+			<e:Image id="shopBtnBG" width="195" height="179" x="0" y="0" source="shopBtn_png"/>
+		</e:Group>
+		<e:Group id="diamondBtn" x="515" y="774">
+			<e:Image id="diamondBtnBG" width="195" height="179" x="0" y="0" source="diamond_png"/>
+		</e:Group>
+		<e:Group id="beginPlayBtn" x="162" y="950">
+			<e:Image id="beginBtnBG" width="427" height="190" x="0" y="0" source="beginBtn_png"/>
+		</e:Group>
+	</e:Group>
+</e:Skin>

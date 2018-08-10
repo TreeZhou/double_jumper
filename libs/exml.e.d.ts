@@ -6,10 +6,6 @@ declare module skins{
 	class CheckBoxSkin extends eui.Skin{
 	}
 }
-declare class DoodlePlayerSkin extends eui.Skin{
-}
-declare class FloorSpringSkin extends eui.Skin{
-}
 declare module skins{
 	class HScrollBarSkin extends eui.Skin{
 	}
@@ -34,13 +30,9 @@ declare module skins{
 	class RadioButtonSkin extends eui.Skin{
 	}
 }
-declare class RolePlayerSkin extends eui.Skin{
-}
 declare module skins{
 	class ScrollerSkin extends eui.Skin{
 	}
-}
-declare class StickItemSkin extends eui.Skin{
 }
 declare module skins{
 	class TextInputSkin extends eui.Skin{
@@ -57,4 +49,14 @@ declare module skins{
 declare module skins{
 	class VSliderSkin extends eui.Skin{
 	}
+}
+declare class DoodlePlayerSkin extends eui.Skin{
+}
+declare class FloorSpringSkin extends eui.Skin{
+}
+declare class GameFirstPageSkin extends eui.Skin{
+}
+declare class GamePageSkin extends eui.Skin{
+}
+declare class StickItemSkin extends eui.Skin{
 }

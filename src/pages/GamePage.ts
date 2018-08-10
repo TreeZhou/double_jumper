@@ -1,4 +1,4 @@
-class RolePlayer extends eui.Component {
+class GamePage extends eui.Component implements  eui.UIComponent {
 	public constructor() {
 		super();
 		// this.skinName = RolePlayer;
@@ -12,7 +12,7 @@ class RolePlayer extends eui.Component {
 	private nowAddDownSped:number;  // 涂鸦向下的加速度，固定的
 	private nowSpeed:number; // 当前那个涂鸦速度
 	private initSpeed:number; //  涂鸦的初始速度
-	private frameNum:number=22;  //控制帧数的数量
+	private frameNum:number=20;  //控制帧数的数量
 	private isDown:boolean=false;  // 判断是否处于下落状态
 	private distanceInit:number=30;
 	private distance:number=10;  // 每个块的距离
@@ -120,12 +120,10 @@ class RolePlayer extends eui.Component {
 	protected createChildren():void
 	{
 		super.createChildren();
-	
-
 		this.percentHeight=100;
+		this.percentWidth=100;
 		this.gamePage.percentHeight = 100;
 		this.beginListenEvent();  //  监听点击开始的按钮
-
 		// egret.Tween.get(this.player).to({x:this.stage.$stageWidth,alpha:1},500);
 
 	}
@@ -143,7 +141,6 @@ class RolePlayer extends eui.Component {
 	 * 开始游戏
 	 */
 	public beginGame() {  // 开始游戏的入口
-
 		this.createDoodle();
 		this.setInitDataGame();  // 设置游戏的开始数据
 		this.initSticket();     // 初始化第一屏的踏板
@@ -157,14 +154,14 @@ class RolePlayer extends eui.Component {
 		this.player = new DoodlePlayer();
 		this.doodleBox.addChild(this.player);
 		this.player.$x = this.stage.$stageWidth/2;
-		// console.log('对象',this.player.width,this.player.height,this.player.x,this.player.y,this.player.$x,this.player);
+		console.log('对象',this.player.width,this.player.height,this.player.x,this.player.y,this.player.$x,this.player);
 	}
 	/**
 	 * 设置初始值
 	 */
 	public setInitDataGame(){
 		this.jumpStartY = this.stage.$stageHeight-this.player.height-100;
-		this.jumpHeightHight = this.stage.$stageHeight*0.65-this.player.height;
+		this.jumpHeightHight = this.stage.$stageHeight*0.6;
 		this.player.visible = true;
 		// this.distance = this.distanceInit;
 		this.preStickY = this.stage.$stageHeight;
@@ -468,27 +465,31 @@ class RolePlayer extends eui.Component {
 	}
 	private checkIsStickHit() {
 		let len = this.stickList.$children.length;
-		let item,itemTwo;
+		let item,itemTwo,itemHalf;
 		let playerX = this.player.$x;
-		let playerY = this.player.$y+this.player.height;
+		let playerY = Math.floor(this.player.$y+this.player.height);
 		let playerW = this.player.width;
 		let playerH = this.player.height;
-		let playerMinX = this.player.$x + this.player.width*0.27;
-		let playerMaxX = this.player.$x+this.player.width*0.72;
+		let playerMinX = Math.floor(this.player.$x + this.player.width*0.27);
+		let playerMaxX = Math.floor(this.player.$x+this.player.width*0.72);
 		let itemMaxX =null;
 		let itemMinX = null;
 		let itemMaxY = null;
 		let itemMinY = null;
+		let playerHHalf = playerH/2;
+		let nowMiddle = this.player.$y+playerHHalf;
 
 		
 		for(let i=0;i<len;i++) {
 			item = this.stickList.$children[i];
-			itemMaxX = item.$x+item.width;
-			itemMinX = item.$x;
-			itemMaxY = item.$y+item.height;
-			itemMinY = item.$y;
-			//+Math.abs(this.nowSpeed) console.log('跳跃',itemMaxX,itemMinX,itemMaxY,itemMinY,playerY,playerW,playerX>=itemMinX&&playerX<=itemMaxX,playerY>=itemMinY&&playerY<=itemMaxY);
-			if(playerMaxX>=itemMinX&&playerMinX<=itemMaxX&&playerY>=itemMinY&&playerY<=itemMaxY) {
+			itemMaxX = Math.floor(item.$x+item.width);
+			itemMinX = Math.floor(item.$x);
+			itemMaxY = Math.floor(item.$y+item.height);
+			itemMinY = Math.floor(item.$y);
+			itemHalf = item.height/2+item.$y;
+			
+			//playerMaxX>=itemMinX&&playerMinX<=itemMaxX&&playerY>=itemMinY&&playerY<=itemMaxY    +Math.abs(this.nowSpeed) console.log('跳跃',itemMaxX,itemMinX,itemMaxY,itemMinY,playerY,playerW,playerX>=itemMinX&&playerX<=itemMaxX,playerY>=itemMinY&&playerY<=itemMaxY);
+			if(playerMaxX>=itemMinX&&playerMinX<=itemMaxX&&playerY>=itemMinY&&(itemHalf-nowMiddle)>0&& (itemHalf-nowMiddle)<(playerHHalf+item.height/2)) {
 				this.player.$y = itemMinY - this.player.height;
 				this.jumpStartY = itemMinY;
 				this.JUMP_STATUS = this.JUMP_NORMAL;
@@ -507,7 +508,33 @@ class RolePlayer extends eui.Component {
 		}
 
 	}
+	private checkIsHitDoodle(list,callback){
+		let item,itemMinX,itemMaxX,itemMaxY,itemMinY,itemHalf,itemMiddleY,pointDistance,maxDistance;
+		let listLen = list.length;
+		// let playerX = this.player.$x;
+		let playerY = this.player.$y+this.player.height;
+		let playerHalf = this.player.height/2;
+		let playerMinX = Math.floor(this.player.$x + this.player.width*0.27);
+		let playerMaxX = Math.floor(this.player.$x+this.player.width*0.72);
+		let playerMiddel = this.player.$y+playerHalf;
 
+		for(let i=0;i<listLen;i++) {
+			item = list[i];
+			itemMaxX = item.$x+item.width;
+			itemMinX = item.$x;
+			itemMinY = item.$y;
+			itemMaxY = item.$y+item.height;
+			itemHalf = item.height/2;
+			itemMiddleY = itemMinY+itemHalf;
+			pointDistance = itemMiddleY-playerMiddel;
+			maxDistance = itemHalf+playerHalf;
+			if(playerMaxX>=itemMinX&&playerMinX<=itemMaxX&&playerY>=itemMinY&&pointDistance>0&& pointDistance<maxDistance) {
+				callback(itemMinY);
+			}
+		}
+	
+
+	}
 	private checkIsHitSpring() {
 		let springListChild = this.springList.$children;
 		let len = springListChild.length;
@@ -522,6 +549,7 @@ class RolePlayer extends eui.Component {
 		let itemMinX = null;
 		let itemMaxY = null;
 		let itemMinY = null;
+		
 
 		
 		for(let i=0;i<len;i++) {
@@ -744,6 +772,5 @@ class RolePlayer extends eui.Component {
 			// this.stageDistance = this.stageDistance +2;
 		}
 	}
-
+	
 }
-//implements  eui.UIComponent 
