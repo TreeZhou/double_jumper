@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="DoodlePlayerSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+<e:Skin class="DoodlePlayerSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing"  width="81" height="102">
 	<w:Config id="1651d818e93" ></w:Config>
-	<e:Image id="DoodleNormalLeft" width="108" height="82" x="54" y="83" source="DoodleNormalLeft_png" anchorOffsetX="54" anchorOffsetY="83" visible="false"/>
-	<e:Image id="DoodleNormalRight" width="108" height="82" x="0" y="0" source="DoodleNormalRight_png" anchorOffsetX="0" anchorOffsetY="0"/>
-	<e:Group id="doodle" anchorOffsetX="0" anchorOffsetY="0" left="0" right="0" top="0" bottom="0" width="108" height="82" visible="false">
-	</e:Group>
+	<e:Image id="BeanNormalLeft" width="81" height="102" x="0" y="0" anchorOffsetX="0" anchorOffsetY="0" source="bean_left_normal_png" scaleX="1" scaleY="1" visible="false"/>
+	<e:Image id="BeanNormalRight" width="81" height="102" x="0" y="0" anchorOffsetX="0" anchorOffsetY="0" source="bean_right_normal_png" scaleX="1" scaleY="1" visible="false"/>
+	<e:Image id="BeanNormalFace" width="81" height="102" x="0" y="0" source="bean_face_normal_png" anchorOffsetX="0" anchorOffsetY="0" scaleX="1" scaleY="1"/>
+	<e:Image id="beanFaceNorDown" width="78" height="94" x="0" y="8" anchorOffsetX="0" anchorOffsetY="0" source="bean_face_normal_down_png" scaleX="1" scaleY="1" visible="false"/>
+	<e:Image id="beanLeftNorDown" width="81" height="94" x="0" y="0" source="bean_left_normal_down_png" scaleX="1" scaleY="1" visible="false"/>
+	<e:Image id="beanRightNorDown" width="80" height="93" x="0" y="0" source="bean_right_normal_down_png" scaleY="1" visible="false"/>
 </e:Skin>

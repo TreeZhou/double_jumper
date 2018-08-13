@@ -1,16 +1,24 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,gameEui_json,DoodleRechts_png,Platformweis_png,play_again_png,longBg_png,Federoffen_png,Federzu_png,move_platformweis_png,DoodleNormalLeft_png,DoodleNormalRight_png,beginBtn_png,diamond_png,rankBtn_png,shopBtn_png,firstPageBG_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,gameEui_json,DoodleRechts_png,Platformweis_png,play_again_png,longBg_png,Federoffen_png,Federzu_png,move_platformweis_png,DoodleNormalLeft_png,DoodleNormalRight_png,beginBtn_png,diamond_png,rankBtn_png,shopBtn_png,firstPageBG_png,bean_face_normal_png,bean_left_normal_png,bean_right_normal_png,bean_face_normal_down2_png,bean_left_normal_down2_png,bean_right_normal_down2_png,stoneStick_png,leafStick_png,soilStick_png",
 			"name": "preload"
 		},
 		{
-			"keys": "Hintergrund_png,DoodleRechts_png,Platformweis_png,play_again_png,longBg_png,Federoffen_png,Federzu_png,move_platformweis_png,DoodleNormalRight_png,DoodleNormalLeft_png",
-			"name": "playtest"
+			"keys": "DoodleRechts_png,Platformweis_png,play_again_png,longBg_png,Federoffen_png,Federzu_png,move_platformweis_png,DoodleNormalRight_png,DoodleNormalLeft_png",
+			"name": "gamePage"
 		},
 		{
 			"keys": "beginBtn_png,diamond_png,firstPageBG_png,rankBtn_png,shopBtn_png",
 			"name": "playFirstPage"
+		},
+		{
+			"keys": "bean_face_normal_png,bean_face_normal_down_png,bean_left_normal_png,bean_left_normal_down_png,bean_right_normal_png,bean_right_normal_down_png",
+			"name": "beanPlayer"
+		},
+		{
+			"keys": "leafStick_png,soilStick_png,stoneStick_png",
+			"name": "stickPng"
 		}
 	],
 	"resources": [
@@ -223,6 +231,66 @@
 			"url": "assets/playFirstPage/firstPageBG.png",
 			"type": "image",
 			"name": "firstPageBG_png"
+		},
+		{
+			"url": "assets/playerImg/bean_face_normal.png",
+			"type": "image",
+			"name": "bean_face_normal_png"
+		},
+		{
+			"url": "assets/playerImg/bean_left_normal.png",
+			"type": "image",
+			"name": "bean_left_normal_png"
+		},
+		{
+			"url": "assets/playerImg/bean_right_normal.png",
+			"type": "image",
+			"name": "bean_right_normal_png"
+		},
+		{
+			"url": "assets/playerImg/bean_face_normal_down.png",
+			"type": "image",
+			"name": "bean_face_normal_down_png"
+		},
+		{
+			"url": "assets/playerImg/bean_left_normal_down.png",
+			"type": "image",
+			"name": "bean_left_normal_down_png"
+		},
+		{
+			"url": "assets/playerImg/bean_right_normal_down.png",
+			"type": "image",
+			"name": "bean_right_normal_down_png"
+		},
+		{
+			"url": "assets/playerImg/bean_face_normal_down.png",
+			"type": "image",
+			"name": "bean_face_normal_down2_png"
+		},
+		{
+			"url": "assets/playerImg/bean_left_normal_down.png",
+			"type": "image",
+			"name": "bean_left_normal_down2_png"
+		},
+		{
+			"url": "assets/playerImg/bean_right_normal_down.png",
+			"type": "image",
+			"name": "bean_right_normal_down2_png"
+		},
+		{
+			"url": "assets/StickImg/stoneStick.png",
+			"type": "image",
+			"name": "stoneStick_png"
+		},
+		{
+			"url": "assets/StickImg/leafStick.png",
+			"type": "image",
+			"name": "leafStick_png"
+		},
+		{
+			"url": "assets/StickImg/soilStick.png",
+			"type": "image",
+			"name": "soilStick_png"
 		}
 	]
 }

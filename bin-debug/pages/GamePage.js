@@ -12,9 +12,7 @@ var GamePage = (function (_super) {
     __extends(GamePage, _super);
     function GamePage() {
         var _this = _super.call(this) || this;
-        _this.jumpStartY = null; // 起跳高度
         _this.frameNum = 20; //控制帧数的数量
-        _this.isDown = false; // 判断是否处于下落状态
         _this.distanceInit = 30;
         _this.distance = 10; // 每个块的距离
         _this.playerIsMove = true; // 角色是否可以移动
@@ -79,9 +77,7 @@ var GamePage = (function (_super) {
         _this.playerChangeY = 0;
         _this.playerBeforeY = 0;
         return _this;
-        // this.skinName = RolePlayer;
     }
-    // private removeChildList:any=[];
     GamePage.prototype.partAdded = function (partName, instance) {
         _super.prototype.partAdded.call(this, partName, instance);
     };
@@ -91,7 +87,6 @@ var GamePage = (function (_super) {
         this.percentWidth = 100;
         this.gamePage.percentHeight = 100;
         this.beginListenEvent(); //  监听点击开始的按钮
-        // egret.Tween.get(this.player).to({x:this.stage.$stageWidth,alpha:1},500);
     };
     /**
      * 监听点击事件
@@ -110,8 +105,6 @@ var GamePage = (function (_super) {
         this.createDoodle();
         this.setInitDataGame(); // 设置游戏的开始数据
         this.initSticket(); // 初始化第一屏的踏板
-        this.setStartAddSpeed(); // 设置涂鸦开始的加速度
-        this.setStartJumpeSpeed(this.frameNum); // 设置涂鸦开始的速度
         this.beginAnimateEvent(); // 开始动画监听
         this.orientationEvent(); //　开始监听左右的加速计
     };
@@ -120,16 +113,12 @@ var GamePage = (function (_super) {
         this.player = new DoodlePlayer();
         this.doodleBox.addChild(this.player);
         this.player.$x = this.stage.$stageWidth / 2;
-        console.log('对象', this.player.width, this.player.height, this.player.x, this.player.y, this.player.$x, this.player);
     };
     /**
      * 设置初始值
      */
     GamePage.prototype.setInitDataGame = function () {
-        this.jumpStartY = this.stage.$stageHeight - this.player.height - 100;
-        this.jumpHeightHight = this.stage.$stageHeight * 0.6;
         this.player.visible = true;
-        // this.distance = this.distanceInit;
         this.preStickY = this.stage.$stageHeight;
         this.playerIsMove = true;
         this.endGame = false;
@@ -141,31 +130,7 @@ var GamePage = (function (_super) {
         this.nowSpringNumber = 0;
         this.scoreText.visible = false;
         this.getRandomPosition(); // 初始化弹簧的数据
-    };
-    /**
-     * 设置涂鸦的初始加速度
-     */
-    GamePage.prototype.setStartAddSpeed = function () {
-        // this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
-        // this.nowAddDownSped = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
-        var frame = this.frameNum * 1.2;
-        var moveX = Math.abs(this.jumpHeightHight - this.jumpStartY) * 2 / (frame * (frame + 1));
-        this.nowAddSpeed = moveX;
-        this.nowAddDownSped = moveX * 1.8;
-    };
-    /**
-     * 	设置涂鸦的跳跃速度
-     */
-    GamePage.prototype.setStartJumpeSpeed = function (frame) {
-        // this.jumpStartY = this.stage.$stageHeight*0.6;
-        // this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum/this.frameNum;
-        // this.nowSpeed =	Math.abs(this.jumpHeightHight-this.jumpStartY)/this.frameNum;
-        // let frame = this.frameNum;
-        var moveX = Math.abs(this.jumpHeightHight - this.jumpStartY) * 2 / (frame * (frame + 1));
-        this.nowAddSpeed = moveX;
-        // this.nowAddDownSped = moveX;
-        this.nowSpeed = moveX * frame;
-        console.log('移动', this.jumpHeightHight - this.jumpStartY);
+        console.log('对象', this.player.width, this.player.height, this.player.$y, this.player.$x, this.player.anchorOffsetX, this.player.anchorOffsetY);
     };
     /**
      * 像素更换成多少米
@@ -219,7 +184,6 @@ var GamePage = (function (_super) {
         }
     };
     GamePage.prototype.handleFunc = function (e) {
-        // console.log('摇动',e);
         if (e.gamma > 0) {
             this.speedX = e.gamma * 0.8;
         }
@@ -228,8 +192,6 @@ var GamePage = (function (_super) {
         }
     };
     GamePage.prototype.handleFuncWx = function (res) {
-        // console.log('摇动',e);
-        // let angle = Math.atan2(-res.x, Math.sqrt(res.y * res.y + res.z * res.z)) * 57.3;
         if (res.x > 0) {
             this.speedX = res.x * this.stage.$stageWidth / 9;
             this.player.setSideStatus(this.player.SIDE_RIGHT);
@@ -238,6 +200,11 @@ var GamePage = (function (_super) {
             this.speedX = res.x * this.stage.$stageWidth / 9;
             this.player.setSideStatus(this.player.SIDE_LEFT);
         }
+        else {
+            this.speedX = res.x * this.stage.$stageWidth / 9;
+            this.player.setSideStatus(this.player.SIDE_FACE);
+        }
+        this.player.changePlaySide(true);
     };
     /**
      * 初始化第一屏的踏板的位置，随机为主
@@ -252,28 +219,10 @@ var GamePage = (function (_super) {
             this.preStickY = pedalObj.$y;
             i++;
         }
-        console.log(this.stickList);
-        // debugger;
         this.lastPetalY = y - pedalObj.height;
         this.petalHeight = pedalObj.height;
         console.log('最后一个y', this.lastPetalY);
-        // if(this.nowSpringNumber<this.springStageNum.length&& stickObj.TYPE_STATUS === stickObj.TYPE_GREEN) {
-        // 	if(Math.abs(stickObj.meter-this.springStageNum[this.nowSpringNumber])<30) {
-        // 		// debugger
-        // 		this.createSpring(stickObj);
-        // 		this.nowSpringNumber++;
-        // 	}
-        // }
     };
-    // private setSpringPosition() {
-    // 	let list = this.stickList.$children;
-    // 	let len = list.length;
-    // 	if(len>0) {
-    // 		for(let i=0;i<len;i++) {
-    // 			if(list[i].meter){}
-    // 		}
-    // 	}
-    // }
     /**
      * 创建绿色的踏板
      */
@@ -343,63 +292,24 @@ var GamePage = (function (_super) {
         this.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
     };
     GamePage.prototype.onEnterFrame = function () {
-        // this.moveplayerY();
         if (this.playerIsMove) {
-            this.moveplayerY();
+            this.player.movePlayerY();
+        }
+        if (this.player.isJumperTopStop) {
+            this.stickMove();
         }
         this.moveplayerX();
-        this.switchStickMove();
         this.checkOverStick();
         this.addNewPetals();
         this.stickMoveLeftAndRight();
-        if (this.isDown) {
-            this.checkIsStickHit();
-            this.checkIsHitSpring();
+        if (this.player.isDown) {
+            this.checkIsHitDoodle(this.stickList.$children, this.checkIsStickHit.bind(this));
+            this.checkIsHitDoodle(this.springList.$children, this.checkIsHitSpring.bind(this));
         }
-        if (this.endGame) {
-            this.gotoMoveBg();
-        }
-        else {
-            this.checkIsGameOver();
-        }
-    };
-    GamePage.prototype.moveplayerY = function () {
-        // console.log('人物',this.player.$y,this.jumpStartY,this.nowSpeed);
-        // this.setStartJumpeSpeed();
-        if (this.nowSpeed < 0) {
-            this.isDown = true;
-            this.nowSpeed = this.nowSpeed - this.nowAddDownSped;
-        }
-        else {
-            this.isDown = false;
-            this.nowSpeed = this.nowSpeed - this.nowAddSpeed;
-        }
-        // this.nowSpeed = this.nowSpeed-this.nowAddSpeed;
-        this.player.$y = this.player.$y - this.nowSpeed;
-        // if(this.player.$y<this.jumpHeightHight) {
-        // 	console.log('Y',this.player.$y);
-        // }
-        // else if((this.player.$y-this.player.width)>this.jumpStartY){
-        // 	this.isDown = false;
-        // }
-        // if(!this.isDown) {
-        // 	this.nowSpeed = this.nowSpeed+this.nowAddSpeed;
-        // 	// this.player.$y -= 20;
-        // 			// this.nowSpeed = this.nowSpeed-this.nowAddSpeed;
-        // }else {
-        // 	this.nowSpeed = this.nowSpeed-this.nowAddSpeed;
-        // 	// this.player.$y += 20;
-        // }
-        // this.player.$y = this.player.$y + this.nowSpeed;
-        // if(this.player.$y<this.jumpHeightHight) {
-        // 	this.nowSpeed = -Math.abs(this.nowSpeed);
-        // }
-        // if(this.player.$y-this.jumpStartY>0.1) {
-        // 	this.player.$y=this.jumpStartY;
-        // 	this.setStartJumpeSpeed();
-        // // this.nowSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/120;
-        // // this.nowAddSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/120/60;
-        // // this.initSpeed = Math.abs(this.jumpHeightHight-this.jumpStartY)/120;
+        // if (this.endGame) {
+        // 	this.gotoMoveBg();
+        // } else {
+        // 	this.checkIsGameOver();
         // }
     };
     GamePage.prototype.moveplayerX = function () {
@@ -411,56 +321,25 @@ var GamePage = (function (_super) {
             this.player.$x = -this.player.width;
         }
     };
-    GamePage.prototype.checkIsStickHit = function () {
-        var len = this.stickList.$children.length;
-        var item, itemTwo, itemHalf;
-        var playerX = this.player.$x;
-        var playerY = Math.floor(this.player.$y + this.player.height);
-        var playerW = this.player.width;
-        var playerH = this.player.height;
-        var playerMinX = Math.floor(this.player.$x + this.player.width * 0.27);
-        var playerMaxX = Math.floor(this.player.$x + this.player.width * 0.72);
-        var itemMaxX = null;
-        var itemMinX = null;
-        var itemMaxY = null;
-        var itemMinY = null;
-        var playerHHalf = playerH / 2;
-        var nowMiddle = this.player.$y + playerHHalf;
-        for (var i = 0; i < len; i++) {
-            item = this.stickList.$children[i];
-            itemMaxX = Math.floor(item.$x + item.width);
-            itemMinX = Math.floor(item.$x);
-            itemMaxY = Math.floor(item.$y + item.height);
-            itemMinY = Math.floor(item.$y);
-            itemHalf = item.height / 2 + item.$y;
-            //playerMaxX>=itemMinX&&playerMinX<=itemMaxX&&playerY>=itemMinY&&playerY<=itemMaxY    +Math.abs(this.nowSpeed) console.log('跳跃',itemMaxX,itemMinX,itemMaxY,itemMinY,playerY,playerW,playerX>=itemMinX&&playerX<=itemMaxX,playerY>=itemMinY&&playerY<=itemMaxY);
-            if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerY >= itemMinY && (itemHalf - nowMiddle) > 0 && (itemHalf - nowMiddle) < (playerHHalf + item.height / 2)) {
-                this.player.$y = itemMinY - this.player.height;
-                this.jumpStartY = itemMinY;
-                this.JUMP_STATUS = this.JUMP_NORMAL;
-                this.setStartJumpeSpeed(this.frameNum);
-                this.setStickSpeed(this.stage.$stageHeight * 0.9 - this.jumpStartY, this.frameNum);
-                item.isHit = true;
-                console.log('撞击', this.jumpStartY, item.isHit);
-                for (var j = 0; j < len; j++) {
-                    itemTwo = this.stickList.$children[j];
-                    if (i != j) {
-                        itemTwo.isHit = false;
-                    }
-                }
-                break;
-            }
-        }
+    GamePage.prototype.checkIsStickHit = function (item) {
+        this.player.$y = item.$y;
+        this.player.jumpStartY = item.$y;
+        this.JUMP_STATUS = this.JUMP_NORMAL;
+        this.player.setStartJumpeSpeed(this.player.jumpStickDistan, this.frameNum);
+        // this.setStickSpeed(this.stage.$stageHeight * 0.9 - this.jumpStartY, this.frameNum);
+        this.player.changePlaySide(false);
     };
     GamePage.prototype.checkIsHitDoodle = function (list, callback) {
         var item, itemMinX, itemMaxX, itemMaxY, itemMinY, itemHalf, itemMiddleY, pointDistance, maxDistance;
         var listLen = list.length;
         // let playerX = this.player.$x;
-        var playerY = this.player.$y + this.player.height;
+        // let playerY = this.player.$y;
+        var playerMaxY = this.player.$y;
+        var playerMinY = this.player.$y - this.player.anchorOffsetY;
         var playerHalf = this.player.height / 2;
-        var playerMinX = Math.floor(this.player.$x + this.player.width * 0.27);
-        var playerMaxX = Math.floor(this.player.$x + this.player.width * 0.72);
-        var playerMiddel = this.player.$y + playerHalf;
+        var playerMinX = this.player.$x - this.player.anchorOffsetX;
+        var playerMaxX = this.player.$x + this.player.anchorOffsetX;
+        var playerMiddel = this.player.$y - this.player.anchorOffsetY / 2;
         for (var i = 0; i < listLen; i++) {
             item = list[i];
             itemMaxX = item.$x + item.width;
@@ -471,81 +350,44 @@ var GamePage = (function (_super) {
             itemMiddleY = itemMinY + itemHalf;
             pointDistance = itemMiddleY - playerMiddel;
             maxDistance = itemHalf + playerHalf;
-            if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerY >= itemMinY && pointDistance > 0 && pointDistance < maxDistance) {
-                callback(itemMinY);
-            }
-        }
-    };
-    GamePage.prototype.checkIsHitSpring = function () {
-        var springListChild = this.springList.$children;
-        var len = springListChild.length;
-        var item, itemTwo;
-        var playerX = this.player.$x;
-        var playerY = this.player.$y + this.player.height;
-        var playerW = this.player.width;
-        var playerH = this.player.height;
-        var playerMinX = this.player.$x + this.player.width * 0.27;
-        var playerMaxX = this.player.$x + this.player.width * 0.72;
-        var itemMaxX = null;
-        var itemMinX = null;
-        var itemMaxY = null;
-        var itemMinY = null;
-        for (var i = 0; i < len; i++) {
-            item = springListChild[i];
-            itemMaxX = item.$x + item.width;
-            itemMinX = item.$x;
-            itemMaxY = item.$y + item.height;
-            itemMinY = item.$y;
-            if (itemMinX < playerMaxX && itemMaxX > playerMinX && playerY >= itemMinY && playerY <= itemMaxY) {
-                console.log('碰撞了弹簧');
-                this.JUMP_STATUS = this.JUMP_SPRING;
-                this.jumpStartY = itemMaxY;
-                this.setStartJumpeSpeed(this.frameNum * 3);
-                this.setStickSpeed(this.stage.$stageHeight * 2, this.frameNum * 3);
-                item.showOffenSpring();
+            if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerMinY < itemMinY && pointDistance > 0 && pointDistance < maxDistance) {
+                callback(item);
                 break;
             }
         }
+    };
+    GamePage.prototype.checkIsHitSpring = function (item) {
+        this.JUMP_STATUS = this.JUMP_SPRING;
+        this.player.jumpStartY = item.$y;
+        this.player.setStartJumpeSpeed(this.player.jumpStickDistan * 2, this.frameNum * 2);
+        item.showOffenSpring();
     };
     GamePage.prototype.checkIsGameOver = function () {
         var list = this.stickList.$children;
         var len = list.length;
         var item = null;
         if (this.player.$y + this.player.height >= this.stage.$stageHeight) {
-            // this.playerIsMove = false;
             this.setScoreText();
             this.endGame = true;
-            this.jumpStartY = this.stage.$stageHeight * 1.5;
-            this.setStartJumpeSpeed(this.frameNum);
-            this.nowAddDownSped = this.nowAddDownSped * 3;
+            this.player.jumpStartY = this.stage.$stageHeight * 1.5;
+            this.player.setStartJumpeSpeed(this.player.jumpStickDistan * 2, this.frameNum * 2);
         }
     };
     GamePage.prototype.setScoreText = function () {
-        this.scoreText.text = '分数：' + Math.ceil(this.changeToMeter(this.jumpStartY, this.nowStage));
+        this.scoreText.text = '分数：' + Math.ceil(this.changeToMeter(this.player.jumpStartY, this.nowStage));
     };
     GamePage.prototype.showScoreText = function () {
         this.scoreText.visible = true;
     };
     GamePage.prototype.gotoMoveBg = function () {
         this.removeAllList();
-        // if(this.longBg.$y+(this.longBg.height-this.stage.$stageHeight)<=60) {
-        // 	this.endPlayerMove();
-        // }else {
-        // 	this.longBg.$y =  this.longBg.$y - 60;
-        // }
-        if (this.player.$y > this.stage.$stageHeight && this.nowSpeed < 0) {
+        if (this.player.$y > this.stage.$stageHeight) {
             this.gameOver();
         }
         else {
             this.longBg.$y = this.longBg.$y - 10;
         }
     };
-    // private endPlayerMove() {
-    // 	this.player.$y = this.player.$y + 30;
-    // 	if(this.player.$y>this.stage.$stageHeight*0.8) {
-    // 		this.gameOver();
-    // 	}
-    // }
     GamePage.prototype.gameOver = function () {
         this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
         this.player.visible = false;
@@ -565,43 +407,6 @@ var GamePage = (function (_super) {
         this.stickList.removeChildren();
         this.springList.removeChildren();
     };
-    GamePage.prototype.switchStickMove = function () {
-        // let list = this.stickList.$children;
-        // let springList = this.springList.$children;
-        // let springLen = springList.length;
-        // let len = list.length;
-        // let item,springItem;
-        // let speed;
-        switch (this.JUMP_STATUS) {
-            case this.JUMP_NORMAL:
-                if ((this.jumpStartY - this.stage.$stageHeight * 0.8) < 0.1 && this.nowSpeed > 0) {
-                    this.stickMove();
-                }
-                break;
-            case this.JUMP_SPRING:
-                if (this.nowSpeed > 0) {
-                    this.stickMove();
-                }
-                break;
-        }
-        // if((this.jumpStartY-this.stage.$stageHeight*0.8)<0.1 && this.nowSpeed>0) {
-        // speed = this.changeMaObjMoveSpeed()
-        // console.log('踏板移动',speed);
-        // // debugger;
-        // for(let i = 0;i<len;i++) {
-        // 	item = list[i];
-        // 	item.$y = item.$y +	speed;     // this.frameNum
-        // 	if(item &&　item.isHit) {
-        // 		// this.jumpStartY = item.$y - this.player.height;
-        // 	}
-        // }
-        // for(let j=0;j<springLen;j++) {
-        // 	springItem = springList[j];
-        // 	springItem.$y = springItem.$y +	speed;  
-        // }
-        // this.lastPetalY = this.lastPetalY + speed;
-        // }
-    };
     GamePage.prototype.stickMove = function () {
         var list = this.stickList.$children;
         var springList = this.springList.$children;
@@ -609,15 +414,10 @@ var GamePage = (function (_super) {
         var len = list.length;
         var item, springItem;
         var speed;
-        speed = this.changeMaObjMoveSpeed();
-        // console.log('踏板移动',speed);
-        // debugger;
+        speed = this.player.nowSpeed;
         for (var i = 0; i < len; i++) {
             item = list[i];
             item.$y = item.$y + speed; // this.frameNum
-            if (item && item.isHit) {
-                // this.jumpStartY = item.$y - this.player.height;
-            }
         }
         for (var j = 0; j < springLen; j++) {
             springItem = springList[j];
@@ -631,31 +431,10 @@ var GamePage = (function (_super) {
         var item;
         for (var i = 0; i < len; i++) {
             item = list[i];
-            if (item.TYPE_STATUS === item.TYPE_BLUE) {
-                // debugger
+            if (item.TYPE_STATUS === item.TYPE_HORIZONTAL) {
                 item.leftAndRightMove();
             }
         }
-    };
-    /**
-     * 计算地图上物体的移动速度
-     */
-    GamePage.prototype.changeMaObjMoveSpeed = function () {
-        var speed = 0;
-        // switch(this.JUMP_STATUS) {
-        // 	case this.JUMP_NORMAL:
-        // 	this.stickMoveSpeed = this.stickMoveSpeed -this.stickAddSpeed; //Math.abs(this.jumpStartY-this.stage.$stageHeight)/this.frameNum
-        // 	speed  = this.stickMoveSpeed;
-        // 	console.log('移动3',this.stage.$stageHeight-this.jumpStartY);
-        // 	// debugger
-        // 	break;
-        // 	case this.JUMP_SPRING:
-        // 	speed = Math.abs(this.stage.$stageHeight*2)/60; // Math.abs(this.stage.$stageHeight*2)/60 
-        // 	break;
-        // }
-        this.stickMoveSpeed = this.stickMoveSpeed - this.stickAddSpeed; //Math.abs(this.jumpStartY-this.stage.$stageHeight)/this.frameNum
-        speed = this.stickMoveSpeed;
-        return speed;
     };
     GamePage.prototype.checkOverStick = function () {
         var list = this.stickList.$children;
@@ -685,7 +464,6 @@ var GamePage = (function (_super) {
         var pedalObj = null;
         if (this.lastPetalY > this.stageDistance + this.petalHeight) {
             this.preStickY = 0;
-            // this.distance = this.distance+5;
             this.nowStage++;
             while (y > -this.stage.$stageHeight) {
                 pedalObj = this.createSticket(this.preStickY, i);
@@ -694,7 +472,6 @@ var GamePage = (function (_super) {
                 i++;
             }
             this.lastPetalY = y - pedalObj.height;
-            // this.stageDistance = this.stageDistance +2;
         }
     };
     return GamePage;

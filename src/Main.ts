@@ -76,8 +76,9 @@ class Main extends eui.UILayer {
             await RES.loadConfig("resource/default.res.json", "resource/");
             await this.loadTheme();
             await RES.loadGroup("preload", 0, loadingView);
-            await RES.loadGroup("playtest",0);
+            await RES.loadGroup("gamePage",0);
             await RES.loadGroup("playFirstPage",0);
+            await RES.loadGroup("beanPlayer",0);
             this.stage.removeChild(loadingView);
         }
         catch (e) {

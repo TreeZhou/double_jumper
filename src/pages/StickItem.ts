@@ -4,18 +4,23 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 	}
 	public meter:number=0;
 	
-	private stickImgGreen:eui.Image;
-	private stickImgBule:eui.Image;
+	private stickDefaultSoil:eui.Image;
+	private stickDefaultLeaf:eui.Image;
+	private stickDefaultStone:eui.Image;
 
-	public TYPE_STATUS:number=1; // 踏板的状态
-	public TYPE_GREEN:number=1;
-	public TYPE_BLUE:number=2;
+	public TYPE_STATUS:string='fixation'; // 踏板的状态
+	public TYPE_FIXATION:string='fixation'; // 固定不动状态
+	public TYPE_HORIZONTAL:string='horizontal'; // 水平移动
+
+	public COLOR_STATUS:string='normal';
+	public COLOR_DEFAULE:string='normal';
 
 	private initSpeed:number=2;
 	private speed:number=2;
 
 	private SHOW_PROBABILITY:any=[0.5,0.6,1];
 
+	private stickClothDataList:Object;
 
 	protected partAdded(partName:string,instance:any):void
 	{
@@ -26,22 +31,37 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
+		
+		this.initStickClothData();
 		this.setRandomStick();
-		// this.setTypeStick(this.TYPE_GREEN);
-		// console.log('wode',this);
 		this.setInitLeftOrRightMove();
-		// this.addEventListener(egret.Event.ENTER_FRAME,this.onEnterFrame,this);
+	}
+	private initStickClothData() {
+		let self = this;
+
+		this.stickClothDataList = {
+			'normal':{
+				'fixation':[
+					self.stickDefaultSoil,
+					self.stickDefaultStone
+					],
+				'horizontal':[
+					self.stickDefaultLeaf
+				]
+			}
+		}
 	}
 	public setRandomStick() {
 		let randomNum = Math.random();
 		
 		if(randomNum<this.SHOW_PROBABILITY[0]) {
-			this.setTypeStick(this.TYPE_GREEN);
+			this.setTypeStick(this.TYPE_FIXATION);
 		}else if(randomNum>this.SHOW_PROBABILITY[0]&&randomNum<this.SHOW_PROBABILITY[1]){
-			this.setTypeStick(this.TYPE_BLUE);
+			this.setTypeStick(this.TYPE_HORIZONTAL);
 		}else {
-			this.setTypeStick(this.TYPE_GREEN);
+			this.setTypeStick(this.TYPE_FIXATION);
 		}
+		this.showStickImg();
 	}
 	private setInitLeftOrRightMove() {
 		let random = Math.random();
@@ -52,39 +72,59 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 		}
 	}
 	public leftAndRightMove() {
-		// console.log('这个对象',this.x,this.width,this.stage.$stageWidth,this.speed);
-		// debugger;
 		if(this.x+this.width>=this.stage.$stageWidth) {
 			this.speed = -this.initSpeed;
 		}else if(this.x<=0){
 			this.speed = this.initSpeed;
 		}
-		// console.log('这个对象2',this.x,this.width,this.stage.$stageWidth,this.speed);
-		// debugger;
 		this.x = this.x+this.speed;
 	}
 
 	public setTypeStick(type) {
 		switch(type) {
-			case this.TYPE_BLUE: 
-			this.TYPE_STATUS = this.TYPE_BLUE;
+			case this.TYPE_HORIZONTAL: 
+			this.TYPE_STATUS = this.TYPE_HORIZONTAL;
 			break;
 			default:
-			this.TYPE_STATUS = this.TYPE_GREEN;
+			this.TYPE_STATUS = this.TYPE_FIXATION;
 			break;
 		}
-		this.showStickImg();
 	}
-	private showStickImg() {
-		switch(this.TYPE_STATUS) {
-			case this.TYPE_BLUE: 
-			this.stickImgGreen.visible = false;
-			this.stickImgBule.visible = true;
-			break;
-			default:
-			this.stickImgGreen.visible = true;
-			this.stickImgBule.visible = false;
-			break;
+	public showStickImg() {
+		let nowStick;
+
+		this.hideAllChildren();
+		nowStick = this.randomShowSameType(this.stickClothDataList[this.COLOR_STATUS][this.TYPE_STATUS]);
+		nowStick.visible = true;
+
+	}
+	private randomShowSameType(list) {
+		let len = list.length;
+		let randomNum ,item;
+
+		if(!len) {
+			alert('随机的跳板数组长度不对!');
+			return;
+		}
+		if(len === 1) {
+			item = list[0];
+		}else {
+			randomNum = Math.floor(Math.random()*len);
+			if(randomNum>=len) {
+				randomNum = len-1;
+			}else if(randomNum<0) {
+				randomNum = 0;
+			}
+			item = list[randomNum];
+		}
+
+		return item;
+	}
+	private hideAllChildren() {
+		let len = this.$children.length;
+
+		for(let i=0;i<len;i++) {
+			this.$children[i].visible = false;
 		}
 	}
 

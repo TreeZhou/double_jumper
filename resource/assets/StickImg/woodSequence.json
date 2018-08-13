@@ -1,0 +1,52 @@
+{"mc":{
+	"woodSequence":{
+		"frameRate":6,
+		"labels":[
+			{"name":"woodSequence","frame":1,"end":6}
+			
+			],
+		"events":[
+			
+			],
+		"frames":[
+			
+			{
+			"res":"mutou1",
+			"x":0,
+			"y":3
+			},
+			{
+			"res":"mutou2",
+			"x":1,
+			"y":3
+			},
+			{
+			"res":"mutou3",
+			"x":1,
+			"y":0
+			},
+			{
+			"res":"mutou4",
+			"x":1,
+			"y":0
+			},
+			{
+			"res":"mutou5",
+			"x":0,
+			"y":0
+			},
+			{
+			"res":"mutou6",
+			"x":3,
+			"y":0
+			}
+			]
+}},
+	"res":{
+		"mutou5":{"x":1,"y":131,"w":257,"h":109},
+		"mutou4":{"x":255,"y":1,"w":256,"h":75},
+		"mutou6":{"x":1,"y":1,"w":252,"h":128},
+		"mutou1":{"x":1,"y":304,"w":257,"h":60},
+		"mutou3":{"x":1,"y":242,"w":257,"h":60},
+		"mutou2":{"x":1,"y":366,"w":257,"h":60}
+	}}

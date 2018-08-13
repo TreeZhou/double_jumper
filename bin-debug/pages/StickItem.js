@@ -13,9 +13,11 @@ var StickItem = (function (_super) {
     function StickItem() {
         var _this = _super.call(this) || this;
         _this.meter = 0;
-        _this.TYPE_STATUS = 1; // 踏板的状态
-        _this.TYPE_GREEN = 1;
-        _this.TYPE_BLUE = 2;
+        _this.TYPE_STATUS = 'fixation'; // 踏板的状态
+        _this.TYPE_FIXATION = 'fixation'; // 固定不动状态
+        _this.TYPE_HORIZONTAL = 'horizontal'; // 水平移动
+        _this.COLOR_STATUS = 'normal';
+        _this.COLOR_DEFAULE = 'normal';
         _this.initSpeed = 2;
         _this.speed = 2;
         _this.SHOW_PROBABILITY = [0.5, 0.6, 1];
@@ -26,23 +28,36 @@ var StickItem = (function (_super) {
     };
     StickItem.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
+        this.initStickClothData();
         this.setRandomStick();
-        // this.setTypeStick(this.TYPE_GREEN);
-        // console.log('wode',this);
         this.setInitLeftOrRightMove();
-        // this.addEventListener(egret.Event.ENTER_FRAME,this.onEnterFrame,this);
+    };
+    StickItem.prototype.initStickClothData = function () {
+        var self = this;
+        this.stickClothDataList = {
+            'normal': {
+                'fixation': [
+                    self.stickDefaultSoil,
+                    self.stickDefaultStone
+                ],
+                'horizontal': [
+                    self.stickDefaultLeaf
+                ]
+            }
+        };
     };
     StickItem.prototype.setRandomStick = function () {
         var randomNum = Math.random();
         if (randomNum < this.SHOW_PROBABILITY[0]) {
-            this.setTypeStick(this.TYPE_GREEN);
+            this.setTypeStick(this.TYPE_FIXATION);
         }
         else if (randomNum > this.SHOW_PROBABILITY[0] && randomNum < this.SHOW_PROBABILITY[1]) {
-            this.setTypeStick(this.TYPE_BLUE);
+            this.setTypeStick(this.TYPE_HORIZONTAL);
         }
         else {
-            this.setTypeStick(this.TYPE_GREEN);
+            this.setTypeStick(this.TYPE_FIXATION);
         }
+        this.showStickImg();
     };
     StickItem.prototype.setInitLeftOrRightMove = function () {
         var random = Math.random();
@@ -54,39 +69,56 @@ var StickItem = (function (_super) {
         }
     };
     StickItem.prototype.leftAndRightMove = function () {
-        // console.log('这个对象',this.x,this.width,this.stage.$stageWidth,this.speed);
-        // debugger;
         if (this.x + this.width >= this.stage.$stageWidth) {
             this.speed = -this.initSpeed;
         }
         else if (this.x <= 0) {
             this.speed = this.initSpeed;
         }
-        // console.log('这个对象2',this.x,this.width,this.stage.$stageWidth,this.speed);
-        // debugger;
         this.x = this.x + this.speed;
     };
     StickItem.prototype.setTypeStick = function (type) {
         switch (type) {
-            case this.TYPE_BLUE:
-                this.TYPE_STATUS = this.TYPE_BLUE;
+            case this.TYPE_HORIZONTAL:
+                this.TYPE_STATUS = this.TYPE_HORIZONTAL;
                 break;
             default:
-                this.TYPE_STATUS = this.TYPE_GREEN;
+                this.TYPE_STATUS = this.TYPE_FIXATION;
                 break;
         }
-        this.showStickImg();
     };
     StickItem.prototype.showStickImg = function () {
-        switch (this.TYPE_STATUS) {
-            case this.TYPE_BLUE:
-                this.stickImgGreen.visible = false;
-                this.stickImgBule.visible = true;
-                break;
-            default:
-                this.stickImgGreen.visible = true;
-                this.stickImgBule.visible = false;
-                break;
+        var nowStick;
+        this.hideAllChildren();
+        nowStick = this.randomShowSameType(this.stickClothDataList[this.COLOR_STATUS][this.TYPE_STATUS]);
+        nowStick.visible = true;
+    };
+    StickItem.prototype.randomShowSameType = function (list) {
+        var len = list.length;
+        var randomNum, item;
+        if (!len) {
+            alert('随机的跳板数组长度不对!');
+            return;
+        }
+        if (len === 1) {
+            item = list[0];
+        }
+        else {
+            randomNum = Math.floor(Math.random() * len);
+            if (randomNum >= len) {
+                randomNum = len - 1;
+            }
+            else if (randomNum < 0) {
+                randomNum = 0;
+            }
+            item = list[randomNum];
+        }
+        return item;
+    };
+    StickItem.prototype.hideAllChildren = function () {
+        var len = this.$children.length;
+        for (var i = 0; i < len; i++) {
+            this.$children[i].visible = false;
         }
     };
     return StickItem;
