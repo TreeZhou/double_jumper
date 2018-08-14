@@ -21,6 +21,7 @@ var DoodlePlayer = (function (_super) {
         _this.jumpStartY = null; // 起跳高度
         _this.frameNum = 20;
         _this.isDown = false;
+        _this.speedX = 0;
         _this.isJumperTopStop = false;
         // private playerColorList:Object={};
         _this.sideStauts = [
@@ -41,6 +42,7 @@ var DoodlePlayer = (function (_super) {
         this.setPlayerSkewXY();
         this.setInitJumperData();
         this.setStartJumpeSpeed(this.jumpStickDistan, this.frameNum);
+        this.orientationEvent(); //　开始监听左右的加速计
     };
     DoodlePlayer.prototype.setEuiImageList = function () {
         var self = this;
@@ -130,6 +132,42 @@ var DoodlePlayer = (function (_super) {
         }
         else {
             this.isJumperTopStop = true;
+        }
+    };
+    DoodlePlayer.prototype.orientationEvent = function () {
+        var _self = this;
+        try {
+            if (wx && wx.onAccelerometerChange) {
+                wx.onAccelerometerChange(function (value) {
+                    console.log('value', value.x);
+                    _self.handleFuncWx(value);
+                });
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    };
+    DoodlePlayer.prototype.handleFuncWx = function (res) {
+        if (res.x > 0) {
+            this.setSideStatus(this.SIDE_RIGHT);
+        }
+        else if (res.x < 0) {
+            this.setSideStatus(this.SIDE_LEFT);
+        }
+        else {
+            this.setSideStatus(this.SIDE_FACE);
+        }
+        this.speedX = res.x * this.stage.$stageWidth / 9;
+        this.changePlaySide(true);
+    };
+    DoodlePlayer.prototype.moveplayerX = function () {
+        this.$x = this.$x + this.speedX;
+        if (this.$x < -this.width) {
+            this.$x = this.stage.$stageWidth;
+        }
+        else if (this.$x > this.stage.$stageWidth) {
+            this.$x = -this.width;
         }
     };
     return DoodlePlayer;

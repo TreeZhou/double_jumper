@@ -1,8 +1,8 @@
 {
   "mc": {
-    "waterSticketMove": {
-      "frameRate": 5,
-      "labels": [{ "name": "waterSticketMove", "frame": 1, "end": 5 }],
+    "waterDefaultMove": {
+      "frameRate": 24,
+      "labels": [{ "name": "move", "frame": 1, "end": 5 }],
       "events": [],
       "frames": [
         {
@@ -35,9 +35,9 @@
   },
   "res": {
     "water4": { "x": 1, "y": 1, "w": 185, "h": 49 },
+    "water5": { "x": 1, "y": 52, "w": 190, "h": 40 },
     "water2": { "x": 1, "y": 137, "w": 136, "h": 33 },
-    "water1": { "x": 1, "y": 172, "w": 123, "h": 31 },
     "water3": { "x": 1, "y": 94, "w": 164, "h": 41 },
-    "water5": { "x": 1, "y": 52, "w": 190, "h": 40 }
+    "water1": { "x": 1, "y": 172, "w": 123, "h": 31 }
   }
 }

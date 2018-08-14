@@ -16,11 +16,13 @@ var StickItem = (function (_super) {
         _this.TYPE_STATUS = 'fixation'; // 踏板的状态
         _this.TYPE_FIXATION = 'fixation'; // 固定不动状态
         _this.TYPE_HORIZONTAL = 'horizontal'; // 水平移动
+        _this.TYPE_HIT_DISABLE = 'hitDisable'; // 撞击无效，可自动断裂
+        _this.TYPE_ONECE_HIT = 'oneceHit'; // 只检测碰撞一次
         _this.COLOR_STATUS = 'normal';
         _this.COLOR_DEFAULE = 'normal';
         _this.initSpeed = 2;
         _this.speed = 2;
-        _this.SHOW_PROBABILITY = [0.5, 0.6, 1];
+        _this.SHOW_PROBABILITY = [0.4, 0.5, 0.6, 0.7, 1];
         return _this;
     }
     StickItem.prototype.partAdded = function (partName, instance) {
@@ -31,9 +33,16 @@ var StickItem = (function (_super) {
         this.initStickClothData();
         this.setRandomStick();
         this.setInitLeftOrRightMove();
+        // 'waterDefaultMove'
+        // let movePescide = this.createMoveObj("woodDefaultMove",this.waterMoveDefault);
+        // console.log('rena',movePescide,this.waterMoveDefault);
+        // this.waterMoveCilpDefault = movePescide;
+        // movePescide.play();
     };
     StickItem.prototype.initStickClothData = function () {
         var self = this;
+        this.woodMoveCilpDefault = this.createMoveObj("woodDefaultMove", this.woodMoveDefault);
+        this.waterMoveCilpDefault = this.createMoveObj("waterDefaultMove", this.waterMoveDefault);
         this.stickClothDataList = {
             'normal': {
                 'fixation': [
@@ -42,6 +51,12 @@ var StickItem = (function (_super) {
                 ],
                 'horizontal': [
                     self.stickDefaultLeaf
+                ],
+                'hitDisable': [
+                    self.woodMoveDefault
+                ],
+                'oneceHit': [
+                    self.waterMoveDefault
                 ]
             }
         };
@@ -50,9 +65,16 @@ var StickItem = (function (_super) {
         var randomNum = Math.random();
         if (randomNum < this.SHOW_PROBABILITY[0]) {
             this.setTypeStick(this.TYPE_FIXATION);
+            // this.setTypeStick(this.TYPE_HIT_DISABLE);
         }
         else if (randomNum > this.SHOW_PROBABILITY[0] && randomNum < this.SHOW_PROBABILITY[1]) {
             this.setTypeStick(this.TYPE_HORIZONTAL);
+        }
+        else if (randomNum > this.SHOW_PROBABILITY[1] && randomNum < this.SHOW_PROBABILITY[2]) {
+            this.setTypeStick(this.TYPE_ONECE_HIT);
+        }
+        else if (randomNum > this.SHOW_PROBABILITY[2] && randomNum < this.SHOW_PROBABILITY[3]) {
+            this.setTypeStick(this.TYPE_HIT_DISABLE);
         }
         else {
             this.setTypeStick(this.TYPE_FIXATION);
@@ -82,6 +104,12 @@ var StickItem = (function (_super) {
             case this.TYPE_HORIZONTAL:
                 this.TYPE_STATUS = this.TYPE_HORIZONTAL;
                 break;
+            case this.TYPE_ONECE_HIT:
+                this.TYPE_STATUS = this.TYPE_ONECE_HIT;
+                break;
+            case this.TYPE_HIT_DISABLE:
+                this.TYPE_STATUS = this.TYPE_HIT_DISABLE;
+                break;
             default:
                 this.TYPE_STATUS = this.TYPE_FIXATION;
                 break;
@@ -90,8 +118,10 @@ var StickItem = (function (_super) {
     StickItem.prototype.showStickImg = function () {
         var nowStick;
         this.hideAllChildren();
+        // this.waterSticketMove.visible = true;
         nowStick = this.randomShowSameType(this.stickClothDataList[this.COLOR_STATUS][this.TYPE_STATUS]);
         nowStick.visible = true;
+        // console.log('我的个人显/示',this.TYPE_STATUS,nowStick.width,nowStick.height);
     };
     StickItem.prototype.randomShowSameType = function (list) {
         var len = list.length;
@@ -121,7 +151,19 @@ var StickItem = (function (_super) {
             this.$children[i].visible = false;
         }
     };
+    StickItem.prototype.playOneceClip = function (callback) {
+        this.waterMoveCilpDefault.play();
+        this.waterMoveCilpDefault.addEventListener('complete', function () {
+            callback();
+        }, this);
+    };
+    StickItem.prototype.playDiasbleHitClip = function (callback) {
+        this.woodMoveCilpDefault.play();
+        this.woodMoveCilpDefault.addEventListener('complete', function () {
+            callback();
+        }, this);
+    };
     return StickItem;
-}(eui.Component));
-__reflect(StickItem.prototype, "StickItem", ["eui.UIComponent", "egret.DisplayObject"]);
+}(BasePage));
+__reflect(StickItem.prototype, "StickItem");
 //# sourceMappingURL=StickItem.js.map

@@ -4,4 +4,6 @@
 	<e:Image id="stickDefaultSoil" width="113" height="30" x="0" y="0" scaleX="1" scaleY="1" source="soilStick_png"/>
 	<e:Image id="stickDefaultLeaf" width="115" height="30" x="0" y="0" source="leafStick_png" visible="false"/>
 	<e:Image id="stickDefaultStone" width="113" height="30" x="0" y="0" source="stoneStick_png" visible="false"/>
+	<e:Group id="waterMoveDefault" width="0" height="0" x="0" y="0" visible="false"/>
+	<e:Group id="woodMoveDefault" width="0" height="0" x="0" y="0" visible="false"/>
 </e:Skin>

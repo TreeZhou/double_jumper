@@ -27,6 +27,7 @@ class DoodlePlayer extends eui.Component implements  eui.UIComponent {
 	public nowSpeed:number;
 	public frameNum:number=20;
 	public isDown:boolean=false;
+	public speedX:number=0;
 
 	public isJumperTopStop:boolean=false;
 
@@ -54,6 +55,7 @@ class DoodlePlayer extends eui.Component implements  eui.UIComponent {
 		this.setPlayerSkewXY();
 		this.setInitJumperData();
 		this.setStartJumpeSpeed(this.jumpStickDistan,this.frameNum);
+		this.orientationEvent();  //　开始监听左右的加速计
 	}
 	private setEuiImageList() {
 		let self = this;
@@ -147,6 +149,41 @@ class DoodlePlayer extends eui.Component implements  eui.UIComponent {
 			this.isJumperTopStop = true;
 		}
 
+	}
+
+	private orientationEvent() {
+		let _self = this;
+
+		try{
+			if (wx && wx.onAccelerometerChange) {
+				wx.onAccelerometerChange(function (value) {
+					console.log('value', value.x);
+					_self.handleFuncWx(value);
+				})
+			}
+		}catch(err){
+			console.log(err);
+		}
+
+	}
+	private handleFuncWx(res) {
+		if (res.x > 0) {  // 向右
+			this.setSideStatus(this.SIDE_RIGHT);
+		} else if (res.x < 0) {  // 向左
+			this.setSideStatus(this.SIDE_LEFT);
+		} else {
+			this.setSideStatus(this.SIDE_FACE);
+		}
+		this.speedX = res.x * this.stage.$stageWidth / 9;
+		this.changePlaySide(true);
+	}
+	public moveplayerX() {
+		this.$x = this.$x + this.speedX;
+		if (this.$x < -this.width) {
+			this.$x = this.stage.$stageWidth;
+		} else if (this.$x > this.stage.$stageWidth) {
+			this.$x = -this.width;
+		}
 	}
 	
 }

@@ -1,4 +1,4 @@
-class StickItem extends eui.Component implements  eui.UIComponent {
+class StickItem extends BasePage{
 	public constructor() {
 		super();
 	}
@@ -7,10 +7,17 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 	private stickDefaultSoil:eui.Image;
 	private stickDefaultLeaf:eui.Image;
 	private stickDefaultStone:eui.Image;
+	private waterMoveDefault:eui.Group;
+	private woodMoveDefault:eui.Group;
+
+	public waterMoveCilpDefault:egret.MovieClip;
+	public woodMoveCilpDefault:egret.MovieClip;
 
 	public TYPE_STATUS:string='fixation'; // 踏板的状态
 	public TYPE_FIXATION:string='fixation'; // 固定不动状态
 	public TYPE_HORIZONTAL:string='horizontal'; // 水平移动
+	public TYPE_HIT_DISABLE:string='hitDisable'; // 撞击无效，可自动断裂
+	public TYPE_ONECE_HIT:string='oneceHit';  // 只检测碰撞一次
 
 	public COLOR_STATUS:string='normal';
 	public COLOR_DEFAULE:string='normal';
@@ -18,7 +25,7 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 	private initSpeed:number=2;
 	private speed:number=2;
 
-	private SHOW_PROBABILITY:any=[0.5,0.6,1];
+	private SHOW_PROBABILITY:any=[0.4,0.5,0.6,0.7,1];
 
 	private stickClothDataList:Object;
 
@@ -35,10 +42,17 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 		this.initStickClothData();
 		this.setRandomStick();
 		this.setInitLeftOrRightMove();
+		// 'waterDefaultMove'
+		// let movePescide = this.createMoveObj("woodDefaultMove",this.waterMoveDefault);
+		// console.log('rena',movePescide,this.waterMoveDefault);
+		// this.waterMoveCilpDefault = movePescide;
+		// movePescide.play();
 	}
 	private initStickClothData() {
 		let self = this;
 
+		this.woodMoveCilpDefault = this.createMoveObj("woodDefaultMove",this.woodMoveDefault);
+		this.waterMoveCilpDefault = this.createMoveObj("waterDefaultMove",this.waterMoveDefault);
 		this.stickClothDataList = {
 			'normal':{
 				'fixation':[
@@ -47,6 +61,12 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 					],
 				'horizontal':[
 					self.stickDefaultLeaf
+				],
+				'hitDisable':[
+					self.woodMoveDefault
+				],
+				'oneceHit':[
+					self.waterMoveDefault
 				]
 			}
 		}
@@ -56,8 +76,13 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 		
 		if(randomNum<this.SHOW_PROBABILITY[0]) {
 			this.setTypeStick(this.TYPE_FIXATION);
+			// this.setTypeStick(this.TYPE_HIT_DISABLE);
 		}else if(randomNum>this.SHOW_PROBABILITY[0]&&randomNum<this.SHOW_PROBABILITY[1]){
 			this.setTypeStick(this.TYPE_HORIZONTAL);
+		}else if(randomNum>this.SHOW_PROBABILITY[1]&&randomNum<this.SHOW_PROBABILITY[2]){
+			this.setTypeStick(this.TYPE_ONECE_HIT);
+		}else if(randomNum>this.SHOW_PROBABILITY[2]&&randomNum<this.SHOW_PROBABILITY[3]){
+			this.setTypeStick(this.TYPE_HIT_DISABLE);
 		}else {
 			this.setTypeStick(this.TYPE_FIXATION);
 		}
@@ -85,6 +110,12 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 			case this.TYPE_HORIZONTAL: 
 			this.TYPE_STATUS = this.TYPE_HORIZONTAL;
 			break;
+			case this.TYPE_ONECE_HIT: 
+			this.TYPE_STATUS = this.TYPE_ONECE_HIT;
+			break;
+			case this.TYPE_HIT_DISABLE: 
+			this.TYPE_STATUS = this.TYPE_HIT_DISABLE;
+			break;
 			default:
 			this.TYPE_STATUS = this.TYPE_FIXATION;
 			break;
@@ -94,8 +125,10 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 		let nowStick;
 
 		this.hideAllChildren();
+		// this.waterSticketMove.visible = true;
 		nowStick = this.randomShowSameType(this.stickClothDataList[this.COLOR_STATUS][this.TYPE_STATUS]);
 		nowStick.visible = true;
+		// console.log('我的个人显/示',this.TYPE_STATUS,nowStick.width,nowStick.height);
 
 	}
 	private randomShowSameType(list) {
@@ -126,6 +159,18 @@ class StickItem extends eui.Component implements  eui.UIComponent {
 		for(let i=0;i<len;i++) {
 			this.$children[i].visible = false;
 		}
+	}
+	public playOneceClip(callback) {
+		this.waterMoveCilpDefault.play();
+		this.waterMoveCilpDefault.addEventListener('complete',function(){
+			callback();
+		},this)
+	}
+	public playDiasbleHitClip(callback){
+		this.woodMoveCilpDefault.play();
+		this.woodMoveCilpDefault.addEventListener('complete',function(){
+			callback();
+		},this)
 	}
 
 

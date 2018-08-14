@@ -26,5 +26,15 @@
         "path": "..\\resource\\skins\\GamePage.ts",
         "class": "GamePage",
         "parentPath": ""
+    },
+    "16537668f03": {
+        "path": "..\\resource\\skins\\AllStickList2.ts",
+        "class": "AllStickList2",
+        "parentPath": ""
+    },
+    "165376b65bd": {
+        "path": "..\\resource\\skins\\AllSticket2.ts",
+        "class": "AllSticket2",
+        "parentPath": ""
     }
 }

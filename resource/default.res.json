@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,gameEui_json,DoodleRechts_png,Platformweis_png,play_again_png,longBg_png,Federoffen_png,Federzu_png,move_platformweis_png,DoodleNormalLeft_png,DoodleNormalRight_png,beginBtn_png,diamond_png,rankBtn_png,shopBtn_png,firstPageBG_png,bean_face_normal_png,bean_left_normal_png,bean_right_normal_png,bean_face_normal_down2_png,bean_left_normal_down2_png,bean_right_normal_down2_png,stoneStick_png,leafStick_png,soilStick_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,gameEui_json,DoodleRechts_png,Platformweis_png,play_again_png,longBg_png,Federoffen_png,Federzu_png,move_platformweis_png,DoodleNormalLeft_png,DoodleNormalRight_png,beginBtn_png,diamond_png,rankBtn_png,shopBtn_png,firstPageBG_png,bean_face_normal_png,bean_left_normal_png,bean_right_normal_png,bean_face_normal_down2_png,bean_left_normal_down2_png,bean_right_normal_down2_png,stoneStick_png,leafStick_png,soilStick_png,waterDefaultMove_png,waterDefaultMove_json,woodDefaultMove_png,woodDefaultMove_json,rocket_stage_default_png,rocket_stage_default2_png,wing_stage_default_png,mushroom2_png,mushroom1_png,protectionCover_png,bean_rocket_default_png,bean_right_wing_default_png,bean_left_wing_default_png,bean_face_wing_default_png",
 			"name": "preload"
 		},
 		{
@@ -17,7 +17,7 @@
 			"name": "beanPlayer"
 		},
 		{
-			"keys": "leafStick_png,soilStick_png,stoneStick_png",
+			"keys": "leafStick_png,soilStick_png,stoneStick_png,waterDefaultMove_json,waterDefaultMove_png,woodDefaultMove_json,woodDefaultMove_png",
 			"name": "stickPng"
 		}
 	],
@@ -291,6 +291,76 @@
 			"url": "assets/StickImg/soilStick.png",
 			"type": "image",
 			"name": "soilStick_png"
+		},
+		{
+			"url": "assets/StickImg/waterDefaultMove.png",
+			"type": "image",
+			"name": "waterDefaultMove_png"
+		},
+		{
+			"url": "assets/StickImg/waterDefaultMove.json",
+			"type": "json",
+			"name": "waterDefaultMove_json"
+		},
+		{
+			"url": "assets/StickImg/woodDefaultMove.png",
+			"type": "image",
+			"name": "woodDefaultMove_png"
+		},
+		{
+			"url": "assets/StickImg/woodDefaultMove.json",
+			"type": "json",
+			"name": "woodDefaultMove_json"
+		},
+		{
+			"name": "rocket_stage_default_png",
+			"type": "image",
+			"url": "assets/rocketImg/rocket_stage_default.png"
+		},
+		{
+			"name": "rocket_stage_default2_png",
+			"type": "image",
+			"url": "assets/protectionImg/rocket_stage_default.png"
+		},
+		{
+			"name": "wing_stage_default_png",
+			"type": "image",
+			"url": "assets/wingImg/wing_stage_default.png"
+		},
+		{
+			"name": "mushroom2_png",
+			"type": "image",
+			"url": "assets/mushroomImg/mushroom2.png"
+		},
+		{
+			"name": "mushroom1_png",
+			"type": "image",
+			"url": "assets/mushroomImg/mushroom1.png"
+		},
+		{
+			"name": "protectionCover_png",
+			"type": "image",
+			"url": "assets/playerImg/protectionCover.png"
+		},
+		{
+			"name": "bean_rocket_default_png",
+			"type": "image",
+			"url": "assets/playerImg/bean_rocket_default.png"
+		},
+		{
+			"name": "bean_right_wing_default_png",
+			"type": "image",
+			"url": "assets/playerImg/bean_right_wing_default.png"
+		},
+		{
+			"name": "bean_left_wing_default_png",
+			"type": "image",
+			"url": "assets/playerImg/bean_left_wing_default.png"
+		},
+		{
+			"name": "bean_face_wing_default_png",
+			"type": "image",
+			"url": "assets/playerImg/bean_face_wing_default.png"
 		}
 	]
 }
