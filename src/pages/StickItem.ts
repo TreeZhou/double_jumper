@@ -13,17 +13,19 @@ class StickItem extends BasePage{
 	public waterMoveCilpDefault:egret.MovieClip;
 	public woodMoveCilpDefault:egret.MovieClip;
 
+	public TYPE_NAME:string="sticket";
 	public TYPE_STATUS:string='fixation'; // 踏板的状态
 	public TYPE_FIXATION:string='fixation'; // 固定不动状态
 	public TYPE_HORIZONTAL:string='horizontal'; // 水平移动
 	public TYPE_HIT_DISABLE:string='hitDisable'; // 撞击无效，可自动断裂
 	public TYPE_ONECE_HIT:string='oneceHit';  // 只检测碰撞一次
 
-	public COLOR_STATUS:string='normal';
-	public COLOR_DEFAULE:string='normal';
+	// public COLOR_STATUS:string='normal';
+	// public COLOR_DEFAULE:string='normal';
 
 	private initSpeed:number=2;
 	private speed:number=2;
+	public JUMP_DISTANCE:number=60;
 
 	private SHOW_PROBABILITY:any=[0.4,0.5,0.6,0.7,1];
 
@@ -42,11 +44,15 @@ class StickItem extends BasePage{
 		this.initStickClothData();
 		this.setRandomStick();
 		this.setInitLeftOrRightMove();
+		this.setJumpeHeight();
 		// 'waterDefaultMove'
 		// let movePescide = this.createMoveObj("woodDefaultMove",this.waterMoveDefault);
 		// console.log('rena',movePescide,this.waterMoveDefault);
 		// this.waterMoveCilpDefault = movePescide;
 		// movePescide.play();
+	}
+	private setJumpeHeight() {
+		this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
 	}
 	private initStickClothData() {
 		let self = this;
@@ -153,13 +159,13 @@ class StickItem extends BasePage{
 
 		return item;
 	}
-	private hideAllChildren() {
-		let len = this.$children.length;
+	// private hideAllChildren() {
+	// 	let len = this.$children.length;
 
-		for(let i=0;i<len;i++) {
-			this.$children[i].visible = false;
-		}
-	}
+	// 	for(let i=0;i<len;i++) {
+	// 		this.$children[i].visible = false;
+	// 	}
+	// }
 	public playOneceClip(callback) {
 		this.waterMoveCilpDefault.play();
 		this.waterMoveCilpDefault.addEventListener('complete',function(){

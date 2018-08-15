@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="GameOverPageSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="1653d0e2981" ></w:Config>
+	<e:Image id="gameOverBG" top="0" bottom="0" left="0" right="0" source="firstPageBG_png"/>
+	<e:Image id="playAgain" width="427" height="190" source="beginBtn_png" bottom="143" horizontalCenter="0"/>
+	<e:Label id="scoreText" text="分数：0" width="750" x="0" height="80" y="766.66" size="51" verticalAlign="justify" textAlign="center" fontFamily="Microsoft JhengHei" textColor="0x95f41a"/>
+</e:Skin>

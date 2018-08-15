@@ -32,6 +32,6 @@ var GameFirstPage = (function (_super) {
         Main.gamePage.beginGame();
     };
     return GameFirstPage;
-}(eui.Component));
-__reflect(GameFirstPage.prototype, "GameFirstPage", ["eui.UIComponent", "egret.DisplayObject"]);
+}(BasePage));
+__reflect(GameFirstPage.prototype, "GameFirstPage");
 //# sourceMappingURL=GameFirstPage.js.map

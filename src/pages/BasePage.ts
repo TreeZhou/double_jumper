@@ -4,6 +4,8 @@ class BasePage extends eui.Component{
     }
     public group_container: eui.Group;
     public STAGE_METER: number = 200; // 一屏等于多少米
+	public COLOR_STATUS:string='normal';
+	public COLOR_DEFAULE:string='normal';
     public createChildren() {
         
         super.createChildren();
@@ -33,6 +35,18 @@ class BasePage extends eui.Component{
 		return meterNum;
 	}
 
+	/**
+	 * 米换成像素
+	 */
+	public changeToPixel(meter) {
+		let pixel = 0;
+		let stage =meter/this.STAGE_METER;
+		// let leftStage = (meter%this.STAGE_METER)/this.STAGE_METER;
+
+		pixel = stage*this.stage.$stageHeight;
+
+		return pixel;
+	}
     // 检查是否超过屏幕底线，是的话就移除该对象
     public checkISOverStage(fatherBox) {
 		let list = fatherBox.$children;
@@ -57,5 +71,12 @@ class BasePage extends eui.Component{
 			}
 		}
         return fatherBox;
+	}
+	public hideAllChildren() {
+		let len = this.$children.length;
+
+		for(let i=0;i<len;i++) {
+			this.$children[i].visible = false;
+		}
 	}
 }

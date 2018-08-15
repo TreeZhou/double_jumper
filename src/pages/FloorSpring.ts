@@ -1,4 +1,4 @@
-class FloorSpring extends eui.Component implements  eui.UIComponent {
+class FloorSpring extends BasePage {
 	public constructor() {
 		super();
 	}

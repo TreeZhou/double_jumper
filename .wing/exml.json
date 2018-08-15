@@ -36,5 +36,30 @@
         "path": "..\\resource\\skins\\AllSticket2.ts",
         "class": "AllSticket2",
         "parentPath": ""
+    },
+    "1653b5052ac": {
+        "path": "..\\resource\\skins\\Trampoline.ts",
+        "class": "Trampoline",
+        "parentPath": ""
+    },
+    "1653c974811": {
+        "path": "..\\resource\\skins\\WingProp.ts",
+        "class": "WingProp",
+        "parentPath": ""
+    },
+    "1653cdc8275": {
+        "path": "..\\resource\\skins\\rocketProps.ts",
+        "class": "rocketProps",
+        "parentPath": ""
+    },
+    "1653ce047e9": {
+        "path": "..\\resource\\skins\\RocketProp.ts",
+        "class": "RocketProp",
+        "parentPath": ""
+    },
+    "1653d0e2981": {
+        "path": "..\\resource\\skins\\GameOverPage.ts",
+        "class": "GameOverPage",
+        "parentPath": ""
     }
 }

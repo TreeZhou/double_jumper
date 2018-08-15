@@ -130,7 +130,7 @@ var Main = (function (_super) {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 7, , 8]);
+                        _a.trys.push([0, 8, , 9]);
                         loadingView = new LoadingUI();
                         this.stage.addChild(loadingView);
                         return [4 /*yield*/, RES.loadConfig("resource/default.res.json", "resource/")];
@@ -151,13 +151,16 @@ var Main = (function (_super) {
                         return [4 /*yield*/, RES.loadGroup("beanPlayer", 0)];
                     case 6:
                         _a.sent();
-                        this.stage.removeChild(loadingView);
-                        return [3 /*break*/, 8];
+                        return [4 /*yield*/, RES.loadGroup("stageProps", 0)];
                     case 7:
+                        _a.sent();
+                        this.stage.removeChild(loadingView);
+                        return [3 /*break*/, 9];
+                    case 8:
                         e_1 = _a.sent();
                         console.error(e_1);
-                        return [3 /*break*/, 8];
-                    case 8: return [2 /*return*/];
+                        return [3 /*break*/, 9];
+                    case 9: return [2 /*return*/];
                 }
             });
         });

@@ -26,6 +26,6 @@ var FloorSpring = (function (_super) {
         this.Federzu.visible = false;
     };
     return FloorSpring;
-}(eui.Component));
-__reflect(FloorSpring.prototype, "FloorSpring", ["eui.UIComponent", "egret.DisplayObject"]);
+}(BasePage));
+__reflect(FloorSpring.prototype, "FloorSpring");
 //# sourceMappingURL=FloorSpring.js.map

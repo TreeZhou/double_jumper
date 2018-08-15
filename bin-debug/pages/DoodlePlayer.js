@@ -16,8 +16,6 @@ var DoodlePlayer = (function (_super) {
         _this.SIDE_FACE = 'face';
         _this.SIDE_RIGHT = 'right'; // 右边
         _this.SIDE_LEFT = 'left'; // 左边
-        _this.COLOR_STATUS = 'normal';
-        _this.COLOR_DEFAULE = 'normal';
         _this.jumpStartY = null; // 起跳高度
         _this.frameNum = 20;
         _this.isDown = false;
@@ -63,7 +61,7 @@ var DoodlePlayer = (function (_super) {
         console.log('object', this.euiImageJumpList);
     };
     DoodlePlayer.prototype.setInitJumperData = function () {
-        this.jumpHeightHight = this.stage.$stageHeight * 0.5;
+        this.jumpHeightHight = this.stage.$stageHeight * 0.6;
         this.jumpStickDistan = this.stage.$stageHeight * 0.4;
         this.jumpStartY = this.stage.$stageHeight;
     };
@@ -171,6 +169,6 @@ var DoodlePlayer = (function (_super) {
         }
     };
     return DoodlePlayer;
-}(eui.Component));
-__reflect(DoodlePlayer.prototype, "DoodlePlayer", ["eui.UIComponent", "egret.DisplayObject"]);
+}(BasePage));
+__reflect(DoodlePlayer.prototype, "DoodlePlayer");
 //# sourceMappingURL=DoodlePlayer.js.map

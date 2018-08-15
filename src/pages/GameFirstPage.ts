@@ -1,4 +1,4 @@
-class GameFirstPage extends eui.Component implements  eui.UIComponent {
+class GameFirstPage extends BasePage {
 	public constructor() {
 		super();
 	}

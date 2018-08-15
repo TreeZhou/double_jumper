@@ -13,6 +13,8 @@ var BasePage = (function (_super) {
     function BasePage() {
         var _this = _super.call(this) || this;
         _this.STAGE_METER = 200; // 一屏等于多少米
+        _this.COLOR_STATUS = 'normal';
+        _this.COLOR_DEFAULE = 'normal';
         return _this;
     }
     BasePage.prototype.createChildren = function () {
@@ -41,6 +43,16 @@ var BasePage = (function (_super) {
         }
         return meterNum;
     };
+    /**
+     * 米换成像素
+     */
+    BasePage.prototype.changeToPixel = function (meter) {
+        var pixel = 0;
+        var stage = meter / this.STAGE_METER;
+        // let leftStage = (meter%this.STAGE_METER)/this.STAGE_METER;
+        pixel = stage * this.stage.$stageHeight;
+        return pixel;
+    };
     // 检查是否超过屏幕底线，是的话就移除该对象
     BasePage.prototype.checkISOverStage = function (fatherBox) {
         var list = fatherBox.$children;
@@ -62,6 +74,12 @@ var BasePage = (function (_super) {
             }
         }
         return fatherBox;
+    };
+    BasePage.prototype.hideAllChildren = function () {
+        var len = this.$children.length;
+        for (var i = 0; i < len; i++) {
+            this.$children[i].visible = false;
+        }
     };
     return BasePage;
 }(eui.Component));

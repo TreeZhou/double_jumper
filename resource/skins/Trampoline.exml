@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="TrampolineSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
+	<w:Config id="1653b5052ac" ></w:Config>
+	<e:Image id="tramTopDefault" width="71" height="31" x="0" y="0" source="mushroom1_png"/>
+	<e:Image id="tramDownDefault" width="71" height="25" x="0" y="6" source="mushroom2_png" visible="false"/>
+</e:Skin>

@@ -31,6 +31,7 @@ class Main extends eui.UILayer {
 
     public static instance: Main;
     public static gamePage:GamePage;
+    public static gameOver:GameOverPage;
     protected createChildren(): void {
         super.createChildren();
 
@@ -79,6 +80,7 @@ class Main extends eui.UILayer {
             await RES.loadGroup("gamePage",0);
             await RES.loadGroup("playFirstPage",0);
             await RES.loadGroup("beanPlayer",0);
+            await RES.loadGroup("stageProps",0);
             this.stage.removeChild(loadingView);
         }
         catch (e) {

@@ -1,4 +1,4 @@
-class DoodlePlayer extends eui.Component implements  eui.UIComponent {
+class DoodlePlayer extends BasePage {
 	public constructor() {
 		super();
 	}
@@ -14,8 +14,8 @@ class DoodlePlayer extends eui.Component implements  eui.UIComponent {
 	public SIDE_RIGHT:string='right';  // 右边
 	public SIDE_LEFT:string='left';  // 左边
 
-	public COLOR_STATUS:string='normal';
-	public COLOR_DEFAULE:string='normal';
+	// public COLOR_STATUS:string='normal';
+	// public COLOR_DEFAULE:string='normal';
 
 	public jumpHeightHight: number; // 正常最高的高度
 	public jumpStartY: number = null; // 起跳高度
@@ -76,7 +76,7 @@ class DoodlePlayer extends eui.Component implements  eui.UIComponent {
 		console.log('object',this.euiImageJumpList);
 	}
 	private setInitJumperData() {
-		this.jumpHeightHight = this.stage.$stageHeight*0.5;
+		this.jumpHeightHight = this.stage.$stageHeight*0.6;
 		this.jumpStickDistan = this.stage.$stageHeight*0.4;
 		this.jumpStartY = this.stage.$stageHeight;
 	}

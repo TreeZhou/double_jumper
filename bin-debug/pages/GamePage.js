@@ -55,7 +55,7 @@ var GamePage = (function (_super) {
         this.percentHeight = 100;
         this.percentWidth = 100;
         this.gamePage.percentHeight = 100;
-        this.beginListenEvent(); //  监听点击开始的按钮
+        // this.beginListenEvent();  //  监听点击开始的按钮
     };
     /**
      * 监听点击事件
@@ -104,9 +104,15 @@ var GamePage = (function (_super) {
         // this.getRandomPosition();  // 初始化弹簧的数据
         console.log('对象', this.player.width, this.player.height, this.player.$y, this.player.$x, this.player.anchorOffsetX, this.player.anchorOffsetY);
     };
+    /**
+     * 开始监听动画
+     */
     GamePage.prototype.beginAnimateEvent = function () {
         this.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
     };
+    /**
+     * 动画监听函数
+     */
     GamePage.prototype.onEnterFrame = function () {
         if (this.playerIsMove) {
             this.player.movePlayerY();
@@ -115,7 +121,7 @@ var GamePage = (function (_super) {
             this.mapObjectMove();
         }
         this.player.moveplayerX();
-        this.checkListOverMapObject(this.stickList);
+        this.checkISOverStage(this.stickList);
         this.nowStage = this.allSticks.addNewPetals(this.stickList, this.nowStage);
         this.allSticks.stickMoveLeftAndRight(this.stickList.$children);
         if (this.player.isDown) {
@@ -123,11 +129,63 @@ var GamePage = (function (_super) {
             // this.checkIsHitDoodle(this.springList.$children,this.checkIsHitSpring.bind(this));
         }
         // console.log(this.stickList.$children.length);
-        // if (this.endGame) {
-        // 	this.gotoMoveBg();
-        // } else {
-        // 	this.checkIsGameOver();
-        // }
+        if (this.endGame) {
+            this.gotoMoveBg();
+        }
+        else {
+            this.checkIsGameOver();
+        }
+    };
+    GamePage.prototype.checkIsGameOver = function () {
+        if (this.player.$y > this.stage.$stageHeight) {
+            this.player.setStartJumpeSpeed(this.stage.$stageHeight * 0.5, this.player.frameNum);
+            this.endGame = true;
+        }
+    };
+    GamePage.prototype.gotoMoveBg = function () {
+        this.removeAllList();
+        if (this.player.$y > this.stage.$stageHeight + this.player.height * 1.5) {
+            this.gameOver();
+        }
+        else {
+            this.longBg.$y = this.longBg.$y - 10;
+        }
+    };
+    GamePage.prototype.gameOver = function () {
+        this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
+        this.player.visible = false;
+        // this.playBtnBox.visible = true;
+        this.doodleBox.removeChildren();
+        // this.showScoreText();
+        try {
+            if (wx && wx.stopAccelerometer) {
+                wx.stopAccelerometer(function () {
+                    console.log('停止监听左右');
+                });
+            }
+            else {
+                this.orientation.stop();
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+        this.showPlayGameOverPage();
+    };
+    GamePage.prototype.showPlayGameOverPage = function () {
+        Main.gameOver = new GameOverPage();
+        Main.instance.addChild(Main.gameOver);
+        Main.gameOver.setScoreText(this.setScoreText());
+        this.parent.removeChild(this);
+    };
+    GamePage.prototype.setScoreText = function () {
+        var score = null;
+        console.log(this.player.jumpStartY);
+        score = '分数：' + Math.ceil(this.changeToMeter(this.player.jumpStartY, this.nowStage));
+        return score;
+    };
+    GamePage.prototype.removeAllList = function () {
+        this.stickList.removeChildren();
     };
     GamePage.prototype.mapObjectMove = function () {
         var list = this.stickList.$children;
@@ -152,7 +210,7 @@ var GamePage = (function (_super) {
         var listLen = list.length;
         var playerMaxY = this.player.$y;
         var playerMinY = this.player.$y - this.player.anchorOffsetY;
-        var playerHalf = this.player.height / 2;
+        var playerHalf = this.player.height / 4;
         var playerMinX = this.player.$x - this.player.anchorOffsetX;
         var playerMaxX = this.player.$x + this.player.anchorOffsetX;
         var playerMiddel = this.player.$y - this.player.anchorOffsetY / 2;
@@ -187,29 +245,19 @@ var GamePage = (function (_super) {
     GamePage.prototype.checkIsStickHit = function (item) {
         this.player.$y = item.$y;
         this.player.jumpStartY = item.$y;
-        this.player.setStartJumpeSpeed(this.player.jumpStickDistan, this.player.frameNum);
+        if (item.TYPE_NAME === 'trampoline') {
+            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, 60);
+        }
+        else if (item.TYPE_NAME === 'wing') {
+            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, 150);
+        }
+        else if (item.TYPE_NAME === 'rocket') {
+            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, 150);
+        }
+        else {
+            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum);
+        }
         this.player.changePlaySide(false);
-    };
-    GamePage.prototype.checkListOverMapObject = function (checkList) {
-        var list = checkList.$children;
-        var len = list.length;
-        var item;
-        var removeChildList = [];
-        var nowLen, nowList;
-        for (var i = 0; i < len; i++) {
-            item = list[i];
-            if (item.$y >= this.stage.$stageHeight) {
-                item.isHit = false;
-                removeChildList.push(item);
-            }
-        }
-        if (removeChildList.length) {
-            for (var j = 0; j < removeChildList.length; j++) {
-                if (removeChildList[j]) {
-                    checkList.removeChild(removeChildList[j]);
-                }
-            }
-        }
     };
     return GamePage;
 }(BasePage));

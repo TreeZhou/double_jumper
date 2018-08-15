@@ -13,15 +13,17 @@ var StickItem = (function (_super) {
     function StickItem() {
         var _this = _super.call(this) || this;
         _this.meter = 0;
+        _this.TYPE_NAME = "sticket";
         _this.TYPE_STATUS = 'fixation'; // 踏板的状态
         _this.TYPE_FIXATION = 'fixation'; // 固定不动状态
         _this.TYPE_HORIZONTAL = 'horizontal'; // 水平移动
         _this.TYPE_HIT_DISABLE = 'hitDisable'; // 撞击无效，可自动断裂
         _this.TYPE_ONECE_HIT = 'oneceHit'; // 只检测碰撞一次
-        _this.COLOR_STATUS = 'normal';
-        _this.COLOR_DEFAULE = 'normal';
+        // public COLOR_STATUS:string='normal';
+        // public COLOR_DEFAULE:string='normal';
         _this.initSpeed = 2;
         _this.speed = 2;
+        _this.JUMP_DISTANCE = 60;
         _this.SHOW_PROBABILITY = [0.4, 0.5, 0.6, 0.7, 1];
         return _this;
     }
@@ -33,11 +35,15 @@ var StickItem = (function (_super) {
         this.initStickClothData();
         this.setRandomStick();
         this.setInitLeftOrRightMove();
+        this.setJumpeHeight();
         // 'waterDefaultMove'
         // let movePescide = this.createMoveObj("woodDefaultMove",this.waterMoveDefault);
         // console.log('rena',movePescide,this.waterMoveDefault);
         // this.waterMoveCilpDefault = movePescide;
         // movePescide.play();
+    };
+    StickItem.prototype.setJumpeHeight = function () {
+        this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
     };
     StickItem.prototype.initStickClothData = function () {
         var self = this;
@@ -145,12 +151,12 @@ var StickItem = (function (_super) {
         }
         return item;
     };
-    StickItem.prototype.hideAllChildren = function () {
-        var len = this.$children.length;
-        for (var i = 0; i < len; i++) {
-            this.$children[i].visible = false;
-        }
-    };
+    // private hideAllChildren() {
+    // 	let len = this.$children.length;
+    // 	for(let i=0;i<len;i++) {
+    // 		this.$children[i].visible = false;
+    // 	}
+    // }
     StickItem.prototype.playOneceClip = function (callback) {
         this.waterMoveCilpDefault.play();
         this.waterMoveCilpDefault.addEventListener('complete', function () {

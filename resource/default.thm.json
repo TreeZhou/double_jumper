@@ -18,7 +18,11 @@
 		"FloorSpring": "resource/skins/FloorSpring.exml",
 		"DoodlePlayer": "resource/skins/DoodlePlayer.exml",
 		"GameFirstPage": "resource/skins/GameFirstPage.exml",
-		"GamePage": "resource/skins/GamePage.exml"
+		"GamePage": "resource/skins/GamePage.exml",
+		"Trampoline": "resource/skins/Trampoline.exml",
+		"WingProp": "resource/skins/WingProp.exml",
+		"RocketProp": "resource/skins/RocketProp.exml",
+		"GameOverPage": "resource/skins/GameOverPage.exml"
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
@@ -38,8 +42,12 @@
 		"resource/skins/DoodlePlayer.exml",
 		"resource/skins/FloorSpring.exml",
 		"resource/skins/GameFirstPage.exml",
+		"resource/skins/GameOverPage.exml",
 		"resource/skins/GamePage.exml",
-		"resource/skins/StickItem.exml"
+		"resource/skins/RocketProp.exml",
+		"resource/skins/StickItem.exml",
+		"resource/skins/Trampoline.exml",
+		"resource/skins/WingProp.exml"
 	],
 	"path": "resource/default.thm.json"
 }
