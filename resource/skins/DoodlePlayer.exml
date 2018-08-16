@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="DoodlePlayerSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing"  width="81" height="102">
+<e:Skin class="DoodlePlayerSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:tween="egret.tween.*"  width="81" height="102">
+	<w:Declarations>
+	</w:Declarations>
 	<w:Config id="1651d818e93" ></w:Config>
 	<e:Image id="BeanNormalLeft" width="81" height="102" x="0" y="0" anchorOffsetX="0" anchorOffsetY="0" source="bean_left_normal_png" scaleX="1" scaleY="1" visible="false"/>
 	<e:Image id="BeanNormalRight" width="81" height="102" x="0" y="0" anchorOffsetX="0" anchorOffsetY="0" source="bean_right_normal_png" scaleX="1" scaleY="1" visible="false"/>
@@ -7,4 +9,8 @@
 	<e:Image id="beanFaceNorDown" width="78" height="94" x="0" y="8" anchorOffsetX="0" anchorOffsetY="0" source="bean_face_normal_down_png" scaleX="1" scaleY="1" visible="false"/>
 	<e:Image id="beanLeftNorDown" width="81" height="94" x="0" y="0" source="bean_left_normal_down_png" scaleX="1" scaleY="1" visible="false"/>
 	<e:Image id="beanRightNorDown" width="80" height="93" x="0" y="0" source="bean_right_normal_down_png" scaleY="1" visible="false"/>
+	<e:Image id="beanRocketDefault" width="113" height="150" x="-16" y="-48" source="bean_rocket_default_png" visible="false"/>
+	<e:Image id="beanWingFaceDefault" width="93" height="119" x="-6" y="-17" source="bean_face_wing_default_png" visible="false"/>
+	<e:Image id="beanWingLeftDefault" width="93" height="119" y="-17" x="-6" source="bean_left_wing_default_png" visible="false"/>
+	<e:Image id="beanWingRightDefault" width="93" height="119" x="-6" y="-17" source="bean_right_wing_default_png" visible="false"/>
 </e:Skin>

@@ -26,6 +26,7 @@ class GameOverPage extends BasePage{
 			this.parent.removeChild(this);
 			Main.gamePage = new GamePage();
 			Main.instance.addChild(Main.gamePage);
+			// Main.gamePage.visible = true;
 			Main.gamePage.beginGame();
 		}, this)
 	}

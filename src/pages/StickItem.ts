@@ -29,6 +29,7 @@ class StickItem extends BasePage{
 
 	private SHOW_PROBABILITY:any=[0.4,0.5,0.6,0.7,1];
 
+
 	private stickClothDataList:Object;
 
 	protected partAdded(partName:string,instance:any):void
@@ -42,7 +43,7 @@ class StickItem extends BasePage{
 		super.childrenCreated();
 		
 		this.initStickClothData();
-		this.setRandomStick();
+		// this.setRandomStick();
 		this.setInitLeftOrRightMove();
 		this.setJumpeHeight();
 		// 'waterDefaultMove'
@@ -60,38 +61,38 @@ class StickItem extends BasePage{
 		this.woodMoveCilpDefault = this.createMoveObj("woodDefaultMove",this.woodMoveDefault);
 		this.waterMoveCilpDefault = this.createMoveObj("waterDefaultMove",this.waterMoveDefault);
 		this.stickClothDataList = {
-			'normal':{
-				'fixation':[
+			normal:{
+				fixation:[
 					self.stickDefaultSoil,
 					self.stickDefaultStone
 					],
-				'horizontal':[
+				horizontal:[
 					self.stickDefaultLeaf
 				],
-				'hitDisable':[
+				hitDisable:[
 					self.woodMoveDefault
 				],
-				'oneceHit':[
+				oneceHit:[
 					self.waterMoveDefault
 				]
 			}
 		}
 	}
-	public setRandomStick() {
-		let randomNum = Math.random();
-		
-		if(randomNum<this.SHOW_PROBABILITY[0]) {
-			this.setTypeStick(this.TYPE_FIXATION);
-			// this.setTypeStick(this.TYPE_HIT_DISABLE);
-		}else if(randomNum>this.SHOW_PROBABILITY[0]&&randomNum<this.SHOW_PROBABILITY[1]){
-			this.setTypeStick(this.TYPE_HORIZONTAL);
-		}else if(randomNum>this.SHOW_PROBABILITY[1]&&randomNum<this.SHOW_PROBABILITY[2]){
-			this.setTypeStick(this.TYPE_ONECE_HIT);
-		}else if(randomNum>this.SHOW_PROBABILITY[2]&&randomNum<this.SHOW_PROBABILITY[3]){
-			this.setTypeStick(this.TYPE_HIT_DISABLE);
-		}else {
-			this.setTypeStick(this.TYPE_FIXATION);
-		}
+	public setRandomStick(typeName) {
+		// let randomNum = Math.random();
+		// if(randomNum<this.SHOW_PROBABILITY[0]) {
+		// 	this.setTypeStick(this.TYPE_FIXATION);
+		// 	// this.setTypeStick(this.TYPE_HIT_DISABLE);
+		// }else if(randomNum>this.SHOW_PROBABILITY[0]&&randomNum<this.SHOW_PROBABILITY[1]){
+		// 	this.setTypeStick(this.TYPE_HORIZONTAL);
+		// }else if(randomNum>this.SHOW_PROBABILITY[1]&&randomNum<this.SHOW_PROBABILITY[2]){
+		// 	this.setTypeStick(this.TYPE_ONECE_HIT);
+		// }else if(randomNum>this.SHOW_PROBABILITY[2]&&randomNum<this.SHOW_PROBABILITY[3]){
+		// 	this.setTypeStick(this.TYPE_HIT_DISABLE);
+		// }else {
+			
+		// }
+		this.setTypeStick(typeName);
 		this.showStickImg();
 	}
 	private setInitLeftOrRightMove() {
@@ -132,7 +133,9 @@ class StickItem extends BasePage{
 
 		this.hideAllChildren();
 		// this.waterSticketMove.visible = true;
+		// console.log(this.stickClothDataList[this.COLOR_STATUS],this.TYPE_STATUS);
 		nowStick = this.randomShowSameType(this.stickClothDataList[this.COLOR_STATUS][this.TYPE_STATUS]);
+		// debugger
 		nowStick.visible = true;
 		// console.log('我的个人显/示',this.TYPE_STATUS,nowStick.width,nowStick.height);
 

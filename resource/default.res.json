@@ -13,7 +13,7 @@
 			"name": "playFirstPage"
 		},
 		{
-			"keys": "bean_face_normal_png,bean_face_normal_down_png,bean_left_normal_png,bean_left_normal_down_png,bean_right_normal_png,bean_right_normal_down_png",
+			"keys": "bean_face_normal_png,bean_face_normal_down_png,bean_left_normal_png,bean_left_normal_down_png,bean_right_normal_png,bean_right_normal_down_png,bean_face_wing_default_png,bean_left_wing_default_png,bean_right_wing_default_png,bean_rocket_default_png,protectionCover_png",
 			"name": "beanPlayer"
 		},
 		{

@@ -14,7 +14,7 @@ var RocketProp = (function (_super) {
         var _this = _super.call(this) || this;
         _this.TYPE_STATUS = 'rocket';
         _this.TYPE_NAME = "rocket";
-        _this.JUMP_DISTANCE = 1000;
+        _this.JUMP_DISTANCE = 1500;
         return _this;
     }
     RocketProp.prototype.partAdded = function (partName, instance) {

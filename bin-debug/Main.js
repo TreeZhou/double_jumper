@@ -186,6 +186,7 @@ var Main = (function (_super) {
         var RolePlayer2 = new GameFirstPage();
         // console.log('对象', Main.instance  );
         this.addChild(RolePlayer2);
+        this.keepScreenOn();
         // console.log(wx)
         // var bodyConfig: BodyConfig = new BodyConfig();
         // bodyConfig.appId = "wx40be417af5beea7d";
@@ -252,6 +253,16 @@ var Main = (function (_super) {
         // button.verticalCenter = 0;
         // this.addChild(button);
         // button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
+    };
+    Main.prototype.keepScreenOn = function () {
+        try {
+            wx.setKeepScreenOn({
+                keepScreenOn: true
+            });
+        }
+        catch (err) {
+            // console.log('wx.setKeepScreenOn',err);
+        }
     };
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。

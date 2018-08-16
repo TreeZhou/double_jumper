@@ -109,9 +109,10 @@ class Main extends eui.UILayer {
      */
     protected createGameScene(): void {
         Main.instance = this;
-        let RolePlayer2 = new GameFirstPage();   
+        let RolePlayer2 = new GameFirstPage(); 
         // console.log('对象', Main.instance  );
         this.addChild(RolePlayer2);
+        this.keepScreenOn();
         // console.log(wx)
   
         // var bodyConfig: BodyConfig = new BodyConfig();
@@ -188,6 +189,15 @@ class Main extends eui.UILayer {
         // this.addChild(button);
         // button.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onButtonClick, this);
     }
+    private keepScreenOn() {
+		try{
+			wx.setKeepScreenOn({
+				keepScreenOn: true
+			});
+		}catch(err){
+			// console.log('wx.setKeepScreenOn',err);
+		}
+	}
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。
      * Create a Bitmap object according to name keyword.As for the property of name please refer to the configuration file of resources/resource.json.

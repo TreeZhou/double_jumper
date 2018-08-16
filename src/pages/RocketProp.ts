@@ -6,7 +6,7 @@ class RocketProp extends BasePage {
 	public TYPE_NAME:string="rocket";
 	private rocketDefault:eui.Image;
 	private skinsData:Object;
-	public JUMP_DISTANCE:number=1000;
+	public JUMP_DISTANCE:number=1500;
 	protected partAdded(partName:string,instance:any):void
 	{
 		super.partAdded(partName,instance);

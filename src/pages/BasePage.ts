@@ -20,6 +20,7 @@ class BasePage extends eui.Component{
          thisMoveObj.addChild(movePesticide);
          return movePesticide;
     }
+
     /**
 	 * 像素更换成多少米
 	*/

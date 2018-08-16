@@ -33,7 +33,7 @@ var StickItem = (function (_super) {
     StickItem.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
         this.initStickClothData();
-        this.setRandomStick();
+        // this.setRandomStick();
         this.setInitLeftOrRightMove();
         this.setJumpeHeight();
         // 'waterDefaultMove'
@@ -50,41 +50,37 @@ var StickItem = (function (_super) {
         this.woodMoveCilpDefault = this.createMoveObj("woodDefaultMove", this.woodMoveDefault);
         this.waterMoveCilpDefault = this.createMoveObj("waterDefaultMove", this.waterMoveDefault);
         this.stickClothDataList = {
-            'normal': {
-                'fixation': [
+            normal: {
+                fixation: [
                     self.stickDefaultSoil,
                     self.stickDefaultStone
                 ],
-                'horizontal': [
+                horizontal: [
                     self.stickDefaultLeaf
                 ],
-                'hitDisable': [
+                hitDisable: [
                     self.woodMoveDefault
                 ],
-                'oneceHit': [
+                oneceHit: [
                     self.waterMoveDefault
                 ]
             }
         };
     };
-    StickItem.prototype.setRandomStick = function () {
-        var randomNum = Math.random();
-        if (randomNum < this.SHOW_PROBABILITY[0]) {
-            this.setTypeStick(this.TYPE_FIXATION);
-            // this.setTypeStick(this.TYPE_HIT_DISABLE);
-        }
-        else if (randomNum > this.SHOW_PROBABILITY[0] && randomNum < this.SHOW_PROBABILITY[1]) {
-            this.setTypeStick(this.TYPE_HORIZONTAL);
-        }
-        else if (randomNum > this.SHOW_PROBABILITY[1] && randomNum < this.SHOW_PROBABILITY[2]) {
-            this.setTypeStick(this.TYPE_ONECE_HIT);
-        }
-        else if (randomNum > this.SHOW_PROBABILITY[2] && randomNum < this.SHOW_PROBABILITY[3]) {
-            this.setTypeStick(this.TYPE_HIT_DISABLE);
-        }
-        else {
-            this.setTypeStick(this.TYPE_FIXATION);
-        }
+    StickItem.prototype.setRandomStick = function (typeName) {
+        // let randomNum = Math.random();
+        // if(randomNum<this.SHOW_PROBABILITY[0]) {
+        // 	this.setTypeStick(this.TYPE_FIXATION);
+        // 	// this.setTypeStick(this.TYPE_HIT_DISABLE);
+        // }else if(randomNum>this.SHOW_PROBABILITY[0]&&randomNum<this.SHOW_PROBABILITY[1]){
+        // 	this.setTypeStick(this.TYPE_HORIZONTAL);
+        // }else if(randomNum>this.SHOW_PROBABILITY[1]&&randomNum<this.SHOW_PROBABILITY[2]){
+        // 	this.setTypeStick(this.TYPE_ONECE_HIT);
+        // }else if(randomNum>this.SHOW_PROBABILITY[2]&&randomNum<this.SHOW_PROBABILITY[3]){
+        // 	this.setTypeStick(this.TYPE_HIT_DISABLE);
+        // }else {
+        // }
+        this.setTypeStick(typeName);
         this.showStickImg();
     };
     StickItem.prototype.setInitLeftOrRightMove = function () {
@@ -125,7 +121,9 @@ var StickItem = (function (_super) {
         var nowStick;
         this.hideAllChildren();
         // this.waterSticketMove.visible = true;
+        // console.log(this.stickClothDataList[this.COLOR_STATUS],this.TYPE_STATUS);
         nowStick = this.randomShowSameType(this.stickClothDataList[this.COLOR_STATUS][this.TYPE_STATUS]);
+        // debugger
         nowStick.visible = true;
         // console.log('我的个人显/示',this.TYPE_STATUS,nowStick.width,nowStick.height);
     };

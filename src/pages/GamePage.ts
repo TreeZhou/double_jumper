@@ -6,33 +6,11 @@ class GamePage extends BasePage{
 	private playerIsMove: boolean = true; // 角色是否可以移动
 	private endGame: boolean = false;
 	private nowStage: number = 1;
-	private nowSpringNumber: number; // 当前显示的弹簧个数
 
 
 	private orientation: any;
 
-	//  弹簧分阶段出现的阶级
-	private SPRING_STAGE_LINE: any = [  // 弹簧的分段
-		{
-			minHeight: 200,
-			maxHeight: 1000,
-			num: 10
-		},
-		{
-			minHeight: 1001,
-			maxHeight: 2000,
-			num: 15
-		},
-		{
-			minHeight: 2001,
-			maxHeight: 5000,
-			num: 20
-		},
-	];
-	private springStageNum: any = [];  // 用于存储每个弹簧应该出现的位置
 
-
-	private scoreText: eui.Label;
 	private player: DoodlePlayer;
 	private allSticks:AllSticks;
 	private gamePage: eui.Group;
@@ -49,8 +27,6 @@ class GamePage extends BasePage{
 	public childList: any = [];
 	private stickMoveList: any = [];
 
-	private initAddSpeed: number = 0.5;
-	private hitSpeed: number = 13;
 	private isStickMove: boolean = false;
 	private hitNowNum: number = null;
 	private speedX: number = 0;
@@ -71,6 +47,7 @@ class GamePage extends BasePage{
 		// this.beginListenEvent();  //  监听点击开始的按钮
 
 	}
+
 
 	/**
 	 * 监听点击事件
@@ -95,6 +72,8 @@ class GamePage extends BasePage{
 		this.player = new DoodlePlayer();
 		this.doodleBox.addChild(this.player);
 		this.player.$x = this.stage.$stageWidth / 2;
+		// this.player.setInitJumperData();
+		this.player.orientationEvent();
 	}
 	//  创建跳板
 	private createSticket(){
@@ -112,8 +91,6 @@ class GamePage extends BasePage{
 		this.player.$y = this.stage.$stageHeight*0.9;
 		this.longBg.$y = 0;
 		this.nowStage = 1;
-		this.springStageNum = [];
-		this.nowSpringNumber = 0;
 		// this.scoreText.visible = false;
 		// this.getRandomPosition();  // 初始化弹簧的数据
 		console.log('对象',this.player.width,this.player.height,this.player.$y,this.player.$x,this.player.anchorOffsetX,this.player.anchorOffsetY);
@@ -152,7 +129,9 @@ class GamePage extends BasePage{
 	}
 	private checkIsGameOver(){
 		if(this.player.$y > this.stage.$stageHeight) {
-			this.player.setStartJumpeSpeed(this.stage.$stageHeight*0.5,this.player.frameNum);
+			this.player.jumpHeightHight = this.stage.$stageHeight*0.3;
+			this.player.setStartJumpeSpeed(this.stage.$stageHeight,this.player.frameNum);
+			this.player.setDownAddSpeed(this.stage.$stageHeight,this.player.frameNum);
 			this.endGame = true;
 		}
 	}
@@ -176,7 +155,7 @@ class GamePage extends BasePage{
 					console.log('停止监听左右');
 				})
 			} else {
-				this.orientation.stop();
+				this.player.orientation.stop();
 			}
 		}catch(err) {
 			console.log(err);
@@ -190,11 +169,12 @@ class GamePage extends BasePage{
 		Main.gameOver = new GameOverPage();
 		Main.instance.addChild(Main.gameOver);
 		Main.gameOver.setScoreText(this.setScoreText());
+		// this.visible = false;
 		this.parent.removeChild(this);
 	}
 	private setScoreText() {
 		let score = null;
-		console.log(this.player.jumpStartY);
+		// console.log(this.player.jumpStartY);
 		score = '分数：' + Math.ceil(this.changeToMeter(this.player.jumpStartY, this.nowStage));
 		return score;
 	}
@@ -223,12 +203,12 @@ class GamePage extends BasePage{
 	private checkIsHitDoodle(list, callback) {
 		let item, itemMinX, itemMaxX, itemMaxY, itemMinY, itemHalf, itemMiddleY, pointDistance, maxDistance;
 		let listLen = list.length;
-		let playerMaxY = this.player.$y;
+		let playerMaxY = this.player.$y+this.player.anchorOffsetY;
 		let playerMinY = this.player.$y-this.player.anchorOffsetY;
-		let playerHalf = this.player.height / 4;
+		let playerHalf = this.player.height/2;
 		let playerMinX = this.player.$x-this.player.anchorOffsetX;
 		let playerMaxX = this.player.$x + this.player.anchorOffsetX;
-		let playerMiddel = this.player.$y-this.player.anchorOffsetY/2;
+		let playerMiddel = this.player.$y; //-this.player.anchorOffsetY/2 this.player.anchorOffsetY
 
 		for (let i = 0; i < listLen; i++) {
 			item = list[i];
@@ -240,8 +220,8 @@ class GamePage extends BasePage{
 			itemMiddleY = itemMinY + itemHalf;
 			pointDistance = itemMiddleY - playerMiddel;
 			maxDistance = itemHalf + playerHalf;
-
-			if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerMinY<itemMinY&&pointDistance > 0 && pointDistance < maxDistance && item.visible) {
+			// && playerMinY<itemMinY&&pointDistance > 0 && pointDistance < maxDistance &&
+			if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible) {
 				if(item.TYPE_HIT_DISABLE && item.TYPE_STATUS ===item.TYPE_HIT_DISABLE ) {
 					// this.player.nowSpeed = this.player.nowSpeed-20;
 					item.playDiasbleHitClip(()=>{
@@ -260,16 +240,21 @@ class GamePage extends BasePage{
 		}
 	}
 	private checkIsStickHit(item) {
-		this.player.$y = item.$y;
+		this.player.$y = item.$y-this.player.anchorOffsetY;
 		this.player.jumpStartY = item.$y;
 		if(item.TYPE_NAME === 'trampoline') {
-			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,60);
+			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,100);
+			this.player.setJumperStatus(this.player.JUMP_NORMAL);
+			// this.player.isPlayCircle =true;
 		}else if(item.TYPE_NAME === 'wing'){
-			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,150);
+			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,200);
+			this.player.setJumperStatus(this.player.JUMP_WING);
 		}else if(item.TYPE_NAME === 'rocket'){
-			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,150);
+			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,200);
+			this.player.setJumperStatus(this.player.JUMP_ROCKET);
 		}else {
 			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum);
+			this.player.setJumperStatus(this.player.JUMP_NORMAL);
 		}
 
 

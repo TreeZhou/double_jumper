@@ -13,74 +13,125 @@ var AllSticks = (function (_super) {
     function AllSticks() {
         var _this = _super.call(this) || this;
         _this.eachStageDistance = 30; // 每个阶段的间隔
-        _this.minDistance = 40;
+        _this.minDistance = 30;
         _this.allStickList = [];
         // public stickList:eui.Group;
         // 每个阶段跳板的最大间距
         _this.STICK_STAGE_DISTANSE = [
             {
                 minHeight: 0,
-                maxHeight: 1000,
-                distance: 50,
+                maxHeight: 400,
+                distance: 24,
+                eachShowProps: 3,
                 props: {
                     spring: 0,
-                    trampoline: 5,
+                    trampoline: 0,
                     springShoe: 0,
-                    bambooFly: 5,
+                    bambooFly: 0,
                     rocketShip: 0,
                     protectionCover: 0,
                     diamond: 0,
                     moreOneLife: 0
                 },
-                propsPercentage: {}
+                // propsPercentage:{},
+                sticketPercentage: {
+                    fixation: 0.9,
+                    horizontal: 0.1,
+                    hitDisable: 0,
+                    oneceHit: 0
+                }
+            },
+            {
+                minHeight: 601,
+                maxHeight: 1000,
+                distance: 50,
+                eachShowProps: 3,
+                props: {
+                    spring: 0,
+                    trampoline: 0.5,
+                    springShoe: 0,
+                    bambooFly: 0.5,
+                    rocketShip: 0,
+                    protectionCover: 0,
+                    diamond: 0,
+                    moreOneLife: 0
+                },
+                // propsPercentage:{},
+                sticketPercentage: {
+                    fixation: 0.6,
+                    horizontal: 0.1,
+                    hitDisable: 0.1,
+                    oneceHit: 0.2
+                }
             },
             {
                 minHeight: 1001,
                 maxHeight: 2000,
                 distance: 60,
+                eachShowProps: 3,
                 props: {
                     spring: 0,
-                    trampoline: 2,
+                    trampoline: 0.5,
                     springShoe: 0,
-                    bambooFly: 5,
-                    rocketShip: 1,
+                    bambooFly: 0.4,
+                    rocketShip: 0.1,
                     protectionCover: 0,
                     diamond: 0,
                     moreOneLife: 0
                 },
-                propsPercentage: {}
+                // propsPercentage:{},
+                sticketPercentage: {
+                    fixation: 0.6,
+                    horizontal: 0.1,
+                    hitDisable: 0.1,
+                    oneceHit: 0.2
+                }
             },
             {
                 minHeight: 2001,
                 maxHeight: 4000,
                 distance: 70,
+                eachShowProps: 3,
                 props: {
                     spring: 0,
-                    trampoline: 2,
+                    trampoline: 0.5,
                     springShoe: 0,
-                    bambooFly: 5,
-                    rocketShip: 1,
+                    bambooFly: 0.3,
+                    rocketShip: 0.2,
                     protectionCover: 0,
                     diamond: 0,
                     moreOneLife: 0
                 },
-                propsPercentage: {}
+                // propsPercentage:{},
+                sticketPercentage: {
+                    fixation: 0.5,
+                    horizontal: 0.2,
+                    hitDisable: 0.1,
+                    oneceHit: 0.2
+                }
             },
             {
                 minHeight: 4001,
                 maxHeight: 6000,
                 distance: 70,
+                eachShowProps: 3,
                 props: {
                     spring: 0,
-                    trampoline: 10,
+                    trampoline: 0.2,
                     springShoe: 0,
-                    bambooFly: 2,
-                    rocketShip: 2,
+                    bambooFly: 0.5,
+                    rocketShip: 0.3,
                     protectionCover: 0,
                     diamond: 0,
                     moreOneLife: 0
                 },
-                propsPercentage: {}
+                // propsPercentage:{},
+                sticketPercentage: {
+                    fixation: 0.4,
+                    horizontal: 0.3,
+                    hitDisable: 0.1,
+                    oneceHit: 0.2
+                }
             },
         ];
         return _this;
@@ -116,14 +167,23 @@ var AllSticks = (function (_super) {
     /**
      * 根据当前阶段的道具各个数量设置对应出现的概率
     */
-    AllSticks.prototype.caculatePropPercent = function (nowStage) {
+    AllSticks.prototype.getPropPercentName = function (nowStage, propsName) {
         var propsObj = null;
         var meter = nowStage * this.STAGE_METER;
         var list = this.STICK_STAGE_DISTANSE;
         var len = list.length;
         var index = 0;
-        var totalMumber = 0;
         var getMyKey = null;
+        index = this.getNowPropIndex(nowStage);
+        propsObj = list[index][propsName];
+        getMyKey = this.getRandomKey(propsObj);
+        return getMyKey;
+    };
+    AllSticks.prototype.getNowPropIndex = function (nowStage) {
+        var meter = nowStage * this.STAGE_METER;
+        var list = this.STICK_STAGE_DISTANSE;
+        var len = list.length;
+        var index = 0;
         for (var i = 0; i < len; i++) {
             if (meter >= list[i].minHeight && meter <= list[i].maxHeight || i >= len - 1) {
                 // propsObj = list[i].props;
@@ -131,33 +191,24 @@ var AllSticks = (function (_super) {
                 break;
             }
         }
-        for (var key in list[index].props) {
-            totalMumber += list[index].props[key];
-        }
-        for (var key in list[index].props) {
-            list[index]['propsPercentage'][key] = list[index].props[key] / totalMumber;
-        }
-        getMyKey = this.getRandomPropKey(list[index]['propsPercentage']);
-        return {
-            stageIndex: index,
-            getMyKey: getMyKey
-        };
+        return index;
     };
     /**
      * 根据当前阶段的道具各个概率，获得道具的key 值，这个key值也是TYPE_STASTUS的值，如果为空，就是不设置道具
     */
-    AllSticks.prototype.getRandomPropKey = function (percentageObj) {
+    AllSticks.prototype.getRandomKey = function (percentageObj) {
         var randomNum = Math.random();
         var start = 0;
         var end = 0;
         var getMyKey = null;
         for (var key in percentageObj) {
+            // console.log('概率',start,end);
             end = start + percentageObj[key];
             if (randomNum > start && randomNum <= end) {
                 getMyKey = key;
                 break;
             }
-            start = start + end;
+            start = end;
         }
         return getMyKey;
     };
@@ -178,7 +229,7 @@ var AllSticks = (function (_super) {
             i++;
         }
         this.lastOneStickY = y - pedalObj.height;
-        console.log('最后的跳板', this.lastOneStickY, this.preStickY);
+        // console.log('最后的跳板',this.lastOneStickY ,this.preStickY)
         return groupBox;
     };
     // 当当前的最后那个跳板大于某个值，就创建下一屏的跳板
@@ -212,12 +263,13 @@ var AllSticks = (function (_super) {
     */
     AllSticks.prototype.getFixtionSticket = function (fixtionList, nowStage, groupBox) {
         var fixtionLen = fixtionList.length;
-        var num = 2;
+        var num = this.STICK_STAGE_DISTANSE[this.getNowPropIndex(nowStage)].eachShowProps;
         var stickList = [];
         var randomNum = null;
         var i = 0;
-        var propObj = null;
+        var getMyKey = null;
         if (fixtionLen) {
+            num = Math.floor(Math.random() * (num - 1)) + 1;
             while (i < num && i < fixtionLen) {
                 randomNum = Math.floor(Math.random() * (fixtionLen - 1));
                 if (stickList.indexOf(randomNum) === -1) {
@@ -227,9 +279,10 @@ var AllSticks = (function (_super) {
             }
         }
         for (var k = 0; k < stickList.length; k++) {
-            propObj = this.caculatePropPercent(nowStage);
-            if (propObj.getMyKey) {
-                this.propsClass.setTypeStatus(propObj.getMyKey);
+            getMyKey = this.getPropPercentName(nowStage, 'props');
+            // console.log('12',getMyKey);
+            if (getMyKey) {
+                this.propsClass.setTypeStatus(getMyKey);
                 this.propsClass.addPropToStage(groupBox, fixtionList[stickList[k]]);
                 // this.STICK_STAGE_DISTANSE[propObj.stageIndex]['props'][propObj.getMyKey]--;
             }
@@ -243,8 +296,11 @@ var AllSticks = (function (_super) {
         var spring = null;
         var distance = this.caculateStickDistance(nowStage);
         var sticketHeight = 0;
+        var keyName = null;
         stickObj = new StickItem();
+        keyName = this.getPropPercentName(nowStage, 'sticketPercentage');
         groupBox.addChild(stickObj);
+        stickObj.setRandomStick(keyName);
         sticketHeight = stickObj.height ? stickObj.height : 30;
         stickObj.$y = initY - (distance + sticketHeight);
         stickObj.$x = Math.random() * (this.stage.stageWidth - stickObj.width);

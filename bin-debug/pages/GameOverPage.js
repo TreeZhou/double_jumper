@@ -32,6 +32,7 @@ var GameOverPage = (function (_super) {
             _this.parent.removeChild(_this);
             Main.gamePage = new GamePage();
             Main.instance.addChild(Main.gamePage);
+            // Main.gamePage.visible = true;
             Main.gamePage.beginGame();
         }, this);
     };

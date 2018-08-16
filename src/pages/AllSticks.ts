@@ -5,7 +5,7 @@ class AllSticks extends BasePage{
     private eachStageDistance:number=30; // 每个阶段的间隔
     private stickHeight:number; // 踏板的高度
     private preStickY:number; // 前一个踏板的位置
-    private minDistance:number=40;
+    private minDistance:number=30;
 
     public lastOneStickY:number;   // 当前最后一个踏板的Y值
     public allStickList:any=[];
@@ -18,38 +18,74 @@ class AllSticks extends BasePage{
 	private STICK_STAGE_DISTANSE: any = [
 		{
 			minHeight: 0,
-			maxHeight: 1000,
-			distance: 50,
-			eachShowProps:2,
+			maxHeight: 400,
+			distance: 24,
+			eachShowProps:3,
 			props:{
 				spring:0,
-				trampoline:5,
+				trampoline:0,
 				springShoe:0,
-				bambooFly:5,
+				bambooFly:0,
 				rocketShip:0,
 				protectionCover:0,
 				diamond:0,
 				moreOneLife:0
 			},
-			propsPercentage:{}
+			// propsPercentage:{},
+			sticketPercentage:{
+				fixation:0.9,
+				horizontal:0.1,
+				hitDisable:0,
+				oneceHit:0
+			}
+	
+		},
+		{
+			minHeight: 601,
+			maxHeight: 1000,
+			distance: 50,
+			eachShowProps:3,
+			props:{
+				spring:0,
+				trampoline:0.5,
+				springShoe:0,
+				bambooFly:0.5,
+				rocketShip:0,
+				protectionCover:0,
+				diamond:0,
+				moreOneLife:0
+			},
+			// propsPercentage:{},
+			sticketPercentage:{
+				fixation:0.6,
+				horizontal:0.1,
+				hitDisable:0.1,
+				oneceHit:0.2
+			}
 	
 		},
 		{
 			minHeight: 1001,
 			maxHeight: 2000,
 			distance: 60,
-			eachShowProps:2,
+			eachShowProps:3,
 			props:{
 				spring:0,
-				trampoline:2,
+				trampoline:0.5,
 				springShoe:0,
-				bambooFly:5,
-				rocketShip:1,
+				bambooFly:0.4,
+				rocketShip:0.1,
 				protectionCover:0,
 				diamond:0,
 				moreOneLife:0
 			},
-			propsPercentage:{}
+			// propsPercentage:{},
+			sticketPercentage:{
+				fixation:0.6,
+				horizontal:0.1,
+				hitDisable:0.1,
+				oneceHit:0.2
+			}
 		},
 		{
 			minHeight: 2001,
@@ -58,31 +94,44 @@ class AllSticks extends BasePage{
 			eachShowProps:3,
 			props:{
 				spring:0,
-				trampoline:2,
+				trampoline:0.5,
 				springShoe:0,
-				bambooFly:5,
-				rocketShip:1,
+				bambooFly:0.3,
+				rocketShip:0.2,
 				protectionCover:0,
 				diamond:0,
 				moreOneLife:0
 			},
-			propsPercentage:{}
+			// propsPercentage:{},
+			sticketPercentage:{
+				fixation:0.5,
+				horizontal:0.2,
+				hitDisable:0.1,
+				oneceHit:0.2
+			}
 		},
 		{
 			minHeight: 4001,
 			maxHeight: 6000,
 			distance: 70,
+			eachShowProps:3,
 			props:{
-				spring:0,
-				trampoline:10,
+			spring:0,
+				trampoline:0.2,
 				springShoe:0,
-				bambooFly:2,
-				rocketShip:2,
+				bambooFly:0.5,
+				rocketShip:0.3,
 				protectionCover:0,
 				diamond:0,
 				moreOneLife:0
 			},
-			propsPercentage:{}
+			// propsPercentage:{},
+			sticketPercentage:{
+				fixation:0.4,
+				horizontal:0.3,
+				hitDisable:0.1,
+				oneceHit:0.2
+			}
 		},
 	]
     protected partAdded(partName: string, instance: any): void {
@@ -118,14 +167,29 @@ class AllSticks extends BasePage{
 	/**
 	 * 根据当前阶段的道具各个数量设置对应出现的概率
 	*/
-	public caculatePropPercent(nowStage) {
+	public getPropPercentName(nowStage,propsName) {
 		let propsObj = null;
 		let meter = nowStage * this.STAGE_METER;
 		let list = this.STICK_STAGE_DISTANSE;
 		let len = list.length;
 		let index = 0;
-		let totalMumber = 0;
 		let getMyKey = null;
+
+		index = this.getNowPropIndex(nowStage);
+		propsObj = list[index][propsName];
+
+
+		getMyKey = this.getRandomKey(propsObj);
+	
+		return getMyKey;
+		
+	}
+
+	public getNowPropIndex(nowStage) {
+		let meter = nowStage * this.STAGE_METER;
+		let list = this.STICK_STAGE_DISTANSE;
+		let len = list.length;
+		let index = 0;
 
 		for (let i = 0; i < len; i++) {
 			if (meter >= list[i].minHeight && meter <= list[i].maxHeight || i >= len - 1) {
@@ -135,38 +199,25 @@ class AllSticks extends BasePage{
 			}
 		}
 
-		for(let key in list[index].props) {
-			totalMumber += list[index].props[key];
-		}
-		for(let key in list[index].props) {
-			list[index]['propsPercentage'][key] = list[index].props[key]/totalMumber;
-		}
-
-		getMyKey = this.getRandomPropKey(list[index]['propsPercentage']);
-	
-		return {
-			stageIndex:index,
-			getMyKey:getMyKey
-		}
-
-
+		return index;
 	}
 	/**
 	 * 根据当前阶段的道具各个概率，获得道具的key 值，这个key值也是TYPE_STASTUS的值，如果为空，就是不设置道具
 	*/
-	private getRandomPropKey(percentageObj:Object){
+	private getRandomKey(percentageObj:Object){
 		let randomNum = Math.random();
 		let start = 0;
 		let end = 0;
 		let getMyKey = null;
 
 		for(let key in percentageObj) {
-			end =start+ percentageObj[key];
+			// console.log('概率',start,end);
+			end = start+ percentageObj[key];
 			if(randomNum>start &&　randomNum<=end) {
 				getMyKey = key;
 				break;
 			}
-			start = start + end;
+			start = end;
 		}
 
 		return getMyKey;
@@ -189,7 +240,7 @@ class AllSticks extends BasePage{
 			i++;
 		}
 		this.lastOneStickY = y - pedalObj.height;
-        console.log('最后的跳板',this.lastOneStickY ,this.preStickY)
+        // console.log('最后的跳板',this.lastOneStickY ,this.preStickY)
         return groupBox;
 	}
     // 当当前的最后那个跳板大于某个值，就创建下一屏的跳板
@@ -224,13 +275,15 @@ class AllSticks extends BasePage{
 	*/
 	private getFixtionSticket(fixtionList,nowStage,groupBox) {
 		let fixtionLen = fixtionList.length;
-		let num = 2;
+		let num = this.STICK_STAGE_DISTANSE[this.getNowPropIndex(nowStage)].eachShowProps;
 		let stickList = [];
 		let randomNum=null;
 		let i = 0;
-		let propObj = null;
+		let getMyKey = null;
+
 
 		if(fixtionLen) {
+			num = Math.floor(Math.random()*(num-1))+1;
 			while(i<num && i<fixtionLen) {
 				randomNum = Math.floor(Math.random()*(fixtionLen-1));
 				if(stickList.indexOf(randomNum)===-1) {
@@ -242,9 +295,10 @@ class AllSticks extends BasePage{
 		}
 
 		for(let k=0;k<stickList.length;k++) {
-			propObj = this.caculatePropPercent(nowStage);
-			if(propObj.getMyKey) {
-				this.propsClass.setTypeStatus(propObj.getMyKey);
+			getMyKey = this.getPropPercentName(nowStage,'props');
+			// console.log('12',getMyKey);
+			if(getMyKey) {
+				this.propsClass.setTypeStatus(getMyKey);
 				this.propsClass.addPropToStage(groupBox,fixtionList[stickList[k]]);
 				// this.STICK_STAGE_DISTANSE[propObj.stageIndex]['props'][propObj.getMyKey]--;
 
@@ -259,9 +313,12 @@ class AllSticks extends BasePage{
 		let spring = null;
 		let distance = this.caculateStickDistance(nowStage);
 		let sticketHeight = 0;
+		let keyName = null;
 
 		stickObj = new StickItem();
+		keyName = this.getPropPercentName(nowStage,'sticketPercentage');
 		groupBox.addChild(stickObj);
+		stickObj.setRandomStick(keyName);
 		sticketHeight=stickObj.height ? stickObj.height : 30;
 		stickObj.$y = initY - (distance + sticketHeight);
 		stickObj.$x = Math.random() * (this.stage.stageWidth - stickObj.width);
