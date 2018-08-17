@@ -41,6 +41,7 @@ class DoodlePlayer extends BasePage {
 	public isPlayCircle:boolean=false;
 
 	public isJumperTopStop:boolean=false;
+	public missDiastance:Object;  // 偏差值
 
 
 	// private playerColorList:Object={};
@@ -97,6 +98,9 @@ class DoodlePlayer extends BasePage {
 					'right':self.beanWingRightDefault
 				}
 			}
+		}
+		this.missDiastance = {
+			'normal':44
 		}
 		// console.log('object',this.euiImageJumpList);
 	}
@@ -235,6 +239,19 @@ class DoodlePlayer extends BasePage {
 			//添加事件监听器
 			this.orientation.addEventListener(egret.Event.CHANGE,this.onOrientation,this);
 			this.orientation.start();
+			document.addEventListener('keydown',(event:KeyboardEvent)=>{
+				console.log(event.keyCode);
+				switch(event.keyCode) {
+					case 65:
+					this.setSideStatus(this.SIDE_LEFT);
+					this.speedX = -5;
+					break;
+					case 68:
+					this.setSideStatus(this.SIDE_RIGHT);
+					this.speedX = 5;
+					break;
+				}
+			})
 		}
 
 	}

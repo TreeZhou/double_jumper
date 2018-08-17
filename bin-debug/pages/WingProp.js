@@ -15,6 +15,8 @@ var WingProp = (function (_super) {
         _this.TYPE_STATUS = 'wing';
         _this.TYPE_NAME = "wing";
         _this.JUMP_DISTANCE = 1000;
+        _this.UP_DISTANCE = 80;
+        _this.DOWN_DISTANCE = 100;
         return _this;
     }
     WingProp.prototype.partAdded = function (partName, instance) {

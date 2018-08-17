@@ -49,7 +49,7 @@ class BasePage extends eui.Component{
 		return pixel;
 	}
     // 检查是否超过屏幕底线，是的话就移除该对象
-    public checkISOverStage(fatherBox) {
+    public checkISOverStage(fatherBox,callback:Function) {
 		let list = fatherBox.$children;
 		let len = list.length;
 		let item;
@@ -67,6 +67,7 @@ class BasePage extends eui.Component{
 			for (let j = 0; j < removeChildList.length; j++) {
 				if (removeChildList[j]) {
 					fatherBox.removeChild(removeChildList[j]);
+					callback(removeChildList[j]);
 				}
 
 			}
@@ -79,5 +80,10 @@ class BasePage extends eui.Component{
 		for(let i=0;i<len;i++) {
 			this.$children[i].visible = false;
 		}
+	}
+	// recycle
+
+	public recycleObj(obj:Object,list:Array<any>){
+		list.push(obj);
 	}
 }

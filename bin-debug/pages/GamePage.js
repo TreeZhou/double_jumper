@@ -53,7 +53,7 @@ var GamePage = (function (_super) {
         this.createDoodle();
         this.createSticket(); // 创建跳板
         this.setInitDataGame(); // 设置游戏的开始数据
-        this.beginAnimateEvent(); // 开始动画监听
+        // this.beginAnimateEvent();  // 开始动画监听
     };
     // 创建涂鸦
     GamePage.prototype.createDoodle = function () {
@@ -100,20 +100,20 @@ var GamePage = (function (_super) {
             this.mapObjectMove();
         }
         this.player.moveplayerX();
-        this.checkISOverStage(this.stickList);
-        this.nowStage = this.allSticks.addNewPetals(this.stickList, this.nowStage);
-        this.allSticks.stickMoveLeftAndRight(this.stickList.$children);
-        if (this.player.isDown) {
-            this.checkIsHitDoodle(this.stickList.$children, this.checkIsStickHit.bind(this));
-            // this.checkIsHitDoodle(this.springList.$children,this.checkIsHitSpring.bind(this));
-        }
-        // console.log(this.stickList.$children.length);
         if (this.endGame) {
             this.gotoMoveBg();
         }
         else {
             this.checkIsGameOver();
+            this.checkISOverStage(this.stickList, this.allSticks.recycleAllObject.bind(this.allSticks));
+            this.nowStage = this.allSticks.addNewPetals(this.stickList, this.nowStage);
+            this.allSticks.stickMoveLeftAndRight(this.stickList.$children);
         }
+        if (this.player.isDown) {
+            this.checkIsHitDoodle(this.stickList.$children, this.checkIsStickHit.bind(this));
+            // this.checkIsHitDoodle(this.springList.$children,this.checkIsHitSpring.bind(this));
+        }
+        // console.log(this.stickList.$children.length);
     };
     GamePage.prototype.checkIsGameOver = function () {
         if (this.player.$y > this.stage.$stageHeight) {
@@ -157,7 +157,8 @@ var GamePage = (function (_super) {
         Main.gameOver = new GameOverPage();
         Main.instance.addChild(Main.gameOver);
         Main.gameOver.setScoreText(this.setScoreText());
-        // this.visible = false;
+        this.visible = false;
+        this.longBg.$y = 0;
         this.parent.removeChild(this);
     };
     GamePage.prototype.setScoreText = function () {
@@ -193,8 +194,8 @@ var GamePage = (function (_super) {
         var playerMaxY = this.player.$y + this.player.anchorOffsetY;
         var playerMinY = this.player.$y - this.player.anchorOffsetY;
         var playerHalf = this.player.height / 2;
-        var playerMinX = this.player.$x - this.player.anchorOffsetX;
-        var playerMaxX = this.player.$x + this.player.anchorOffsetX;
+        var playerMinX = this.player.$x - this.player.anchorOffsetX + this.player.missDiastance[this.player.COLOR_STATUS];
+        var playerMaxX = this.player.$x + this.player.anchorOffsetX - this.player.missDiastance[this.player.COLOR_STATUS];
         var playerMiddel = this.player.$y; //-this.player.anchorOffsetY/2 this.player.anchorOffsetY
         for (var i = 0; i < listLen; i++) {
             item = list[i];

@@ -65,7 +65,7 @@ class GamePage extends BasePage{
 		this.createDoodle();
 		this.createSticket();  // 创建跳板
 		this.setInitDataGame();  // 设置游戏的开始数据
-		this.beginAnimateEvent();  // 开始动画监听
+		// this.beginAnimateEvent();  // 开始动画监听
 	}
 	// 创建涂鸦
 	private createDoodle() {
@@ -112,19 +112,21 @@ class GamePage extends BasePage{
 			this.mapObjectMove();
 		}
 		this.player.moveplayerX();
-		this.checkISOverStage(this.stickList);
-		this.nowStage = this.allSticks.addNewPetals(this.stickList,this.nowStage);
-		this.allSticks.stickMoveLeftAndRight(this.stickList.$children);
+		if (this.endGame) {
+			this.gotoMoveBg();
+		} else {
+			this.checkIsGameOver();
+			this.checkISOverStage(this.stickList,this.allSticks.recycleAllObject.bind(this.allSticks));
+			this.nowStage = this.allSticks.addNewPetals(this.stickList,this.nowStage);
+			this.allSticks.stickMoveLeftAndRight(this.stickList.$children);
+		}
+
 		if (this.player.isDown) {
 			this.checkIsHitDoodle(this.stickList.$children, this.checkIsStickHit.bind(this));
 			// this.checkIsHitDoodle(this.springList.$children,this.checkIsHitSpring.bind(this));
 		}
 		// console.log(this.stickList.$children.length);
-		if (this.endGame) {
-			this.gotoMoveBg();
-		} else {
-			this.checkIsGameOver();
-		}
+
 
 	}
 	private checkIsGameOver(){
@@ -169,7 +171,9 @@ class GamePage extends BasePage{
 		Main.gameOver = new GameOverPage();
 		Main.instance.addChild(Main.gameOver);
 		Main.gameOver.setScoreText(this.setScoreText());
-		// this.visible = false;
+
+		this.visible = false;
+		this.longBg.$y = 0;
 		this.parent.removeChild(this);
 	}
 	private setScoreText() {
@@ -206,8 +210,8 @@ class GamePage extends BasePage{
 		let playerMaxY = this.player.$y+this.player.anchorOffsetY;
 		let playerMinY = this.player.$y-this.player.anchorOffsetY;
 		let playerHalf = this.player.height/2;
-		let playerMinX = this.player.$x-this.player.anchorOffsetX;
-		let playerMaxX = this.player.$x + this.player.anchorOffsetX;
+		let playerMinX = this.player.$x-this.player.anchorOffsetX+this.player.missDiastance[this.player.COLOR_STATUS];
+		let playerMaxX = this.player.$x + this.player.anchorOffsetX-this.player.missDiastance[this.player.COLOR_STATUS];
 		let playerMiddel = this.player.$y; //-this.player.anchorOffsetY/2 this.player.anchorOffsetY
 
 		for (let i = 0; i < listLen; i++) {

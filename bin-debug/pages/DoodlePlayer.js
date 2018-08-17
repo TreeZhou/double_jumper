@@ -76,6 +76,9 @@ var DoodlePlayer = (function (_super) {
                 }
             }
         };
+        this.missDiastance = {
+            'normal': 44
+        };
         // console.log('object',this.euiImageJumpList);
     };
     DoodlePlayer.prototype.setInitJumperData = function () {
@@ -197,6 +200,7 @@ var DoodlePlayer = (function (_super) {
         }
     };
     DoodlePlayer.prototype.orientationEvent = function () {
+        var _this = this;
         var _self = this;
         try {
             if (wx && wx.onAccelerometerChange) {
@@ -209,6 +213,19 @@ var DoodlePlayer = (function (_super) {
             //添加事件监听器
             this.orientation.addEventListener(egret.Event.CHANGE, this.onOrientation, this);
             this.orientation.start();
+            document.addEventListener('keydown', function (event) {
+                console.log(event.keyCode);
+                switch (event.keyCode) {
+                    case 65:
+                        _this.setSideStatus(_this.SIDE_LEFT);
+                        _this.speedX = -5;
+                        break;
+                    case 68:
+                        _this.setSideStatus(_this.SIDE_RIGHT);
+                        _this.speedX = 5;
+                        break;
+                }
+            });
         }
     };
     DoodlePlayer.prototype.onOrientation = function (e) {

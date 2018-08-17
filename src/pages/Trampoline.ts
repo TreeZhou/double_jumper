@@ -7,6 +7,8 @@ class Trampoline extends BasePage{
 	public TYPE_UP:string='up';
 	public TYPE_DOWN:string='down';
 	public JUMP_DISTANCE:number=400;
+	public UP_DISTANCE:number = 80;
+	public DOWN_DISTANCE:number = 100;
 
 	// public COLOR_STATUS:string='normal';
 	// public COLOR_DEFAULE:string='normal';

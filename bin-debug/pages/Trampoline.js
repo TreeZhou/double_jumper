@@ -17,6 +17,8 @@ var Trampoline = (function (_super) {
         _this.TYPE_UP = 'up';
         _this.TYPE_DOWN = 'down';
         _this.JUMP_DISTANCE = 400;
+        _this.UP_DISTANCE = 80;
+        _this.DOWN_DISTANCE = 100;
         return _this;
     }
     Trampoline.prototype.partAdded = function (partName, instance) {

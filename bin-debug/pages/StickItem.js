@@ -32,15 +32,21 @@ var StickItem = (function (_super) {
     };
     StickItem.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
+        this.setInitAllData();
         this.initStickClothData();
         // this.setRandomStick();
-        this.setInitLeftOrRightMove();
-        this.setJumpeHeight();
+        // this.setInitLeftOrRightMove();
+        // this.setJumpeHeight();
         // 'waterDefaultMove'
         // let movePescide = this.createMoveObj("woodDefaultMove",this.waterMoveDefault);
         // console.log('rena',movePescide,this.waterMoveDefault);
         // this.waterMoveCilpDefault = movePescide;
         // movePescide.play();
+    };
+    StickItem.prototype.setInitAllData = function () {
+        this.initStickClothData();
+        this.setInitLeftOrRightMove();
+        this.setJumpeHeight();
     };
     StickItem.prototype.setJumpeHeight = function () {
         this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
@@ -67,7 +73,7 @@ var StickItem = (function (_super) {
             }
         };
     };
-    StickItem.prototype.setRandomStick = function (typeName) {
+    StickItem.prototype.setStickTypeName = function (typeName) {
         // let randomNum = Math.random();
         // if(randomNum<this.SHOW_PROBABILITY[0]) {
         // 	this.setTypeStick(this.TYPE_FIXATION);

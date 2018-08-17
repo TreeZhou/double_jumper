@@ -54,7 +54,7 @@ var BasePage = (function (_super) {
         return pixel;
     };
     // 检查是否超过屏幕底线，是的话就移除该对象
-    BasePage.prototype.checkISOverStage = function (fatherBox) {
+    BasePage.prototype.checkISOverStage = function (fatherBox, callback) {
         var list = fatherBox.$children;
         var len = list.length;
         var item;
@@ -70,6 +70,7 @@ var BasePage = (function (_super) {
             for (var j = 0; j < removeChildList.length; j++) {
                 if (removeChildList[j]) {
                     fatherBox.removeChild(removeChildList[j]);
+                    callback(removeChildList[j]);
                 }
             }
         }
@@ -80,6 +81,10 @@ var BasePage = (function (_super) {
         for (var i = 0; i < len; i++) {
             this.$children[i].visible = false;
         }
+    };
+    // recycle
+    BasePage.prototype.recycleObj = function (obj, list) {
+        list.push(obj);
     };
     return BasePage;
 }(eui.Component));

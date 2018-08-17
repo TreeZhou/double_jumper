@@ -23,6 +23,7 @@ class StickItem extends BasePage{
 	// public COLOR_STATUS:string='normal';
 	// public COLOR_DEFAULE:string='normal';
 
+
 	private initSpeed:number=2;
 	private speed:number=2;
 	public JUMP_DISTANCE:number=60;
@@ -35,22 +36,29 @@ class StickItem extends BasePage{
 	protected partAdded(partName:string,instance:any):void
 	{
 		super.partAdded(partName,instance);
+		
 	}
 
 
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
-		
+		this.setInitAllData();
 		this.initStickClothData();
 		// this.setRandomStick();
-		this.setInitLeftOrRightMove();
-		this.setJumpeHeight();
+		// this.setInitLeftOrRightMove();
+		// this.setJumpeHeight();
 		// 'waterDefaultMove'
 		// let movePescide = this.createMoveObj("woodDefaultMove",this.waterMoveDefault);
 		// console.log('rena',movePescide,this.waterMoveDefault);
 		// this.waterMoveCilpDefault = movePescide;
 		// movePescide.play();
+	
+	}
+	public setInitAllData(){
+		this.initStickClothData();
+		this.setInitLeftOrRightMove();
+		this.setJumpeHeight();
 	}
 	private setJumpeHeight() {
 		this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
@@ -78,7 +86,7 @@ class StickItem extends BasePage{
 			}
 		}
 	}
-	public setRandomStick(typeName) {
+	public setStickTypeName(typeName) {
 		// let randomNum = Math.random();
 		// if(randomNum<this.SHOW_PROBABILITY[0]) {
 		// 	this.setTypeStick(this.TYPE_FIXATION);

@@ -8,9 +8,12 @@ class AllSticks extends BasePage{
     private minDistance:number=30;
 
     public lastOneStickY:number;   // 当前最后一个踏板的Y值
-    public allStickList:any=[];
+    public stickRecyclePool:any=[];
 
-	private propsClass:StagePropClass;
+	public propsClass:StagePropClass;
+	
+	public hasPropsStage:number=3;
+
 
     // public stickList:eui.Group;
 
@@ -25,8 +28,8 @@ class AllSticks extends BasePage{
 				spring:0,
 				trampoline:0,
 				springShoe:0,
-				bambooFly:0,
-				rocketShip:0,
+				wing:0,
+				rocket:0,
 				protectionCover:0,
 				diamond:0,
 				moreOneLife:0
@@ -34,8 +37,8 @@ class AllSticks extends BasePage{
 			// propsPercentage:{},
 			sticketPercentage:{
 				fixation:0.9,
-				horizontal:0.1,
-				hitDisable:0,
+				horizontal:0,
+				hitDisable:0.1,
 				oneceHit:0
 			}
 	
@@ -43,38 +46,38 @@ class AllSticks extends BasePage{
 		{
 			minHeight: 601,
 			maxHeight: 1000,
-			distance: 50,
+			distance: 30,
 			eachShowProps:3,
 			props:{
 				spring:0,
-				trampoline:0.5,
+				trampoline:0.8,
 				springShoe:0,
-				bambooFly:0.5,
-				rocketShip:0,
+				wing:0.2,
+				rocket:0,
 				protectionCover:0,
 				diamond:0,
 				moreOneLife:0
 			},
 			// propsPercentage:{},
 			sticketPercentage:{
-				fixation:0.6,
+				fixation:0.8,
 				horizontal:0.1,
 				hitDisable:0.1,
-				oneceHit:0.2
+				oneceHit:0
 			}
 	
 		},
 		{
 			minHeight: 1001,
 			maxHeight: 2000,
-			distance: 60,
+			distance: 40,
 			eachShowProps:3,
 			props:{
 				spring:0,
-				trampoline:0.5,
+				trampoline:0.6,
 				springShoe:0,
-				bambooFly:0.4,
-				rocketShip:0.1,
+				wing:0.3,
+				rocket:0.1,
 				protectionCover:0,
 				diamond:0,
 				moreOneLife:0
@@ -90,14 +93,14 @@ class AllSticks extends BasePage{
 		{
 			minHeight: 2001,
 			maxHeight: 4000,
-			distance: 70,
+			distance: 50,
 			eachShowProps:3,
 			props:{
 				spring:0,
 				trampoline:0.5,
 				springShoe:0,
-				bambooFly:0.3,
-				rocketShip:0.2,
+				wing:0.3,
+				rocket:0.2,
 				protectionCover:0,
 				diamond:0,
 				moreOneLife:0
@@ -113,14 +116,14 @@ class AllSticks extends BasePage{
 		{
 			minHeight: 4001,
 			maxHeight: 6000,
-			distance: 70,
+			distance: 60,
 			eachShowProps:3,
 			props:{
 			spring:0,
 				trampoline:0.2,
 				springShoe:0,
-				bambooFly:0.5,
-				rocketShip:0.3,
+				wing:0.5,
+				rocket:0.3,
 				protectionCover:0,
 				diamond:0,
 				moreOneLife:0
@@ -143,6 +146,7 @@ class AllSticks extends BasePage{
         this.initStickData();
 	}
     private initStickData(){
+		this.hasPropsStage = 3;
         this.preStickY = this.stage.$stageHeight;
 		this.propsClass = new StagePropClass();
 		this.addChild(this.propsClass);
@@ -231,13 +235,28 @@ class AllSticks extends BasePage{
 		let pedalObj = null;
         let sticketObj = null;
 
-		while (y > 0) {
-            sticketObj = this.createSticket(nowStage,this.preStickY, i,groupBox);
-            pedalObj = sticketObj.stickObj;
-            groupBox = sticketObj.groupBox;
+		let sticket = new SetCheckPoints();
+		let list = sticket.fixtionStick({
+			lastY:this.stage.$stageHeight,
+            stageWidth:this.stage.$stageWidth,
+            distance:24,
+            num:20,
+			keyNameList:['fixation']
+		});
+		// while (y > 0) {
+        //     sticketObj = this.createSticket(nowStage,this.preStickY, i,groupBox);
+        //     pedalObj = sticketObj.stickObj;
+        //     groupBox = sticketObj.groupBox;
+		// 	y = pedalObj.$y;
+		// 	this.preStickY = pedalObj.$y;
+		// 	i++;
+		// }
+		for(let i=0;i<list.length;i++) {
+			groupBox.addChild(list[i]);
+			pedalObj = list[i];
+			pedalObj.setStickTypeName(pedalObj.typeName);
+			console.log('pedalObj',pedalObj.$y,pedalObj.height,this.stage.$stageHeight);
 			y = pedalObj.$y;
-			this.preStickY = pedalObj.$y;
-			i++;
 		}
 		this.lastOneStickY = y - pedalObj.height;
         // console.log('最后的跳板',this.lastOneStickY ,this.preStickY)
@@ -250,6 +269,7 @@ class AllSticks extends BasePage{
 		let pedalObj = null;
         let sticketObj = null;
 		let fixtionList = [];
+		let propsObj = null;
 
         if (this.lastOneStickY > (this.eachStageDistance + this.minDistance)) {
 			this.preStickY = 0;
@@ -260,12 +280,20 @@ class AllSticks extends BasePage{
                 groupBox = sticketObj.groupBox;
 				y = pedalObj.$y;
 				this.preStickY = pedalObj.$y;
-				if(pedalObj.TYPE_STATUS === pedalObj.TYPE_FIXATION ) {
-					fixtionList.push(pedalObj);
+				if(pedalObj.TYPE_STATUS === pedalObj.TYPE_FIXATION && nowStage === this.hasPropsStage) {
+					propsObj = this.setPropOnSticket(pedalObj,nowStage,groupBox);
+					if(propsObj) {
+						pedalObj.$y = pedalObj.$y-propsObj.DOWN_DISTANCE;
+						propsObj.$y =  propsObj.$y-propsObj.DOWN_DISTANCE;
+						pedalObj.meter = this.changeToMeter(pedalObj.$y,nowStage);
+						y = propsObj.$y-propsObj.UP_DISTANCE;
+						this.preStickY = y;
+						this.hasPropsStage++;
+					}
 				}
 				i++;
 			}
-			this.getFixtionSticket(fixtionList,nowStage,groupBox);
+			// this.getFixtionSticket(fixtionList,nowStage,groupBox);
 			this.lastOneStickY = y - pedalObj.height;
 		}
         return nowStage;
@@ -288,6 +316,7 @@ class AllSticks extends BasePage{
 				randomNum = Math.floor(Math.random()*(fixtionLen-1));
 				if(stickList.indexOf(randomNum)===-1) {
 					stickList.push(randomNum);
+
 					i++;
 				}
 		
@@ -305,6 +334,17 @@ class AllSticks extends BasePage{
 			}
 		}
 	}
+	private setPropOnSticket(sticketObj,nowStage,groupBox){
+		let myKey = null;
+		let propsObj = null;
+
+		myKey = this.getPropPercentName(nowStage,'props');
+		if(myKey) {
+			this.propsClass.setTypeStatus(myKey);
+			propsObj = this.propsClass.addPropToStage(groupBox,sticketObj);
+		}
+		return propsObj;
+	}
     /**
 	 * 创建踏板对象
 	*/
@@ -315,22 +355,30 @@ class AllSticks extends BasePage{
 		let sticketHeight = 0;
 		let keyName = null;
 
-		stickObj = new StickItem();
+		stickObj =  this.createStick();   ///     Object.create(this.allPropsObjectPool['stickItem']);
 		keyName = this.getPropPercentName(nowStage,'sticketPercentage');
 		groupBox.addChild(stickObj);
-		stickObj.setRandomStick(keyName);
+		stickObj.setStickTypeName(keyName);
 		sticketHeight=stickObj.height ? stickObj.height : 30;
 		stickObj.$y = initY - (distance + sticketHeight);
 		stickObj.$x = Math.random() * (this.stage.stageWidth - stickObj.width);
 		stickObj.meter = this.changeToMeter(stickObj.$y, nowStage);
-		// if(stickObj.TYPE_STATUS === stickObj.TYPE_FIXATION) {
-		// 	this.propsClass.addPropToStage(groupBox,stickObj);
-		// }
 
         return {
             stickObj:stickObj,
             groupBox:groupBox
         };
+	}
+	private createStick(){
+		let item = null;
+		let propsList = this.stickRecyclePool;
+		if(propsList.length) {
+			item = propsList[0];
+			propsList.shift();
+		}else {
+			item = new StickItem();
+		}
+		return item;
 	}
 	public stickMoveLeftAndRight(allStickList) {
 		let list = allStickList;
@@ -340,6 +388,19 @@ class AllSticks extends BasePage{
 			item = list[i];
 			if (item.TYPE_STATUS === item.TYPE_HORIZONTAL) {
 				item.leftAndRightMove();
+			}
+		}
+	}
+	public recycleAllObject(obj){
+		if(obj.TYPE_NAME) {
+			if(obj.TYPE_NAME === 'trampoline') {
+				this.recycleObj(obj,this.propsClass.allPropsPool[obj.TYPE_NAME]);
+			}else if(obj.TYPE_NAME === 'wing'){
+				this.recycleObj(obj,this.propsClass.allPropsPool[obj.TYPE_NAME]);
+			}else if(obj.TYPE_NAME === 'rocket'){
+				this.recycleObj(obj,this.propsClass.allPropsPool[obj.TYPE_NAME]);
+			}else if(obj.TYPE_NAME === 'sticket'){
+				this.recycleObj(obj,this.stickRecyclePool);
 			}
 		}
 	}
