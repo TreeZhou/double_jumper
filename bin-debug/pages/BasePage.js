@@ -43,6 +43,11 @@ var BasePage = (function (_super) {
         }
         return meterNum;
     };
+    BasePage.prototype.doodleChangeToMeter = function (y) {
+        var num = 0;
+        num = Math.ceil((y / this.stage.$stageHeight) * this.STAGE_METER);
+        return num;
+    };
     /**
      * 米换成像素
      */
@@ -81,10 +86,6 @@ var BasePage = (function (_super) {
         for (var i = 0; i < len; i++) {
             this.$children[i].visible = false;
         }
-    };
-    // recycle
-    BasePage.prototype.recycleObj = function (obj, list) {
-        list.push(obj);
     };
     return BasePage;
 }(eui.Component));

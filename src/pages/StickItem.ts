@@ -45,6 +45,7 @@ class StickItem extends BasePage{
 		super.childrenCreated();
 		this.setInitAllData();
 		this.initStickClothData();
+		
 		// this.setRandomStick();
 		// this.setInitLeftOrRightMove();
 		// this.setJumpeHeight();
@@ -59,6 +60,11 @@ class StickItem extends BasePage{
 		this.initStickClothData();
 		this.setInitLeftOrRightMove();
 		this.setJumpeHeight();
+	}
+	public resetIniData(){
+		this.visible = true;
+		this.waterMoveCilpDefault.gotoAndStop(0);
+		this.woodMoveCilpDefault.gotoAndStop(0);
 	}
 	private setJumpeHeight() {
 		this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);

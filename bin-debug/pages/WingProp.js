@@ -27,6 +27,8 @@ var WingProp = (function (_super) {
         this.setSkinData();
         this.setJumpeHeight();
     };
+    WingProp.prototype.setInitAllData = function () {
+    };
     WingProp.prototype.setJumpeHeight = function () {
         this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
     };

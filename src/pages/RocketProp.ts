@@ -20,6 +20,9 @@ class RocketProp extends BasePage {
 		this.setSkinData();
 		this.setJumpeHeight();
 	}
+	public setInitAllData() {
+		
+	}
 	public setSkinData(){
 		let self = this;
 		this.skinsData = {

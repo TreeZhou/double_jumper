@@ -48,6 +48,11 @@ var StickItem = (function (_super) {
         this.setInitLeftOrRightMove();
         this.setJumpeHeight();
     };
+    StickItem.prototype.resetIniData = function () {
+        this.visible = true;
+        this.waterMoveCilpDefault.gotoAndStop(0);
+        this.woodMoveCilpDefault.gotoAndStop(0);
+    };
     StickItem.prototype.setJumpeHeight = function () {
         this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
     };

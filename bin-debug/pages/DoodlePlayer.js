@@ -27,6 +27,8 @@ var DoodlePlayer = (function (_super) {
         _this.speedX = 0;
         _this.isPlayCircle = false;
         _this.isJumperTopStop = false;
+        _this.doodelMeter = 0; // 豆丁跳跃的累计值
+        _this.isStopCaulte = false; // 是否停止累计分数
         // private playerColorList:Object={};
         _this.sideStauts = [
             _this.SIDE_FACE,
@@ -187,6 +189,9 @@ var DoodlePlayer = (function (_super) {
         }
         else {
             this.isJumperTopStop = true;
+            if (!this.isStopCaulte) {
+                this.doodelMeter = this.doodelMeter + this.nowSpeed;
+            }
         }
         if (this.isDown) {
             this.setJumperStatus(this.JUMP_NORMAL);
@@ -208,7 +213,6 @@ var DoodlePlayer = (function (_super) {
             }
         }
         catch (err) {
-            console.log(err);
             this.orientation = new egret.DeviceOrientation();
             //添加事件监听器
             this.orientation.addEventListener(egret.Event.CHANGE, this.onOrientation, this);

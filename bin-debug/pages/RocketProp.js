@@ -27,6 +27,8 @@ var RocketProp = (function (_super) {
         this.setSkinData();
         this.setJumpeHeight();
     };
+    RocketProp.prototype.setInitAllData = function () {
+    };
     RocketProp.prototype.setSkinData = function () {
         var self = this;
         this.skinsData = {

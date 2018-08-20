@@ -3,9 +3,8 @@ class GamePage extends BasePage{
 		super();
 	}
 
-	private playerIsMove: boolean = true; // 角色是否可以移动
 	private endGame: boolean = false;
-	private nowStage: number = 1;
+	// private nowStage: number = 1;
 
 
 	private orientation: any;
@@ -65,7 +64,7 @@ class GamePage extends BasePage{
 		this.createDoodle();
 		this.createSticket();  // 创建跳板
 		this.setInitDataGame();  // 设置游戏的开始数据
-		// this.beginAnimateEvent();  // 开始动画监听
+		this.beginAnimateEvent();  // 开始动画监听
 	}
 	// 创建涂鸦
 	private createDoodle() {
@@ -79,18 +78,17 @@ class GamePage extends BasePage{
 	private createSticket(){
 		this.allSticks = new AllSticks();
 		this.addChild(this.allSticks);
-		this.stickList = this.allSticks.initSticket(this.stickList,this.nowStage);
+		this.stickList = this.allSticks.initSticket(this.stickList);
 	}
 	/**
 	 * 设置初始值
 	 */
 	public setInitDataGame() {
 		this.player.visible = true;
-		this.playerIsMove = true;
 		this.endGame = false;
 		this.player.$y = this.stage.$stageHeight*0.9;
 		this.longBg.$y = 0;
-		this.nowStage = 1;
+		// this.nowStage = 1;
 		// this.scoreText.visible = false;
 		// this.getRandomPosition();  // 初始化弹簧的数据
 		console.log('对象',this.player.width,this.player.height,this.player.$y,this.player.$x,this.player.anchorOffsetX,this.player.anchorOffsetY);
@@ -105,9 +103,7 @@ class GamePage extends BasePage{
 	 * 动画监听函数
 	 */
 	private onEnterFrame() {
-		if (this.playerIsMove) {
-			this.player.movePlayerY();
-		}
+		this.player.movePlayerY();
 		if(this.player.isJumperTopStop){
 			this.mapObjectMove();
 		}
@@ -117,7 +113,7 @@ class GamePage extends BasePage{
 		} else {
 			this.checkIsGameOver();
 			this.checkISOverStage(this.stickList,this.allSticks.recycleAllObject.bind(this.allSticks));
-			this.nowStage = this.allSticks.addNewPetals(this.stickList,this.nowStage);
+			this.allSticks.addNewPetals(this.stickList,this.doodleChangeToMeter(this.player.doodelMeter));
 			this.allSticks.stickMoveLeftAndRight(this.stickList.$children);
 		}
 
@@ -135,6 +131,7 @@ class GamePage extends BasePage{
 			this.player.setStartJumpeSpeed(this.stage.$stageHeight,this.player.frameNum);
 			this.player.setDownAddSpeed(this.stage.$stageHeight,this.player.frameNum);
 			this.endGame = true;
+			this.player.isStopCaulte = true;
 		}
 	}
 	private gotoMoveBg(){
@@ -179,7 +176,8 @@ class GamePage extends BasePage{
 	private setScoreText() {
 		let score = null;
 		// console.log(this.player.jumpStartY);
-		score = '分数：' + Math.ceil(this.changeToMeter(this.player.jumpStartY, this.nowStage));
+		console.log('tingzhi',this.player.doodelMeter);
+		score = '分数：' + Math.ceil(this.doodleChangeToMeter(this.player.doodelMeter));
 		return score;
 	}
 	private removeAllList() {

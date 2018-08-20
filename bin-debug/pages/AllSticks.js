@@ -16,6 +16,92 @@ var AllSticks = (function (_super) {
         _this.minDistance = 30;
         _this.stickRecyclePool = [];
         _this.hasPropsStage = 3;
+        _this.METER_STAGE_LIST = [
+            {
+                minHeight: 600,
+                maxHeight: 2000,
+                distance: 30,
+                pointRateList: [0.1, 0.7, 0.2],
+                singlePoprsRate: {
+                    spring: 0,
+                    trampoline: 0.9,
+                    springShoe: 0,
+                    wing: 0.1,
+                    rocket: 0,
+                    protectionCover: 0,
+                    diamond: 0,
+                    moreOneLife: 0
+                },
+                moreSticketRate: {
+                    fixation: 0.7,
+                    horizontal: 0.1,
+                    hitDisable: 0.1,
+                    oneceHit: 0.1
+                },
+                signleSticketRate: {
+                    fixation: 0.9,
+                    horizontal: 0.1,
+                    hitDisable: 0,
+                    oneceHit: 0
+                },
+            },
+            {
+                minHeight: 2000,
+                maxHeight: 5000,
+                distance: 40,
+                pointRateList: [0.2, 0.6, 0.2],
+                singlePoprsRate: {
+                    spring: 0,
+                    trampoline: 0.8,
+                    springShoe: 0,
+                    wing: 0.2,
+                    rocket: 0,
+                    protectionCover: 0,
+                    diamond: 0,
+                    moreOneLife: 0
+                },
+                moreSticketRate: {
+                    fixation: 0.5,
+                    horizontal: 0.3,
+                    hitDisable: 0.1,
+                    oneceHit: 0.1
+                },
+                signleSticketRate: {
+                    fixation: 0.7,
+                    horizontal: 0.2,
+                    hitDisable: 0,
+                    oneceHit: 0.1
+                },
+            },
+            {
+                minHeight: 5000,
+                maxHeight: 10000,
+                distance: 50,
+                pointRateList: [0.2, 0.6, 0.2],
+                singlePoprsRate: {
+                    spring: 0,
+                    trampoline: 0.8,
+                    springShoe: 0,
+                    wing: 0.2,
+                    rocket: 0,
+                    protectionCover: 0,
+                    diamond: 0,
+                    moreOneLife: 0
+                },
+                moreSticketRate: {
+                    fixation: 0.5,
+                    horizontal: 0.3,
+                    hitDisable: 0.1,
+                    oneceHit: 0.1
+                },
+                signleSticketRate: {
+                    fixation: 0.7,
+                    horizontal: 0.2,
+                    hitDisable: 0,
+                    oneceHit: 0.1
+                },
+            },
+        ];
         // public stickList:eui.Group;
         // 每个阶段跳板的最大间距
         _this.STICK_STAGE_DISTANSE = [
@@ -149,52 +235,53 @@ var AllSticks = (function (_super) {
         this.preStickY = this.stage.$stageHeight;
         this.propsClass = new StagePropClass();
         this.addChild(this.propsClass);
+        this.setCheckPoints = new SetCheckPoints();
     };
     /**
      * 计算当前这个屏跳板的间距
      */
-    AllSticks.prototype.caculateStickDistance = function (nowStage) {
-        var distand = null;
-        var meter = nowStage * this.STAGE_METER;
-        var list = this.STICK_STAGE_DISTANSE;
-        var len = list.length;
-        for (var i = 0; i < len; i++) {
-            if (meter >= list[i].minHeight && meter <= list[i].maxHeight || i >= len - 1) {
-                distand = Math.ceil(Math.abs(Math.random() * (list[i].distance - this.minDistance)) + this.minDistance);
-                break;
-            }
-        }
-        return distand;
-    };
+    // public caculateStickDistance(nowStage) {
+    // 	let distand = null;
+    // 	let meter = nowStage * this.STAGE_METER;
+    // 	let list = this.STICK_STAGE_DISTANSE;
+    // 	let len = list.length;
+    // 	for (let i = 0; i < len; i++) {
+    // 		if (meter >= list[i].minHeight && meter <= list[i].maxHeight || i >= len - 1) {
+    // 			distand = Math.ceil(Math.abs(Math.random() * (list[i].distance - this.minDistance)) + this.minDistance);
+    // 			break;
+    // 		}
+    // 	}
+    // 	return distand;
+    // }
     /**
      * 根据当前阶段的道具各个数量设置对应出现的概率
     */
-    AllSticks.prototype.getPropPercentName = function (nowStage, propsName) {
-        var propsObj = null;
-        var meter = nowStage * this.STAGE_METER;
-        var list = this.STICK_STAGE_DISTANSE;
-        var len = list.length;
-        var index = 0;
-        var getMyKey = null;
-        index = this.getNowPropIndex(nowStage);
-        propsObj = list[index][propsName];
-        getMyKey = this.getRandomKey(propsObj);
-        return getMyKey;
-    };
-    AllSticks.prototype.getNowPropIndex = function (nowStage) {
-        var meter = nowStage * this.STAGE_METER;
-        var list = this.STICK_STAGE_DISTANSE;
-        var len = list.length;
-        var index = 0;
-        for (var i = 0; i < len; i++) {
-            if (meter >= list[i].minHeight && meter <= list[i].maxHeight || i >= len - 1) {
-                // propsObj = list[i].props;
-                index = i;
-                break;
-            }
-        }
-        return index;
-    };
+    // public getPropPercentName(nowStage,propsName) {
+    // 	let propsObj = null;
+    // 	let meter = nowStage * this.STAGE_METER;
+    // 	let list = this.STICK_STAGE_DISTANSE;
+    // 	let len = list.length;
+    // 	let index = 0;
+    // 	let getMyKey = null;
+    // 	index = this.getNowPropIndex(nowStage);
+    // 	propsObj = list[index][propsName];
+    // 	getMyKey = this.getRandomKey(propsObj);
+    // 	return getMyKey;
+    // }
+    // public getNowPropIndex(nowStage) {
+    // 	let meter = nowStage * this.STAGE_METER;
+    // 	let list = this.STICK_STAGE_DISTANSE;
+    // 	let len = list.length;
+    // 	let index = 0;
+    // 	for (let i = 0; i < len; i++) {
+    // 		if (meter >= list[i].minHeight && meter <= list[i].maxHeight || i >= len - 1) {
+    // 			// propsObj = list[i].props;
+    // 			index = i;
+    // 			break;
+    // 		}
+    // 	}
+    // 	return index;
+    // }
     /**
      * 根据当前阶段的道具各个概率，获得道具的key 值，这个key值也是TYPE_STASTUS的值，如果为空，就是不设置道具
     */
@@ -217,146 +304,246 @@ var AllSticks = (function (_super) {
     /**
      * 初始化第一屏的踏板的位置，随机为主
      */
-    AllSticks.prototype.initSticket = function (groupBox, nowStage) {
+    AllSticks.prototype.initSticket = function (groupBox) {
         var i = 0;
         var y = this.stage.$stageHeight;
         var pedalObj = null;
         var sticketObj = null;
-        var sticket = new SetCheckPoints();
-        var list = sticket.fixtionStick({
+        var list = this.setCheckPoints.fixtionStick({
             lastY: this.stage.$stageHeight,
             stageWidth: this.stage.$stageWidth,
             distance: 24,
-            num: 20
+            num: 20,
+            keyName: 'fixation'
         });
-        // while (y > 0) {
-        //     sticketObj = this.createSticket(nowStage,this.preStickY, i,groupBox);
-        //     pedalObj = sticketObj.stickObj;
-        //     groupBox = sticketObj.groupBox;
-        // 	y = pedalObj.$y;
-        // 	this.preStickY = pedalObj.$y;
-        // 	i++;
-        // }
         for (var i_1 = 0; i_1 < list.length; i_1++) {
             groupBox.addChild(list[i_1]);
             pedalObj = list[i_1];
             pedalObj.setStickTypeName(pedalObj.typeName);
-            console.log('pedalObj', pedalObj.$y, pedalObj.height, this.stage.$stageHeight);
             y = pedalObj.$y;
         }
         this.lastOneStickY = y - pedalObj.height;
-        // console.log('最后的跳板',this.lastOneStickY ,this.preStickY)
         return groupBox;
     };
     // 当当前的最后那个跳板大于某个值，就创建下一屏的跳板
-    AllSticks.prototype.addNewPetals = function (groupBox, nowStage) {
+    AllSticks.prototype.addNewPetals = function (groupBox, playerMeter) {
         var i = 0;
         var y = 0;
         var pedalObj = null;
         var sticketObj = null;
         var fixtionList = [];
         var propsObj = null;
+        var rateObj = null;
         if (this.lastOneStickY > (this.eachStageDistance + this.minDistance)) {
             this.preStickY = 0;
-            nowStage++;
-            while (y > -this.stage.$stageHeight) {
-                sticketObj = this.createSticket(nowStage, this.preStickY, i, groupBox);
-                pedalObj = sticketObj.stickObj;
-                groupBox = sticketObj.groupBox;
-                y = pedalObj.$y;
-                this.preStickY = pedalObj.$y;
-                if (pedalObj.TYPE_STATUS === pedalObj.TYPE_FIXATION && nowStage === this.hasPropsStage) {
-                    propsObj = this.setPropOnSticket(pedalObj, nowStage, groupBox);
-                    if (propsObj) {
-                        pedalObj.$y = pedalObj.$y - propsObj.DOWN_DISTANCE;
-                        propsObj.$y = propsObj.$y - propsObj.DOWN_DISTANCE;
-                        pedalObj.meter = this.changeToMeter(pedalObj.$y, nowStage);
-                        y = propsObj.$y - propsObj.UP_DISTANCE;
-                        this.preStickY = y;
-                        this.hasPropsStage++;
-                    }
+            rateObj = this.getNowStageItem(playerMeter);
+            // nowStage++;
+            if (!rateObj) {
+                alert('概率对象为空');
+                return;
+            }
+            var list = this.randomShowPoint(rateObj);
+            for (var i_2 = 0; i_2 < list.length; i_2++) {
+                groupBox.addChild(list[i_2]);
+                if (list[i_2].resetIniData) {
+                    list[i_2].resetIniData();
                 }
+                pedalObj = list[i_2];
+                if (pedalObj.typeName) {
+                    pedalObj.setStickTypeName(pedalObj.typeName);
+                }
+                // console.log('pedalObj',pedalObj.$y,pedalObj.height,this.stage.$stageHeight);
+                y = pedalObj.$y;
+            }
+            // while (y > -this.stage.$stageHeight) {
+            // 	sticketObj = this.createSticket(nowStage,this.preStickY, i ,groupBox);
+            //     pedalObj = sticketObj.stickObj;
+            //     groupBox = sticketObj.groupBox;
+            // 	y = pedalObj.$y;
+            // 	this.preStickY = pedalObj.$y;
+            // 	if(pedalObj.TYPE_STATUS === pedalObj.TYPE_FIXATION && nowStage === this.hasPropsStage) {
+            // 		propsObj = this.setPropOnSticket(pedalObj,nowStage,groupBox);
+            // 		if(propsObj) {
+            // 			pedalObj.$y = pedalObj.$y-propsObj.DOWN_DISTANCE;
+            // 			propsObj.$y =  propsObj.$y-propsObj.DOWN_DISTANCE;
+            // 			pedalObj.meter = this.changeToMeter(pedalObj.$y,nowStage);
+            // 			y = propsObj.$y-propsObj.UP_DISTANCE;
+            // 			this.preStickY = y;
+            // 			this.hasPropsStage++;
+            // 		}
+            // 	}
+            // 	i++;
+            // }
+            // this.getFixtionSticket(fixtionList,nowStage,groupBox);
+            this.lastOneStickY = y - pedalObj.height - 20;
+        }
+        // return nowStage;
+    };
+    AllSticks.prototype.getNowStageItem = function (playerMeter) {
+        var list = this.METER_STAGE_LIST;
+        var item = null;
+        if (list.length) {
+            for (var i = 0; i < list.length; i++) {
+                if (playerMeter >= list[i].minHeight && playerMeter < list[i].maxHeight || i === (list.length - 1)) {
+                    item = list[i];
+                    break;
+                }
+            }
+        }
+        return item;
+    };
+    AllSticks.prototype.getRateList = function (rateList) {
+        var list = [];
+        var num = 0;
+        if (rateList.length) {
+            for (var i = 0; i < rateList.length; i++) {
+                num = num + rateList[i];
+                list.push(num);
+            }
+        }
+        return list;
+    };
+    // 随机关卡
+    AllSticks.prototype.randomShowPoint = function (rateObj) {
+        var randomNum = Math.random();
+        var list = [];
+        var rateTotalList = this.getRateList(rateObj.pointRateList);
+        // console.log(this.getMoreSticketKey(rateObj.moreSticketRate),this.getSinglePropKey(rateObj.singlePoprsRate),this.getSinglePropKey(rateObj.signleSticketRate));
+        // debugger
+        if (randomNum >= 0 && randomNum < rateTotalList[0]) {
+            list = this.setCheckPoints.setPropsAndStick({
+                lastY: this.lastOneStickY,
+                stageWidth: this.stage.$stageWidth,
+                distance: rateObj.distance,
+                propsName: this.getSinglePropKey(rateObj.singlePoprsRate),
+                sticketName: 'fixation'
+            });
+        }
+        else if (randomNum >= rateTotalList[0] && randomNum < rateTotalList[1]) {
+            list = this.setCheckPoints.listSticket({
+                lastY: this.lastOneStickY,
+                stageWidth: this.stage.$stageWidth,
+                distance: rateObj.distance,
+                keyNameList: this.getMoreSticketKey(rateObj.moreSticketRate)
+            });
+        }
+        else if (randomNum >= rateTotalList[1] && randomNum < rateTotalList[2]) {
+            list = this.setCheckPoints.fixtionStick({
+                lastY: this.lastOneStickY,
+                stageWidth: this.stage.$stageWidth,
+                distance: rateObj.distance,
+                num: 6,
+                keyName: this.getSinglePropKey(rateObj.signleSticketRate)
+            });
+        }
+        else {
+            list = this.setCheckPoints.listSticket({
+                lastY: this.lastOneStickY,
+                stageWidth: this.stage.$stageWidth,
+                distance: rateObj.distance,
+                keyNameList: this.getMoreSticketKey(rateObj.moreSticketRate)
+            });
+        }
+        return list;
+    };
+    AllSticks.prototype.getMoreSticketKey = function (rateList) {
+        var i = 0;
+        var keyList = [];
+        var keyItem = null;
+        var rateNum = Math.floor(Math.random() * (Object.keys(rateList).length - 1)) + 1;
+        if (rateNum >= rateList.length) {
+            rateNum = rateList.length - 1;
+        }
+        while (i <= rateNum) {
+            keyItem = this.getRandomKey(rateList);
+            if (keyList.indexOf(keyItem) === -1) {
+                keyList.push(keyItem);
                 i++;
             }
-            // this.getFixtionSticket(fixtionList,nowStage,groupBox);
-            this.lastOneStickY = y - pedalObj.height;
         }
-        return nowStage;
+        // debugger
+        return keyList;
+    };
+    AllSticks.prototype.getSinglePropKey = function (rateList) {
+        var item = null;
+        while (!item) {
+            item = this.getRandomKey(rateList);
+        }
+        return item;
     };
     /**
      * 根据固定的跳板随机两个跳板设置概率性的道具
     */
-    AllSticks.prototype.getFixtionSticket = function (fixtionList, nowStage, groupBox) {
-        var fixtionLen = fixtionList.length;
-        var num = this.STICK_STAGE_DISTANSE[this.getNowPropIndex(nowStage)].eachShowProps;
-        var stickList = [];
-        var randomNum = null;
-        var i = 0;
-        var getMyKey = null;
-        if (fixtionLen) {
-            num = Math.floor(Math.random() * (num - 1)) + 1;
-            while (i < num && i < fixtionLen) {
-                randomNum = Math.floor(Math.random() * (fixtionLen - 1));
-                if (stickList.indexOf(randomNum) === -1) {
-                    stickList.push(randomNum);
-                    i++;
-                }
-            }
-        }
-        for (var k = 0; k < stickList.length; k++) {
-            getMyKey = this.getPropPercentName(nowStage, 'props');
-            // console.log('12',getMyKey);
-            if (getMyKey) {
-                this.propsClass.setTypeStatus(getMyKey);
-                this.propsClass.addPropToStage(groupBox, fixtionList[stickList[k]]);
-                // this.STICK_STAGE_DISTANSE[propObj.stageIndex]['props'][propObj.getMyKey]--;
-            }
-        }
-    };
-    AllSticks.prototype.setPropOnSticket = function (sticketObj, nowStage, groupBox) {
-        var myKey = null;
-        var propsObj = null;
-        myKey = this.getPropPercentName(nowStage, 'props');
-        if (myKey) {
-            this.propsClass.setTypeStatus(myKey);
-            propsObj = this.propsClass.addPropToStage(groupBox, sticketObj);
-        }
-        return propsObj;
-    };
+    // private getFixtionSticket(fixtionList,nowStage,groupBox) {
+    // 	let fixtionLen = fixtionList.length;
+    // 	let num = this.STICK_STAGE_DISTANSE[this.getNowPropIndex(nowStage)].eachShowProps;
+    // 	let stickList = [];
+    // 	let randomNum=null;
+    // 	let i = 0;
+    // 	let getMyKey = null;
+    // 	if(fixtionLen) {
+    // 		num = Math.floor(Math.random()*(num-1))+1;
+    // 		while(i<num && i<fixtionLen) {
+    // 			randomNum = Math.floor(Math.random()*(fixtionLen-1));
+    // 			if(stickList.indexOf(randomNum)===-1) {
+    // 				stickList.push(randomNum);
+    // 				i++;
+    // 			}
+    // 		}
+    // 	}
+    // 	for(let k=0;k<stickList.length;k++) {
+    // 		getMyKey = this.getPropPercentName(nowStage,'props');
+    // 		// console.log('12',getMyKey);
+    // 		if(getMyKey) {
+    // 			this.propsClass.setTypeStatus(getMyKey);
+    // 			this.propsClass.addPropToStage(groupBox,fixtionList[stickList[k]]);
+    // 			// this.STICK_STAGE_DISTANSE[propObj.stageIndex]['props'][propObj.getMyKey]--;
+    // 		}
+    // 	}
+    // }
+    // private setPropOnSticket(sticketObj,nowStage,groupBox){
+    // 	let myKey = null;
+    // 	let propsObj = null;
+    // 	myKey = this.getPropPercentName(nowStage,'props');
+    // 	if(myKey) {
+    // 		this.propsClass.setTypeStatus(myKey);
+    // 		propsObj = this.propsClass.addPropToStage(groupBox,sticketObj);
+    // 	}
+    // 	return propsObj;
+    // }
     /**
      * 创建踏板对象
     */
-    AllSticks.prototype.createSticket = function (nowStage, initY, num, groupBox) {
-        var stickObj = null;
-        var spring = null;
-        var distance = this.caculateStickDistance(nowStage);
-        var sticketHeight = 0;
-        var keyName = null;
-        stickObj = this.createStick(); ///     Object.create(this.allPropsObjectPool['stickItem']);
-        keyName = this.getPropPercentName(nowStage, 'sticketPercentage');
-        groupBox.addChild(stickObj);
-        stickObj.setStickTypeName(keyName);
-        sticketHeight = stickObj.height ? stickObj.height : 30;
-        stickObj.$y = initY - (distance + sticketHeight);
-        stickObj.$x = Math.random() * (this.stage.stageWidth - stickObj.width);
-        stickObj.meter = this.changeToMeter(stickObj.$y, nowStage);
-        return {
-            stickObj: stickObj,
-            groupBox: groupBox
-        };
-    };
-    AllSticks.prototype.createStick = function () {
-        var item = null;
-        var propsList = this.stickRecyclePool;
-        if (propsList.length) {
-            item = propsList[0];
-            propsList.shift();
-        }
-        else {
-            item = new StickItem();
-        }
-        return item;
-    };
+    // public createSticket(nowStage:number,initY, num,groupBox:eui.Group) {
+    // 	let stickObj = null;
+    // 	let spring = null;
+    // 	let distance = this.caculateStickDistance(nowStage);
+    // 	let sticketHeight = 0;
+    // 	let keyName = null;
+    // 	stickObj =  this.createStick();   ///     Object.create(this.allPropsObjectPool['stickItem']);
+    // 	keyName = this.getPropPercentName(nowStage,'sticketPercentage');
+    // 	groupBox.addChild(stickObj);
+    // 	stickObj.setStickTypeName(keyName);
+    // 	sticketHeight=stickObj.height ? stickObj.height : 30;
+    // 	stickObj.$y = initY - (distance + sticketHeight);
+    // 	stickObj.$x = Math.random() * (this.stage.stageWidth - stickObj.width);
+    // 	stickObj.meter = this.changeToMeter(stickObj.$y, nowStage);
+    //     return {
+    //         stickObj:stickObj,
+    //         groupBox:groupBox
+    //     };
+    // }
+    // private createStick(){
+    // 	let item = null;
+    // 	let propsList = this.stickRecyclePool;
+    // 	if(propsList.length) {
+    // 		item = propsList[0];
+    // 		propsList.shift();
+    // 	}else {
+    // 		item = new StickItem();
+    // 	}
+    // 	return item;
+    // }
     AllSticks.prototype.stickMoveLeftAndRight = function (allStickList) {
         var list = allStickList;
         var len = list.length;
@@ -371,16 +558,16 @@ var AllSticks = (function (_super) {
     AllSticks.prototype.recycleAllObject = function (obj) {
         if (obj.TYPE_NAME) {
             if (obj.TYPE_NAME === 'trampoline') {
-                this.recycleObj(obj, this.propsClass.allPropsPool[obj.TYPE_NAME]);
+                this.setCheckPoints.recycleObj(obj, obj.TYPE_NAME);
             }
             else if (obj.TYPE_NAME === 'wing') {
-                this.recycleObj(obj, this.propsClass.allPropsPool[obj.TYPE_NAME]);
+                this.setCheckPoints.recycleObj(obj, obj.TYPE_NAME);
             }
             else if (obj.TYPE_NAME === 'rocket') {
-                this.recycleObj(obj, this.propsClass.allPropsPool[obj.TYPE_NAME]);
+                this.setCheckPoints.recycleObj(obj, obj.TYPE_NAME);
             }
             else if (obj.TYPE_NAME === 'sticket') {
-                this.recycleObj(obj, this.stickRecyclePool);
+                this.setCheckPoints.recycleObj(obj, 'stickRecyclePool');
             }
         }
     };

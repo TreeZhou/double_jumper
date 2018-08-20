@@ -35,6 +35,11 @@ class BasePage extends eui.Component{
 
 		return meterNum;
 	}
+	public doodleChangeToMeter(y){
+		let num = 0;
+		num = Math.ceil((y/this.stage.$stageHeight)*this.STAGE_METER);
+		return num;
+	}	
 
 	/**
 	 * 米换成像素
@@ -83,7 +88,7 @@ class BasePage extends eui.Component{
 	}
 	// recycle
 
-	public recycleObj(obj:Object,list:Array<any>){
-		list.push(obj);
-	}
+	// public recycleObj(obj:Object,list:Array<any>){
+	// 	list.push(obj);
+	// }
 }

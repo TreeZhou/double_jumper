@@ -30,6 +30,9 @@ class Trampoline extends BasePage{
 		this.setSkinData();
 		this.setJumpeHeight();
 	}
+	public setInitAllData() {
+		
+	}
 	private setJumpeHeight() {
 		this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
 	}

@@ -12,9 +12,7 @@ var GamePage = (function (_super) {
     __extends(GamePage, _super);
     function GamePage() {
         var _this = _super.call(this) || this;
-        _this.playerIsMove = true; // 角色是否可以移动
         _this.endGame = false;
-        _this.nowStage = 1;
         // private doodlePlayer:eui.Component;
         _this.stickNum = 30;
         _this.childList = [];
@@ -53,7 +51,7 @@ var GamePage = (function (_super) {
         this.createDoodle();
         this.createSticket(); // 创建跳板
         this.setInitDataGame(); // 设置游戏的开始数据
-        // this.beginAnimateEvent();  // 开始动画监听
+        this.beginAnimateEvent(); // 开始动画监听
     };
     // 创建涂鸦
     GamePage.prototype.createDoodle = function () {
@@ -67,18 +65,17 @@ var GamePage = (function (_super) {
     GamePage.prototype.createSticket = function () {
         this.allSticks = new AllSticks();
         this.addChild(this.allSticks);
-        this.stickList = this.allSticks.initSticket(this.stickList, this.nowStage);
+        this.stickList = this.allSticks.initSticket(this.stickList);
     };
     /**
      * 设置初始值
      */
     GamePage.prototype.setInitDataGame = function () {
         this.player.visible = true;
-        this.playerIsMove = true;
         this.endGame = false;
         this.player.$y = this.stage.$stageHeight * 0.9;
         this.longBg.$y = 0;
-        this.nowStage = 1;
+        // this.nowStage = 1;
         // this.scoreText.visible = false;
         // this.getRandomPosition();  // 初始化弹簧的数据
         console.log('对象', this.player.width, this.player.height, this.player.$y, this.player.$x, this.player.anchorOffsetX, this.player.anchorOffsetY);
@@ -93,9 +90,7 @@ var GamePage = (function (_super) {
      * 动画监听函数
      */
     GamePage.prototype.onEnterFrame = function () {
-        if (this.playerIsMove) {
-            this.player.movePlayerY();
-        }
+        this.player.movePlayerY();
         if (this.player.isJumperTopStop) {
             this.mapObjectMove();
         }
@@ -106,7 +101,7 @@ var GamePage = (function (_super) {
         else {
             this.checkIsGameOver();
             this.checkISOverStage(this.stickList, this.allSticks.recycleAllObject.bind(this.allSticks));
-            this.nowStage = this.allSticks.addNewPetals(this.stickList, this.nowStage);
+            this.allSticks.addNewPetals(this.stickList, this.doodleChangeToMeter(this.player.doodelMeter));
             this.allSticks.stickMoveLeftAndRight(this.stickList.$children);
         }
         if (this.player.isDown) {
@@ -121,6 +116,7 @@ var GamePage = (function (_super) {
             this.player.setStartJumpeSpeed(this.stage.$stageHeight, this.player.frameNum);
             this.player.setDownAddSpeed(this.stage.$stageHeight, this.player.frameNum);
             this.endGame = true;
+            this.player.isStopCaulte = true;
         }
     };
     GamePage.prototype.gotoMoveBg = function () {
@@ -164,7 +160,8 @@ var GamePage = (function (_super) {
     GamePage.prototype.setScoreText = function () {
         var score = null;
         // console.log(this.player.jumpStartY);
-        score = '分数：' + Math.ceil(this.changeToMeter(this.player.jumpStartY, this.nowStage));
+        console.log('tingzhi', this.player.doodelMeter);
+        score = '分数：' + Math.ceil(this.doodleChangeToMeter(this.player.doodelMeter));
         return score;
     };
     GamePage.prototype.removeAllList = function () {

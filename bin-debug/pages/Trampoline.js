@@ -30,6 +30,8 @@ var Trampoline = (function (_super) {
         this.setSkinData();
         this.setJumpeHeight();
     };
+    Trampoline.prototype.setInitAllData = function () {
+    };
     Trampoline.prototype.setJumpeHeight = function () {
         this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
     };

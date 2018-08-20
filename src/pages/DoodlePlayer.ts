@@ -43,6 +43,9 @@ class DoodlePlayer extends BasePage {
 	public isJumperTopStop:boolean=false;
 	public missDiastance:Object;  // 偏差值
 
+	public doodelMeter:number = 0;  // 豆丁跳跃的累计值
+	public isStopCaulte:boolean = false;  // 是否停止累计分数
+
 
 	// private playerColorList:Object={};
 	private sideStauts:any = [
@@ -212,6 +215,9 @@ class DoodlePlayer extends BasePage {
 			this.isJumperTopStop = false;
 		}else {
 			this.isJumperTopStop = true;
+			if(!this.isStopCaulte) {
+				this.doodelMeter = this.doodelMeter + this.nowSpeed;
+			}
 		}
 
 		if(this.isDown) {
@@ -234,7 +240,6 @@ class DoodlePlayer extends BasePage {
 				wx.onAccelerometerChange(this.handleFuncWx.bind(this));
 			}
 		}catch(err){
-			console.log(err);
 			this.orientation = new egret.DeviceOrientation();
 			//添加事件监听器
 			this.orientation.addEventListener(egret.Event.CHANGE,this.onOrientation,this);
