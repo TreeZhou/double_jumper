@@ -10,7 +10,7 @@
 	],
 	"game": [
 		"bin-debug/pages/BasePage.js",
-		"bin-debug/LoadingUI.js",
+		"bin-debug/pages/GameFirstPage.js",
 		"bin-debug/Main.js",
 		"bin-debug/Platform.js",
 		"bin-debug/ThemeAdapter.js",
@@ -18,7 +18,7 @@
 		"bin-debug/AssetAdapter.js",
 		"bin-debug/pages/DoodlePlayer.js",
 		"bin-debug/pages/FloorSpring.js",
-		"bin-debug/pages/WingProp.js",
+		"bin-debug/LoadingUI.js",
 		"bin-debug/pages/GameOverPage.js",
 		"bin-debug/pages/GamePage.js",
 		"bin-debug/pages/RocketProp.js",
@@ -26,6 +26,6 @@
 		"bin-debug/pages/StagePropClass.js",
 		"bin-debug/pages/StickItem.js",
 		"bin-debug/pages/Trampoline.js",
-		"bin-debug/pages/GameFirstPage.js"
+		"bin-debug/pages/WingProp.js"
 	]
 }
