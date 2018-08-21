@@ -12,17 +12,29 @@ class DoodlePlayer extends BasePage {
 	private beanWingFaceDefault:eui.Image;
 	private beanWingLeftDefault:eui.Image;
 	private beanWingRightDefault:eui.Image;
+	private leftSpringUpDefault:eui.Image;
+	private leftSpringDownDefault:eui.Image;
+	private rightSpringUpDefault:eui.Image;
+	private rightSpringDownDefault:eui.Image;
+	private faceSpringUpDefault:eui.Image;
+	private faceSpringDownDefault:eui.Image;
 
-	public SIDE_STATUS:string='face';
+
+
+	public SIDE_STATUS:string='face'; // 正面跳，只有点击屏幕发射子弹的时候才会正面跳
 	public SIDE_FACE:string='face';
 	public SIDE_RIGHT:string='right';  // 右边
 	public SIDE_LEFT:string='left';  // 左边
 
 	public JUMP_STATUS:string='jump';
 	public JUMP_NORMAL:string='jump';  // 正常跳跃的形式
-	public JUMP_HIT:string='hit'; // 撞击到时正常形式
+	public JUMP_HIT:string='jumpHit'; // 撞击到时正常形式
 	public JUMP_WING:string='wing'; //撞击到翅膀的形式
 	public JUMP_ROCKET:string='rocket'; //　撞击到火箭时的形式
+
+	public JUMP_SPRINGSHOE_JUMP:string='springShoeJump';  // 穿了弹簧鞋的跳跃
+	public JUMP_SPRINGSHOE_HIT:string = 'springShoeHit';  // 穿了弹簧鞋的碰撞
+	public JUMP_NORMAL_HIT:string = 'jumpHit';  // 正常状态下碰撞的状态
 
 	// public COLOR_STATUS:string='normal';
 	// public COLOR_DEFAULE:string='normal';
@@ -31,20 +43,22 @@ class DoodlePlayer extends BasePage {
 	public jumpStartY: number = null; // 起跳高度
 	public jumpStickDistan:number;
 
-	public nowUpAddSpeed:number;
-	public nowDownAddSpeed:number;
-	public initSpeed:number;
-	public nowSpeed:number;
-	public frameNum:number=40;
-	public isDown:boolean=false;
-	public speedX:number=0;
-	public isPlayCircle:boolean=false;
+	public nowUpAddSpeed:number;  // 上升的加速度
+	public nowDownAddSpeed:number; // 下落的加速度
+	public initSpeed:number; // 初始化的速度
+	public nowSpeed:number; // 现在的速度
+	public frameNum:number=40; // 帧率，控制速度
+	public isDown:boolean=false; // 判断是下落还是上升状态
+	public speedX:number=0;  // 左右移动的增量
+	public isPlayCircle:boolean=false;  //判断是否展示弹床旋转的动画
 
-	public isJumperTopStop:boolean=false;
+	public isJumperTopStop:boolean=false; // 判断是否跳跃到最高点，轮到跳板运动
 	public missDiastance:Object;  // 偏差值
 
 	public doodelMeter:number = 0;  // 豆丁跳跃的累计值
 	public isStopCaulte:boolean = false;  // 是否停止累计分数
+
+	public isWearSpringShoes:boolean = false;  // 是否正在穿弹簧鞋
 
 
 	// private playerColorList:Object={};
@@ -85,7 +99,7 @@ class DoodlePlayer extends BasePage {
 					'left':	self.BeanNormalLeft,
 					'right':self.BeanNormalRight,
 				},
-				'hit':{
+				'jumpHit':{
 					'face':self.beanFaceNorDown,
 					'left':self.beanLeftNorDown,
 					'right':self.beanRightNorDown
@@ -99,6 +113,16 @@ class DoodlePlayer extends BasePage {
 					'face':self.beanWingFaceDefault,
 					'left':self.beanWingLeftDefault,
 					'right':self.beanWingRightDefault
+				},
+				'springShoeJump':{
+					'face':self.faceSpringUpDefault,
+					'left':self.leftSpringUpDefault,
+					'right':self.rightSpringUpDefault
+				},
+				'springShoeHit':{
+					'face':self.faceSpringDownDefault,
+					'left':self.leftSpringDownDefault,
+					'right':self.rightSpringDownDefault
 				}
 			}
 		}
@@ -133,18 +157,23 @@ class DoodlePlayer extends BasePage {
 		switch(jumpStatus){
 			case this.JUMP_ROCKET:
 			this.JUMP_STATUS = this.JUMP_ROCKET;
+			this.JUMP_HIT = this.JUMP_NORMAL_HIT;
 			break;
 			case this.JUMP_WING:
 			this.JUMP_STATUS = this.JUMP_WING;
+			this.JUMP_HIT = this.JUMP_NORMAL_HIT;
 			break;
-			// case this.JUMP_HIT:
-			// this.JUMP_STATUS = this.JUMP_HIT;
-			// break;
+			case this.JUMP_SPRINGSHOE_JUMP:
+			this.JUMP_STATUS = this.JUMP_SPRINGSHOE_JUMP;
+			this.JUMP_HIT = this.JUMP_SPRINGSHOE_HIT;
+			break;
 			case this.JUMP_NORMAL:
 			this.JUMP_STATUS = this.JUMP_NORMAL;
+			this.JUMP_HIT = this.JUMP_NORMAL_HIT;
 			break;
 			default:
 			this.JUMP_STATUS = this.JUMP_NORMAL;
+			this.JUMP_HIT = this.JUMP_NORMAL_HIT;
 			break;
 		}
 	}
@@ -168,10 +197,10 @@ class DoodlePlayer extends BasePage {
 		this.setPlayerSkewXY();
 	}
 
-	private setThisWidthHeight(item){
-		this.width = item.width;
-		// this.height = item.height;
-	}
+	// private setThisWidthHeight(item){
+	// 	this.width = item.width;
+	// 	// this.height = item.height;
+	// }
 
 	private hideAllPlayer() {
 		let len = this.$children.length;
@@ -221,7 +250,12 @@ class DoodlePlayer extends BasePage {
 		}
 
 		if(this.isDown) {
-			this.setJumperStatus(this.JUMP_NORMAL);
+			if(this.isWearSpringShoes) {
+				this.setJumperStatus(this.JUMP_SPRINGSHOE_JUMP);
+			}else {
+				this.setJumperStatus(this.JUMP_NORMAL);
+			}
+	
 			this.changePlaySide(true);
 			this.isPlayCircle = false;
 		}else {
@@ -265,13 +299,11 @@ class DoodlePlayer extends BasePage {
 		if(!stage) {
 			return false;
 		}
-		if (e.gamma > 0) {  // 向右
+		if (e.gamma >= 0) {  // 向右
 			this.setSideStatus(this.SIDE_RIGHT);
 		} else if (e.gamma< 0) {  // 向左
 			this.setSideStatus(this.SIDE_LEFT);
-		} else {
-			this.setSideStatus(this.SIDE_FACE);
-		}
+		} 
 		this.changePlaySide(true);
 		this.speedX =Math.sin(e.gamma*(Math.PI/180))*this.stage.$stageWidth/22;
 		// console.log('左右移动',Math.sin(e.gamma*(Math.PI/180)));
@@ -281,18 +313,19 @@ class DoodlePlayer extends BasePage {
 		if(!stage) {
 			return false;
 		}
-		if (res.x > 0) {  // 向右
+		if (res.x >= 0) {  // 向右
 			this.setSideStatus(this.SIDE_RIGHT);
 		} else if (res.x < 0) {  // 向左
 			this.setSideStatus(this.SIDE_LEFT);
-		} else {
-			this.setSideStatus(this.SIDE_FACE);
-		}
+		} 
+		
+		// else {
+		// 	this.setSideStatus(this.SIDE_FACE);
+		// }
 		this.speedX = Math.sin(res.x * Math.PI / 2) * this.stage.$stageWidth/22;
 		this.changePlaySide(true);
 	}
 	public moveplayerX() {
-
 		this.$x = this.$x + this.speedX;
 		if (this.$x < -this.width) {
 			this.$x = this.stage.$stageWidth;

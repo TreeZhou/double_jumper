@@ -9,6 +9,7 @@ class StickItem extends BasePage{
 	private stickDefaultStone:eui.Image;
 	private waterMoveDefault:eui.Group;
 	private woodMoveDefault:eui.Group;
+	private stickDefaultCloud:eui.Image;
 
 	public waterMoveCilpDefault:egret.MovieClip;
 	public woodMoveCilpDefault:egret.MovieClip;
@@ -19,6 +20,7 @@ class StickItem extends BasePage{
 	public TYPE_HORIZONTAL:string='horizontal'; // 水平移动
 	public TYPE_HIT_DISABLE:string='hitDisable'; // 撞击无效，可自动断裂
 	public TYPE_ONECE_HIT:string='oneceHit';  // 只检测碰撞一次
+	public TYPE_TIMING:string = 'timing';  // 定时消失
 
 	// public COLOR_STATUS:string='normal';
 	// public COLOR_DEFAULE:string='normal';
@@ -32,6 +34,7 @@ class StickItem extends BasePage{
 
 
 	private stickClothDataList:Object;
+	private isPlayWood:boolean = false;
 
 	protected partAdded(partName:string,instance:any):void
 	{
@@ -44,7 +47,8 @@ class StickItem extends BasePage{
 	{
 		super.childrenCreated();
 		this.setInitAllData();
-		this.initStickClothData();
+		// this.initStickClothData();
+
 		
 		// this.setRandomStick();
 		// this.setInitLeftOrRightMove();
@@ -65,6 +69,7 @@ class StickItem extends BasePage{
 		this.visible = true;
 		this.waterMoveCilpDefault.gotoAndStop(0);
 		this.woodMoveCilpDefault.gotoAndStop(0);
+		this.isPlayWood = false;
 	}
 	private setJumpeHeight() {
 		this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
@@ -84,28 +89,23 @@ class StickItem extends BasePage{
 					self.stickDefaultLeaf
 				],
 				hitDisable:[
-					self.woodMoveDefault
+					self.waterMoveDefault
 				],
 				oneceHit:[
-					self.waterMoveDefault
+					self.stickDefaultCloud
+				],
+				timing:[
+					self.woodMoveDefault
 				]
 			}
 		}
+		this.setThisWidthHeight({
+			width:126,
+			height:32
+		});
+
 	}
 	public setStickTypeName(typeName) {
-		// let randomNum = Math.random();
-		// if(randomNum<this.SHOW_PROBABILITY[0]) {
-		// 	this.setTypeStick(this.TYPE_FIXATION);
-		// 	// this.setTypeStick(this.TYPE_HIT_DISABLE);
-		// }else if(randomNum>this.SHOW_PROBABILITY[0]&&randomNum<this.SHOW_PROBABILITY[1]){
-		// 	this.setTypeStick(this.TYPE_HORIZONTAL);
-		// }else if(randomNum>this.SHOW_PROBABILITY[1]&&randomNum<this.SHOW_PROBABILITY[2]){
-		// 	this.setTypeStick(this.TYPE_ONECE_HIT);
-		// }else if(randomNum>this.SHOW_PROBABILITY[2]&&randomNum<this.SHOW_PROBABILITY[3]){
-		// 	this.setTypeStick(this.TYPE_HIT_DISABLE);
-		// }else {
-			
-		// }
 		this.setTypeStick(typeName);
 		this.showStickImg();
 	}
@@ -137,6 +137,9 @@ class StickItem extends BasePage{
 			case this.TYPE_HIT_DISABLE: 
 			this.TYPE_STATUS = this.TYPE_HIT_DISABLE;
 			break;
+			case this.TYPE_TIMING: 
+			this.TYPE_STATUS = this.TYPE_TIMING;
+			break;
 			default:
 			this.TYPE_STATUS = this.TYPE_FIXATION;
 			break;
@@ -146,54 +149,42 @@ class StickItem extends BasePage{
 		let nowStick;
 
 		this.hideAllChildren();
-		// this.waterSticketMove.visible = true;
-		// console.log(this.stickClothDataList[this.COLOR_STATUS],this.TYPE_STATUS);
 		nowStick = this.randomShowSameType(this.stickClothDataList[this.COLOR_STATUS][this.TYPE_STATUS]);
-		// debugger
 		nowStick.visible = true;
-		// console.log('我的个人显/示',this.TYPE_STATUS,nowStick.width,nowStick.height);
+		this.setThisWidthHeight({
+			width:nowStick.width,
+			height:nowStick.height
+		});
 
 	}
-	private randomShowSameType(list) {
-		let len = list.length;
-		let randomNum ,item;
 
-		if(!len) {
-			alert('随机的跳板数组长度不对!');
-			return;
-		}
-		if(len === 1) {
-			item = list[0];
-		}else {
-			randomNum = Math.floor(Math.random()*len);
-			if(randomNum>=len) {
-				randomNum = len-1;
-			}else if(randomNum<0) {
-				randomNum = 0;
-			}
-			item = list[randomNum];
-		}
-
-		return item;
-	}
-	// private hideAllChildren() {
-	// 	let len = this.$children.length;
-
-	// 	for(let i=0;i<len;i++) {
-	// 		this.$children[i].visible = false;
-	// 	}
-	// }
 	public playOneceClip(callback) {
-		this.waterMoveCilpDefault.play();
-		this.waterMoveCilpDefault.addEventListener('complete',function(){
-			callback();
-		},this)
+		setTimeout(()=>{
+			if(this.TYPE_STATUS === this.TYPE_ONECE_HIT) {
+				callback();
+			}
+		},20);
+	
 	}
 	public playDiasbleHitClip(callback){
-		this.woodMoveCilpDefault.play();
-		this.woodMoveCilpDefault.addEventListener('complete',function(){
-			callback();
+		this.waterMoveCilpDefault.play();
+		this.waterMoveCilpDefault.addEventListener('complete',function(){
+			if(this.TYPE_STATUS === this.TYPE_HIT_DISABLE) {
+				callback();
+			}
 		},this)
+	}
+	public setTimingSticket(timeNum,callback){
+		this.isPlayWood = true;
+		setTimeout(()=>{
+			let self = this;
+			this.woodMoveCilpDefault.play();
+			this.woodMoveCilpDefault.addEventListener('complete',function(){
+				if(self.TYPE_STATUS === self.TYPE_TIMING) {
+					callback(self);
+				}
+			},this)
+		},timeNum)
 	}
 
 

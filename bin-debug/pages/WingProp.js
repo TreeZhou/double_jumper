@@ -24,10 +24,12 @@ var WingProp = (function (_super) {
     };
     WingProp.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
-        this.setSkinData();
-        this.setJumpeHeight();
+        this.setInitAllData();
     };
     WingProp.prototype.setInitAllData = function () {
+        this.setSkinData();
+        this.setJumpeHeight();
+        this.showPropsSkins();
     };
     WingProp.prototype.setJumpeHeight = function () {
         this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
@@ -38,9 +40,13 @@ var WingProp = (function (_super) {
             'normal': self.wingDefault
         };
     };
-    WingProp.prototype.playShowDownTram = function () {
+    WingProp.prototype.showPropsSkins = function () {
         this.hideAllChildren();
         this.skinsData[this.COLOR_STATUS].visible = true;
+        this.setThisWidthHeight({
+            width: this.skinsData[this.COLOR_STATUS].width,
+            height: this.skinsData[this.COLOR_STATUS].height
+        });
     };
     return WingProp;
 }(BasePage));

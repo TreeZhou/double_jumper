@@ -66,7 +66,29 @@ var GamePage = (function (_super) {
         this.allSticks = new AllSticks();
         this.addChild(this.allSticks);
         this.stickList = this.allSticks.initSticket(this.stickList);
+        // this.player.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onAddToStage, this);
     };
+    GamePage.prototype.onAddToStage = function () {
+        // let list = this.stickList.$children;
+        // 	console.log(list);
+        // 	this.run(list);
+        // // for(let i=0;i<	list.length;i++) {
+        // // 	if(list.playDiasbleHitClip ) {
+        // // 		list.playDiasbleHitClip (()=>{})
+        // // 	}
+        // // }
+        var movePescide = this.createMoveObj("woodDefaultMove", this.stickList);
+        console.log('rena', movePescide, this.stickList);
+        // this.waterMoveCilpDefault = movePescide;
+        movePescide.play();
+    };
+    // private run(list){
+    // 	for(let i=0;i<	list.length;i++) {
+    // 		if(list[i].playDiasbleHitClip) {
+    // 			list[i].playDiasbleHitClip (()=>{})
+    // 		}
+    // 	}
+    // }
     /**
      * 设置初始值
      */

@@ -60,7 +60,13 @@ declare class GameOverPageSkin extends eui.Skin{
 }
 declare class GamePageSkin extends eui.Skin{
 }
+declare class MonsterPropSkin extends eui.Skin{
+}
 declare class RocketPropSkin extends eui.Skin{
+}
+declare class SpiderWebSkin extends eui.Skin{
+}
+declare class SpringShoesPropSkin extends eui.Skin{
 }
 declare class StickItemSkin extends eui.Skin{
 }

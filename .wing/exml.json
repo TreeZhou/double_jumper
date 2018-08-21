@@ -61,5 +61,20 @@
         "path": "..\\resource\\skins\\GameOverPage.ts",
         "class": "GameOverPage",
         "parentPath": ""
+    },
+    "1655b6cbbaa": {
+        "path": "..\\resource\\skins\\MonsterProp.ts",
+        "class": "MonsterProp",
+        "parentPath": ""
+    },
+    "1655b94587a": {
+        "path": "..\\resource\\skins\\SpiderWeb.ts",
+        "class": "SpiderWeb",
+        "parentPath": ""
+    },
+    "1655b9ddea4": {
+        "path": "..\\resource\\skins\\SpringShoesProp.ts",
+        "class": "SpringShoesProp",
+        "parentPath": ""
     }
 }

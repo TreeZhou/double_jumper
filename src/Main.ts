@@ -81,6 +81,7 @@ class Main extends eui.UILayer {
             await RES.loadGroup("playFirstPage",0);
             await RES.loadGroup("beanPlayer",0);
             await RES.loadGroup("stageProps",0);
+            await RES.loadGroup("monsters",0);
             this.stage.removeChild(loadingView);
         }
         catch (e) {

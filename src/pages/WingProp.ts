@@ -18,11 +18,12 @@ class WingProp extends BasePage {
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
-		this.setSkinData();
-		this.setJumpeHeight();
+		this.setInitAllData();
 	}
 	public setInitAllData() {
-		
+		this.setSkinData();
+		this.setJumpeHeight();
+		this.showPropsSkins();
 	}
 	private setJumpeHeight() {
 		this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
@@ -33,9 +34,13 @@ class WingProp extends BasePage {
 			'normal':self.wingDefault
 		}
 	}
-	public playShowDownTram() {
+	public showPropsSkins() {
 		this.hideAllChildren();
 		this.skinsData[this.COLOR_STATUS].visible=true;
+		this.setThisWidthHeight({
+			width:this.skinsData[this.COLOR_STATUS].width,
+			height:this.skinsData[this.COLOR_STATUS].height
+		});
 	}
 	
 }

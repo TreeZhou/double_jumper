@@ -12,23 +12,27 @@ var DoodlePlayer = (function (_super) {
     __extends(DoodlePlayer, _super);
     function DoodlePlayer() {
         var _this = _super.call(this) || this;
-        _this.SIDE_STATUS = 'face';
+        _this.SIDE_STATUS = 'face'; // 正面跳，只有点击屏幕发射子弹的时候才会正面跳
         _this.SIDE_FACE = 'face';
         _this.SIDE_RIGHT = 'right'; // 右边
         _this.SIDE_LEFT = 'left'; // 左边
         _this.JUMP_STATUS = 'jump';
         _this.JUMP_NORMAL = 'jump'; // 正常跳跃的形式
-        _this.JUMP_HIT = 'hit'; // 撞击到时正常形式
+        _this.JUMP_HIT = 'jumpHit'; // 撞击到时正常形式
         _this.JUMP_WING = 'wing'; //撞击到翅膀的形式
         _this.JUMP_ROCKET = 'rocket'; //　撞击到火箭时的形式
+        _this.JUMP_SPRINGSHOE_JUMP = 'springShoeJump'; // 穿了弹簧鞋的跳跃
+        _this.JUMP_SPRINGSHOE_HIT = 'springShoeHit'; // 穿了弹簧鞋的碰撞
+        _this.JUMP_NORMAL_HIT = 'jumpHit'; // 正常状态下碰撞的状态
         _this.jumpStartY = null; // 起跳高度
-        _this.frameNum = 40;
-        _this.isDown = false;
-        _this.speedX = 0;
-        _this.isPlayCircle = false;
-        _this.isJumperTopStop = false;
+        _this.frameNum = 40; // 帧率，控制速度
+        _this.isDown = false; // 判断是下落还是上升状态
+        _this.speedX = 0; // 左右移动的增量
+        _this.isPlayCircle = false; //判断是否展示弹床旋转的动画
+        _this.isJumperTopStop = false; // 判断是否跳跃到最高点，轮到跳板运动
         _this.doodelMeter = 0; // 豆丁跳跃的累计值
         _this.isStopCaulte = false; // 是否停止累计分数
+        _this.isWearSpringShoes = false; // 是否正在穿弹簧鞋
         // private playerColorList:Object={};
         _this.sideStauts = [
             _this.SIDE_FACE,
@@ -61,7 +65,7 @@ var DoodlePlayer = (function (_super) {
                     'left': self.BeanNormalLeft,
                     'right': self.BeanNormalRight,
                 },
-                'hit': {
+                'jumpHit': {
                     'face': self.beanFaceNorDown,
                     'left': self.beanLeftNorDown,
                     'right': self.beanRightNorDown
@@ -75,6 +79,16 @@ var DoodlePlayer = (function (_super) {
                     'face': self.beanWingFaceDefault,
                     'left': self.beanWingLeftDefault,
                     'right': self.beanWingRightDefault
+                },
+                'springShoeJump': {
+                    'face': self.faceSpringUpDefault,
+                    'left': self.leftSpringUpDefault,
+                    'right': self.rightSpringUpDefault
+                },
+                'springShoeHit': {
+                    'face': self.faceSpringDownDefault,
+                    'left': self.leftSpringDownDefault,
+                    'right': self.rightSpringDownDefault
                 }
             }
         };
@@ -108,18 +122,23 @@ var DoodlePlayer = (function (_super) {
         switch (jumpStatus) {
             case this.JUMP_ROCKET:
                 this.JUMP_STATUS = this.JUMP_ROCKET;
+                this.JUMP_HIT = this.JUMP_NORMAL_HIT;
                 break;
             case this.JUMP_WING:
                 this.JUMP_STATUS = this.JUMP_WING;
+                this.JUMP_HIT = this.JUMP_NORMAL_HIT;
                 break;
-            // case this.JUMP_HIT:
-            // this.JUMP_STATUS = this.JUMP_HIT;
-            // break;
+            case this.JUMP_SPRINGSHOE_JUMP:
+                this.JUMP_STATUS = this.JUMP_SPRINGSHOE_JUMP;
+                this.JUMP_HIT = this.JUMP_SPRINGSHOE_HIT;
+                break;
             case this.JUMP_NORMAL:
                 this.JUMP_STATUS = this.JUMP_NORMAL;
+                this.JUMP_HIT = this.JUMP_NORMAL_HIT;
                 break;
             default:
                 this.JUMP_STATUS = this.JUMP_NORMAL;
+                this.JUMP_HIT = this.JUMP_NORMAL_HIT;
                 break;
         }
     };
@@ -144,10 +163,10 @@ var DoodlePlayer = (function (_super) {
         // console.log('当前宽高',this.width,this.height);
         this.setPlayerSkewXY();
     };
-    DoodlePlayer.prototype.setThisWidthHeight = function (item) {
-        this.width = item.width;
-        // this.height = item.height;
-    };
+    // private setThisWidthHeight(item){
+    // 	this.width = item.width;
+    // 	// this.height = item.height;
+    // }
     DoodlePlayer.prototype.hideAllPlayer = function () {
         var len = this.$children.length;
         for (var i = 0; i < len; i++) {
@@ -194,7 +213,12 @@ var DoodlePlayer = (function (_super) {
             }
         }
         if (this.isDown) {
-            this.setJumperStatus(this.JUMP_NORMAL);
+            if (this.isWearSpringShoes) {
+                this.setJumperStatus(this.JUMP_SPRINGSHOE_JUMP);
+            }
+            else {
+                this.setJumperStatus(this.JUMP_NORMAL);
+            }
             this.changePlaySide(true);
             this.isPlayCircle = false;
         }
@@ -237,14 +261,11 @@ var DoodlePlayer = (function (_super) {
         if (!stage) {
             return false;
         }
-        if (e.gamma > 0) {
+        if (e.gamma >= 0) {
             this.setSideStatus(this.SIDE_RIGHT);
         }
         else if (e.gamma < 0) {
             this.setSideStatus(this.SIDE_LEFT);
-        }
-        else {
-            this.setSideStatus(this.SIDE_FACE);
         }
         this.changePlaySide(true);
         this.speedX = Math.sin(e.gamma * (Math.PI / 180)) * this.stage.$stageWidth / 22;
@@ -255,15 +276,15 @@ var DoodlePlayer = (function (_super) {
         if (!stage) {
             return false;
         }
-        if (res.x > 0) {
+        if (res.x >= 0) {
             this.setSideStatus(this.SIDE_RIGHT);
         }
         else if (res.x < 0) {
             this.setSideStatus(this.SIDE_LEFT);
         }
-        else {
-            this.setSideStatus(this.SIDE_FACE);
-        }
+        // else {
+        // 	this.setSideStatus(this.SIDE_FACE);
+        // }
         this.speedX = Math.sin(res.x * Math.PI / 2) * this.stage.$stageWidth / 22;
         this.changePlaySide(true);
     };

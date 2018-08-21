@@ -17,11 +17,13 @@ class RocketProp extends BasePage {
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
-		this.setSkinData();
-		this.setJumpeHeight();
+		this.setInitAllData();
+	
 	}
 	public setInitAllData() {
-		
+		this.setSkinData();
+		this.setJumpeHeight();
+		this.playShowDownTram();
 	}
 	public setSkinData(){
 		let self = this;
@@ -35,5 +37,9 @@ class RocketProp extends BasePage {
 	public playShowDownTram() {
 		this.hideAllChildren();
 		this.skinsData[this.COLOR_STATUS].visible=true;
+		this.setThisWidthHeight({
+			width:this.skinsData[this.COLOR_STATUS].width,
+			height:this.skinsData[this.COLOR_STATUS].height
+		});
 	}
 }

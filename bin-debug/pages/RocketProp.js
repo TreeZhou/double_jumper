@@ -24,10 +24,12 @@ var RocketProp = (function (_super) {
     };
     RocketProp.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
-        this.setSkinData();
-        this.setJumpeHeight();
+        this.setInitAllData();
     };
     RocketProp.prototype.setInitAllData = function () {
+        this.setSkinData();
+        this.setJumpeHeight();
+        this.playShowDownTram();
     };
     RocketProp.prototype.setSkinData = function () {
         var self = this;
@@ -41,6 +43,10 @@ var RocketProp = (function (_super) {
     RocketProp.prototype.playShowDownTram = function () {
         this.hideAllChildren();
         this.skinsData[this.COLOR_STATUS].visible = true;
+        this.setThisWidthHeight({
+            width: this.skinsData[this.COLOR_STATUS].width,
+            height: this.skinsData[this.COLOR_STATUS].height
+        });
     };
     return RocketProp;
 }(BasePage));

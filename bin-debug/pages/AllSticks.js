@@ -15,18 +15,47 @@ var AllSticks = (function (_super) {
         _this.eachStageDistance = 30; // 每个阶段的间隔
         _this.minDistance = 30;
         _this.stickRecyclePool = [];
+        // public propsClass:StagePropClass;
         _this.hasPropsStage = 3;
         _this.METER_STAGE_LIST = [
+            {
+                minHeight: 0,
+                maxHeight: 600,
+                distance: 30,
+                pointRateList: [0.1, 0.7, 0.2, 0],
+                singlePoprsRate: {
+                    spring: 0,
+                    trampoline: 0,
+                    springShoes: 1,
+                    wing: 0,
+                    rocket: 0,
+                    protectionCover: 0,
+                    diamond: 0,
+                    moreOneLife: 0
+                },
+                moreSticketRate: {
+                    fixation: 0.7,
+                    horizontal: 0.1,
+                    hitDisable: 0.1,
+                    oneceHit: 0.1
+                },
+                signleSticketRate: {
+                    fixation: 0.9,
+                    horizontal: 0.1,
+                    hitDisable: 0,
+                    oneceHit: 0
+                },
+            },
             {
                 minHeight: 600,
                 maxHeight: 2000,
                 distance: 30,
-                pointRateList: [0.1, 0.7, 0.2],
+                pointRateList: [0.1, 0.7, 0.2, 0],
                 singlePoprsRate: {
                     spring: 0,
-                    trampoline: 0.9,
-                    springShoe: 0,
-                    wing: 0.1,
+                    trampoline: 0,
+                    springShoes: 1,
+                    wing: 0,
                     rocket: 0,
                     protectionCover: 0,
                     diamond: 0,
@@ -49,11 +78,11 @@ var AllSticks = (function (_super) {
                 minHeight: 2000,
                 maxHeight: 5000,
                 distance: 40,
-                pointRateList: [0.2, 0.6, 0.2],
+                pointRateList: [0.2, 0.5, 0.2, 0.1],
                 singlePoprsRate: {
                     spring: 0,
                     trampoline: 0.8,
-                    springShoe: 0,
+                    springShoes: 0,
                     wing: 0.2,
                     rocket: 0,
                     protectionCover: 0,
@@ -77,11 +106,11 @@ var AllSticks = (function (_super) {
                 minHeight: 5000,
                 maxHeight: 10000,
                 distance: 50,
-                pointRateList: [0.2, 0.6, 0.2],
+                pointRateList: [0.2, 0.4, 0.2, 0.2],
                 singlePoprsRate: {
                     spring: 0,
                     trampoline: 0.8,
-                    springShoe: 0,
+                    springShoes: 0,
                     wing: 0.2,
                     rocket: 0,
                     protectionCover: 0,
@@ -233,8 +262,6 @@ var AllSticks = (function (_super) {
     AllSticks.prototype.initStickData = function () {
         this.hasPropsStage = 3;
         this.preStickY = this.stage.$stageHeight;
-        this.propsClass = new StagePropClass();
-        this.addChild(this.propsClass);
         this.setCheckPoints = new SetCheckPoints();
     };
     /**
@@ -290,6 +317,7 @@ var AllSticks = (function (_super) {
         var start = 0;
         var end = 0;
         var getMyKey = null;
+        // debugger
         for (var key in percentageObj) {
             // console.log('概率',start,end);
             end = start + percentageObj[key];
@@ -314,7 +342,7 @@ var AllSticks = (function (_super) {
             stageWidth: this.stage.$stageWidth,
             distance: 24,
             num: 20,
-            keyName: 'fixation'
+            keyName: 'fixation' // timing fixation
         });
         for (var i_1 = 0; i_1 < list.length; i_1++) {
             groupBox.addChild(list[i_1]);
@@ -352,29 +380,8 @@ var AllSticks = (function (_super) {
                 if (pedalObj.typeName) {
                     pedalObj.setStickTypeName(pedalObj.typeName);
                 }
-                // console.log('pedalObj',pedalObj.$y,pedalObj.height,this.stage.$stageHeight);
                 y = pedalObj.$y;
             }
-            // while (y > -this.stage.$stageHeight) {
-            // 	sticketObj = this.createSticket(nowStage,this.preStickY, i ,groupBox);
-            //     pedalObj = sticketObj.stickObj;
-            //     groupBox = sticketObj.groupBox;
-            // 	y = pedalObj.$y;
-            // 	this.preStickY = pedalObj.$y;
-            // 	if(pedalObj.TYPE_STATUS === pedalObj.TYPE_FIXATION && nowStage === this.hasPropsStage) {
-            // 		propsObj = this.setPropOnSticket(pedalObj,nowStage,groupBox);
-            // 		if(propsObj) {
-            // 			pedalObj.$y = pedalObj.$y-propsObj.DOWN_DISTANCE;
-            // 			propsObj.$y =  propsObj.$y-propsObj.DOWN_DISTANCE;
-            // 			pedalObj.meter = this.changeToMeter(pedalObj.$y,nowStage);
-            // 			y = propsObj.$y-propsObj.UP_DISTANCE;
-            // 			this.preStickY = y;
-            // 			this.hasPropsStage++;
-            // 		}
-            // 	}
-            // 	i++;
-            // }
-            // this.getFixtionSticket(fixtionList,nowStage,groupBox);
             this.lastOneStickY = y - pedalObj.height - 20;
         }
         // return nowStage;
@@ -382,6 +389,7 @@ var AllSticks = (function (_super) {
     AllSticks.prototype.getNowStageItem = function (playerMeter) {
         var list = this.METER_STAGE_LIST;
         var item = null;
+        // console.log('对象的米数',playerMeter);
         if (list.length) {
             for (var i = 0; i < list.length; i++) {
                 if (playerMeter >= list[i].minHeight && playerMeter < list[i].maxHeight || i === (list.length - 1)) {
@@ -408,9 +416,8 @@ var AllSticks = (function (_super) {
         var randomNum = Math.random();
         var list = [];
         var rateTotalList = this.getRateList(rateObj.pointRateList);
-        // console.log(this.getMoreSticketKey(rateObj.moreSticketRate),this.getSinglePropKey(rateObj.singlePoprsRate),this.getSinglePropKey(rateObj.signleSticketRate));
-        // debugger
-        if (randomNum >= 0 && randomNum < rateTotalList[0]) {
+        // console.log('随机',this.getSinglePropKey(rateObj.singlePoprsRate))
+        if (randomNum > 0 && randomNum <= rateTotalList[0]) {
             list = this.setCheckPoints.setPropsAndStick({
                 lastY: this.lastOneStickY,
                 stageWidth: this.stage.$stageWidth,
@@ -419,7 +426,7 @@ var AllSticks = (function (_super) {
                 sticketName: 'fixation'
             });
         }
-        else if (randomNum >= rateTotalList[0] && randomNum < rateTotalList[1]) {
+        else if (randomNum > rateTotalList[0] && randomNum <= rateTotalList[1]) {
             list = this.setCheckPoints.listSticket({
                 lastY: this.lastOneStickY,
                 stageWidth: this.stage.$stageWidth,
@@ -427,13 +434,22 @@ var AllSticks = (function (_super) {
                 keyNameList: this.getMoreSticketKey(rateObj.moreSticketRate)
             });
         }
-        else if (randomNum >= rateTotalList[1] && randomNum < rateTotalList[2]) {
+        else if (randomNum > rateTotalList[1] && randomNum <= rateTotalList[2]) {
             list = this.setCheckPoints.fixtionStick({
                 lastY: this.lastOneStickY,
                 stageWidth: this.stage.$stageWidth,
                 distance: rateObj.distance,
                 num: 6,
                 keyName: this.getSinglePropKey(rateObj.signleSticketRate)
+            });
+        }
+        else if (randomNum > rateTotalList[2] && randomNum <= rateTotalList[3]) {
+            list = this.setCheckPoints.fixtionStick({
+                lastY: this.lastOneStickY,
+                stageWidth: this.stage.$stageWidth,
+                distance: 50,
+                num: 6,
+                keyName: 'timing'
             });
         }
         else {
@@ -553,21 +569,26 @@ var AllSticks = (function (_super) {
             if (item.TYPE_STATUS === item.TYPE_HORIZONTAL) {
                 item.leftAndRightMove();
             }
+            if (item.TYPE_STATUS === item.TYPE_TIMING && item.$y > this.stage.$stageHeight * 0.35 && !item.isPlayWood) {
+                item.setTimingSticket(2000, function (thisItem) {
+                    thisItem.visible = false;
+                });
+            }
         }
     };
     AllSticks.prototype.recycleAllObject = function (obj) {
         if (obj.TYPE_NAME) {
-            if (obj.TYPE_NAME === 'trampoline') {
-                this.setCheckPoints.recycleObj(obj, obj.TYPE_NAME);
-            }
-            else if (obj.TYPE_NAME === 'wing') {
-                this.setCheckPoints.recycleObj(obj, obj.TYPE_NAME);
-            }
-            else if (obj.TYPE_NAME === 'rocket') {
-                this.setCheckPoints.recycleObj(obj, obj.TYPE_NAME);
-            }
-            else if (obj.TYPE_NAME === 'sticket') {
+            // if(obj.TYPE_NAME === 'trampoline') {
+            // 	this.setCheckPoints.recycleObj(obj,obj.TYPE_NAME);
+            // }else if(obj.TYPE_NAME === 'wing'){
+            // 	this.setCheckPoints.recycleObj(obj,obj.TYPE_NAME);
+            // }else if(obj.TYPE_NAME === 'rocket'){
+            // }else
+            if (obj.TYPE_NAME === 'sticket') {
                 this.setCheckPoints.recycleObj(obj, 'stickRecyclePool');
+            }
+            else if (obj.TYPE_NAME) {
+                this.setCheckPoints.recycleObj(obj, obj.TYPE_NAME);
             }
         }
     };

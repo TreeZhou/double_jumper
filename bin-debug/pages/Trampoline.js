@@ -27,10 +27,10 @@ var Trampoline = (function (_super) {
     // hideAllChildren
     Trampoline.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
-        this.setSkinData();
-        this.setJumpeHeight();
     };
     Trampoline.prototype.setInitAllData = function () {
+        this.setSkinData();
+        this.setJumpeHeight();
     };
     Trampoline.prototype.setJumpeHeight = function () {
         this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
@@ -43,14 +43,26 @@ var Trampoline = (function (_super) {
                 'down': self.tramDownDefault
             }
         };
+        this.setThisWidthHeight({
+            width: this.skinsData[this.COLOR_STATUS][this.TYPE_DOWN].width,
+            height: this.skinsData[this.COLOR_STATUS][this.TYPE_DOWN].height
+        });
     };
     Trampoline.prototype.playShowDownTram = function () {
         var _this = this;
         this.hideAllChildren();
         this.skinsData[this.COLOR_STATUS][this.TYPE_DOWN].visible = true;
+        this.setThisWidthHeight({
+            width: this.skinsData[this.COLOR_STATUS][this.TYPE_DOWN].width,
+            height: this.skinsData[this.COLOR_STATUS][this.TYPE_DOWN].height
+        });
         setTimeout(function () {
             _this.hideAllChildren();
             _this.skinsData[_this.COLOR_STATUS][_this.TYPE_UP].visible = true;
+            _this.setThisWidthHeight({
+                width: _this.skinsData[_this.COLOR_STATUS][_this.TYPE_UP].width,
+                height: _this.skinsData[_this.COLOR_STATUS][_this.TYPE_UP].height
+            });
         }, 50);
     };
     return Trampoline;

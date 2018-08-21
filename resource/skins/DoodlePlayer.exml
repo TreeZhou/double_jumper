@@ -13,4 +13,10 @@
 	<e:Image id="beanWingFaceDefault" width="113" height="150" x="0" y="0" source="bean_face_wing_default_png" visible="false"/>
 	<e:Image id="beanWingLeftDefault" width="113" height="150" y="0" x="0" source="bean_left_wing_default_png" visible="false"/>
 	<e:Image id="beanWingRightDefault" width="113" height="150" x="0" y="0" source="bean_right_wing_default_png" visible="false"/>
+	<e:Image id="faceSpringDownDefault" width="113" height="150" x="0" y="0" source="bean_face_spring_down_normal_png"/>
+	<e:Image id="faceSpringUpDefault" width="113" height="150" x="0" y="0" source="bean_face_spring_up_normal_png"/>
+	<e:Image id="rightSpringDownDefault" width="113" height="150" x="0" y="0" source="bean_right_spring_down_normal_png"/>
+	<e:Image id="rightSpringUpDefault" width="113" height="150" x="0" y="0" source="bean_right_spring_up_normal_png"/>
+	<e:Image id="leftSpringDownDefault" width="113" height="150" x="0" y="0" source="bean_left_spring_down_normal_png"/>
+	<e:Image id="leftSpringUpDefault" width="113" height="150" x="0" y="0" source="bean_left_spring_up_normal_png"/>
 </e:Skin>

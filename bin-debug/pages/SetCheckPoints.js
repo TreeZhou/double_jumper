@@ -15,10 +15,14 @@ var SetCheckPoints = (function () {
                 width: 126
             },
             'horizontal': {
+                height: 33,
+                width: 136
+            },
+            'oneceHit': {
                 height: 32,
                 width: 126
             },
-            'oneceHit': {
+            'timing': {
                 height: 32,
                 width: 126
             },
@@ -33,19 +37,35 @@ var SetCheckPoints = (function () {
             'rocket': {
                 height: 62,
                 width: 56
-            }
+            },
+            'springShoes': {
+                width: 60,
+                height: 32
+            },
+            'smallMonster': {
+                width: 237,
+                height: 161
+            },
+            'bigMonster': {
+                width: 286,
+                height: 321
+            },
         };
         this.skinPropData = {
             'trampoline': Trampoline,
             'wing': WingProp,
             'rocket': RocketProp,
-            'sticket': StickItem
+            'sticket': StickItem,
+            'springShoes': SpringShoesProp,
+            'bigMonster': MonsterProp,
+            'smallMonster': MonsterProp
         };
         this.allPropsPool = {
             'trampoline': [],
             'wing': [],
             'rocket': [],
-            'stickRecyclePool': []
+            'stickRecyclePool': [],
+            'springShoes': []
         };
     }
     // 关卡函数
@@ -108,10 +128,14 @@ var SetCheckPoints = (function () {
         return list;
     };
     /**
+     * 怪兽的关卡
+     */
+    // public setMonster
+    /**
      * 可以共用的方法
      */
     SetCheckPoints.prototype.addPropToStage = function (referStick, propsName, sticketName) {
-        var item = this.createStick(this.skinPropData[propsName], propsName);
+        var item = this.createSkinObj(this.skinPropData[propsName], propsName);
         item.$x = this.setPropsX(this.stickHeightWidth[propsName].width, referStick, this.stickHeightWidth[sticketName].width);
         item.$y = referStick.$y - this.stickHeightWidth[propsName].height;
         // debugger;
@@ -129,15 +153,12 @@ var SetCheckPoints = (function () {
         }
         return itemX;
     };
-    SetCheckPoints.prototype.createStick = function (objClass, recycleList) {
+    SetCheckPoints.prototype.createSkinObj = function (objClass, recycleList) {
         var item = null;
         var propsList = this.allPropsPool[recycleList];
         if (propsList.length) {
             item = this.allPropsPool[recycleList][0];
             this.allPropsPool[recycleList].shift();
-            // if(recycleList!='stickRecyclePool') {
-            //     //  console.log('prop',item)
-            // }
         }
         else {
             item = new objClass();
@@ -153,11 +174,12 @@ var SetCheckPoints = (function () {
         return randomX;
     };
     SetCheckPoints.prototype.createOneStick = function (obj) {
-        var item = this.createStick(this.skinPropData['sticket'], 'stickRecyclePool');
+        var item = this.createSkinObj(this.skinPropData['sticket'], 'stickRecyclePool');
         var ranDistance = Math.ceil(Math.abs(Math.random() * (obj.distance - this.minDistance)) + this.minDistance);
         item.$y = obj.perY - obj.objHeight - ranDistance;
         item.$x = this.randomObjX(obj.stageWidth, obj.objWidth);
         item.typeName = obj.keyName;
+        // item.setStickTypeName(item.typeName);
         return item;
     };
     return SetCheckPoints;

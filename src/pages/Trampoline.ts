@@ -27,11 +27,11 @@ class Trampoline extends BasePage{
 	protected childrenCreated():void
 	{
 		super.childrenCreated();
-		this.setSkinData();
-		this.setJumpeHeight();
+	
 	}
 	public setInitAllData() {
-		
+		this.setSkinData();
+		this.setJumpeHeight();
 	}
 	private setJumpeHeight() {
 		this.JUMP_DISTANCE = this.changeToPixel(this.JUMP_DISTANCE);
@@ -44,13 +44,25 @@ class Trampoline extends BasePage{
 				'down':self.tramDownDefault
 			}
 		}
+		this.setThisWidthHeight({
+			width:this.skinsData[this.COLOR_STATUS][this.TYPE_DOWN].width,
+			height:this.skinsData[this.COLOR_STATUS][this.TYPE_DOWN].height
+		});
 	}
 	public playShowDownTram() {
 		this.hideAllChildren();
 		this.skinsData[this.COLOR_STATUS][this.TYPE_DOWN].visible=true;
+		this.setThisWidthHeight({
+			width:this.skinsData[this.COLOR_STATUS][this.TYPE_DOWN].width,
+			height:this.skinsData[this.COLOR_STATUS][this.TYPE_DOWN].height
+		});
 		setTimeout(()=>{
 			this.hideAllChildren();
 			this.skinsData[this.COLOR_STATUS][this.TYPE_UP].visible=true;
+			this.setThisWidthHeight({
+				width:this.skinsData[this.COLOR_STATUS][this.TYPE_UP].width,
+				height:this.skinsData[this.COLOR_STATUS][this.TYPE_UP].height
+			});
 		},50)
 	}
 	

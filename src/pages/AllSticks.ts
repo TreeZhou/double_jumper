@@ -10,7 +10,7 @@ class AllSticks extends BasePage{
     public lastOneStickY:number;   // 当前最后一个踏板的Y值
     public stickRecyclePool:any=[];
 
-	public propsClass:StagePropClass;
+	// public propsClass:StagePropClass;
 	
 	public hasPropsStage:number=3;
 
@@ -18,15 +18,44 @@ class AllSticks extends BasePage{
 
 	private METER_STAGE_LIST:Array<any> = [
 		{
+			minHeight:0,
+			maxHeight:600,
+			distance:30,
+			pointRateList:[0.1,0.7,0.2,0],  // 含有单个道具，跳板有多种的，跳板只有一种的，定时出现的跳板
+			singlePoprsRate:{
+				spring:0,
+				trampoline:0,
+				springShoes:1,
+				wing:0,
+				rocket:0,
+				protectionCover:0,
+				diamond:0,
+				moreOneLife:0
+			},
+			moreSticketRate:{
+				fixation:0.7,
+				horizontal:0.1,
+				hitDisable:0.1,
+				oneceHit:0.1
+			},
+			signleSticketRate:{
+				fixation:0.9,
+				horizontal:0.1,
+				hitDisable:0,
+				oneceHit:0
+			},
+
+		},
+		{
 			minHeight:600,
 			maxHeight:2000,
 			distance:30,
-			pointRateList:[0.1,0.7,0.2],  // 含有单个道具，跳板有多种的，跳板只有一种的，
+			pointRateList:[0.1,0.7,0.2,0],  // 含有单个道具，跳板有多种的，跳板只有一种的，定时出现的跳板
 			singlePoprsRate:{
 				spring:0,
-				trampoline:0.9,
-				springShoe:0,
-				wing:0.1,
+				trampoline:0,
+				springShoes:1,
+				wing:0,
 				rocket:0,
 				protectionCover:0,
 				diamond:0,
@@ -50,11 +79,11 @@ class AllSticks extends BasePage{
 			minHeight:2000,
 			maxHeight:5000,
 			distance:40,
-			pointRateList:[0.2,0.6,0.2],  // 含有单个道具，跳板有多种的，跳板只有一种的，
+			pointRateList:[0.2,0.5,0.2,0.1],  // 含有单个道具，跳板有多种的，跳板只有一种的,定时出现的跳板，
 			singlePoprsRate:{
 				spring:0,
 				trampoline:0.8,
-				springShoe:0,
+				springShoes:0,
 				wing:0.2,
 				rocket:0,
 				protectionCover:0,
@@ -79,11 +108,11 @@ class AllSticks extends BasePage{
 			minHeight:5000,
 			maxHeight:10000,
 			distance:50,
-			pointRateList:[0.2,0.6,0.2],  // 含有单个道具，跳板有多种的，跳板只有一种的，
+			pointRateList:[0.2,0.4,0.2,0.2],  // 含有单个道具，跳板有多种的，跳板只有一种的，
 			singlePoprsRate:{
 				spring:0,
 				trampoline:0.8,
-				springShoe:0,
+				springShoes:0,
 				wing:0.2,
 				rocket:0,
 				protectionCover:0,
@@ -242,8 +271,6 @@ class AllSticks extends BasePage{
     private initStickData(){
 		this.hasPropsStage = 3;
         this.preStickY = this.stage.$stageHeight;
-		this.propsClass = new StagePropClass();
-		this.addChild(this.propsClass);
 		this.setCheckPoints = new SetCheckPoints();
     }
     /**
@@ -308,7 +335,7 @@ class AllSticks extends BasePage{
 		let start = 0;
 		let end = 0;
 		let getMyKey = null;
-
+		// debugger
 		for(let key in percentageObj) {
 			// console.log('概率',start,end);
 			end = start+ percentageObj[key];
@@ -334,7 +361,7 @@ class AllSticks extends BasePage{
             stageWidth:this.stage.$stageWidth,
             distance:24,
             num:20,
-			keyName:'fixation'
+			keyName:'fixation' // timing fixation
 		});
 		for(let i=0;i<list.length;i++) {
 			groupBox.addChild(list[i]);
@@ -343,8 +370,10 @@ class AllSticks extends BasePage{
 			y = pedalObj.$y;
 		}
 		this.lastOneStickY = y - pedalObj.height;
+
         return groupBox;
 	}
+
     // 当当前的最后那个跳板大于某个值，就创建下一屏的跳板
 	public addNewPetals(groupBox:eui.Group,playerMeter:number) {
 		let i = 0;
@@ -373,29 +402,8 @@ class AllSticks extends BasePage{
 				if(pedalObj.typeName) {
 					pedalObj.setStickTypeName(pedalObj.typeName);
 				}
-				// console.log('pedalObj',pedalObj.$y,pedalObj.height,this.stage.$stageHeight);
 				y = pedalObj.$y;
 			}
-			// while (y > -this.stage.$stageHeight) {
-			// 	sticketObj = this.createSticket(nowStage,this.preStickY, i ,groupBox);
-            //     pedalObj = sticketObj.stickObj;
-            //     groupBox = sticketObj.groupBox;
-			// 	y = pedalObj.$y;
-			// 	this.preStickY = pedalObj.$y;
-			// 	if(pedalObj.TYPE_STATUS === pedalObj.TYPE_FIXATION && nowStage === this.hasPropsStage) {
-			// 		propsObj = this.setPropOnSticket(pedalObj,nowStage,groupBox);
-			// 		if(propsObj) {
-			// 			pedalObj.$y = pedalObj.$y-propsObj.DOWN_DISTANCE;
-			// 			propsObj.$y =  propsObj.$y-propsObj.DOWN_DISTANCE;
-			// 			pedalObj.meter = this.changeToMeter(pedalObj.$y,nowStage);
-			// 			y = propsObj.$y-propsObj.UP_DISTANCE;
-			// 			this.preStickY = y;
-			// 			this.hasPropsStage++;
-			// 		}
-			// 	}
-			// 	i++;
-			// }
-			// this.getFixtionSticket(fixtionList,nowStage,groupBox);
 			this.lastOneStickY = y - pedalObj.height-20;
 		}
         // return nowStage;
@@ -403,6 +411,7 @@ class AllSticks extends BasePage{
 	private getNowStageItem(playerMeter){
 		let list = this.METER_STAGE_LIST;
 		let item = null;
+		// console.log('对象的米数',playerMeter);
 		if(list.length) {
 			for(let i=0;i<list.length;i++) {
 				if(playerMeter>=list[i].minHeight&&playerMeter<list[i].maxHeight||i===(list.length-1)) {
@@ -432,9 +441,8 @@ class AllSticks extends BasePage{
 		let list = [];
 		let rateTotalList = this.getRateList(rateObj.pointRateList);
 
-		// console.log(this.getMoreSticketKey(rateObj.moreSticketRate),this.getSinglePropKey(rateObj.singlePoprsRate),this.getSinglePropKey(rateObj.signleSticketRate));
-		// debugger
-		if(randomNum>=0&&randomNum<rateTotalList[0]) {
+		// console.log('随机',this.getSinglePropKey(rateObj.singlePoprsRate))
+		if(randomNum>0&&randomNum<=rateTotalList[0]) {
 			list = this.setCheckPoints.setPropsAndStick({
 				lastY:this.lastOneStickY,
 				stageWidth:this.stage.$stageWidth,
@@ -442,14 +450,14 @@ class AllSticks extends BasePage{
 				propsName:this.getSinglePropKey(rateObj.singlePoprsRate),
 				sticketName:'fixation'
 			});
-		}else if(randomNum>=rateTotalList[0]&&randomNum<rateTotalList[1]) {
+		}else if(randomNum>rateTotalList[0]&&randomNum<=rateTotalList[1]) {
 			list = this.setCheckPoints.listSticket({
 				lastY:this.lastOneStickY,
 				stageWidth:this.stage.$stageWidth,
 				distance:rateObj.distance,
 				keyNameList:this.getMoreSticketKey(rateObj.moreSticketRate)
 			});
-		}else if(randomNum>=rateTotalList[1]&&randomNum<rateTotalList[2]) {
+		}else if(randomNum>rateTotalList[1]&&randomNum<=rateTotalList[2]) {
 			list = this.setCheckPoints.fixtionStick({
 			lastY:this.lastOneStickY,
             stageWidth:this.stage.$stageWidth,
@@ -457,7 +465,15 @@ class AllSticks extends BasePage{
             num:6,
 			keyName:this.getSinglePropKey(rateObj.signleSticketRate)
 			});
-		}else {
+		}else if(randomNum>rateTotalList[2]&&randomNum<=rateTotalList[3]){
+			list = this.setCheckPoints.fixtionStick({
+				lastY:this.lastOneStickY,
+				stageWidth:this.stage.$stageWidth,
+				distance:50,
+				num:6,
+				keyName:'timing'
+			});
+		}else{
 			list = this.setCheckPoints.listSticket({
 				lastY:this.lastOneStickY,
 				stageWidth:this.stage.$stageWidth,
@@ -587,18 +603,26 @@ class AllSticks extends BasePage{
 			if (item.TYPE_STATUS === item.TYPE_HORIZONTAL) {
 				item.leftAndRightMove();
 			}
+			if(item.TYPE_STATUS === item.TYPE_TIMING && item.$y > this.stage.$stageHeight*0.35 && !item.isPlayWood) {
+				item.setTimingSticket(2000,(thisItem)=>{
+						thisItem.visible = false;
+				});
+			}
 		}
 	}
 	public recycleAllObject(obj){
 		if(obj.TYPE_NAME) {
-			if(obj.TYPE_NAME === 'trampoline') {
-				this.setCheckPoints.recycleObj(obj,obj.TYPE_NAME);
-			}else if(obj.TYPE_NAME === 'wing'){
-				this.setCheckPoints.recycleObj(obj,obj.TYPE_NAME);
-			}else if(obj.TYPE_NAME === 'rocket'){
-				this.setCheckPoints.recycleObj(obj,obj.TYPE_NAME);
-			}else if(obj.TYPE_NAME === 'sticket'){
+			// if(obj.TYPE_NAME === 'trampoline') {
+			// 	this.setCheckPoints.recycleObj(obj,obj.TYPE_NAME);
+			// }else if(obj.TYPE_NAME === 'wing'){
+			// 	this.setCheckPoints.recycleObj(obj,obj.TYPE_NAME);
+			// }else if(obj.TYPE_NAME === 'rocket'){
+				
+			// }else
+			 if(obj.TYPE_NAME === 'sticket'){
 				this.setCheckPoints.recycleObj(obj,'stickRecyclePool');
+			}else if(obj.TYPE_NAME ){
+				this.setCheckPoints.recycleObj(obj,obj.TYPE_NAME);
 			}
 		}
 	}

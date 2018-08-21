@@ -65,7 +65,10 @@ class GamePage extends BasePage{
 		this.createSticket();  // 创建跳板
 		this.setInitDataGame();  // 设置游戏的开始数据
 		this.beginAnimateEvent();  // 开始动画监听
+
+
 	}
+
 	// 创建涂鸦
 	private createDoodle() {
 		this.player = new DoodlePlayer();
@@ -79,7 +82,32 @@ class GamePage extends BasePage{
 		this.allSticks = new AllSticks();
 		this.addChild(this.allSticks);
 		this.stickList = this.allSticks.initSticket(this.stickList);
+		// this.player.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onAddToStage, this);
 	}
+	private onAddToStage(){
+
+		// let list = this.stickList.$children;
+		// 	console.log(list);
+		// 	this.run(list);
+		// // for(let i=0;i<	list.length;i++) {
+		// // 	if(list.playDiasbleHitClip ) {
+		// // 		list.playDiasbleHitClip (()=>{})
+		// // 	}
+		
+		// // }
+			let movePescide = this.createMoveObj("woodDefaultMove",this.stickList);
+		console.log('rena',movePescide,this.stickList);
+		// this.waterMoveCilpDefault = movePescide;
+		movePescide.play();
+	}
+	// private run(list){
+	// 	for(let i=0;i<	list.length;i++) {
+	// 		if(list[i].playDiasbleHitClip) {
+	// 			list[i].playDiasbleHitClip (()=>{})
+	// 		}
+		
+	// 	}
+	// }
 	/**
 	 * 设置初始值
 	 */

@@ -6,6 +6,10 @@ class BasePage extends eui.Component{
     public STAGE_METER: number = 200; // 一屏等于多少米
 	public COLOR_STATUS:string='normal';
 	public COLOR_DEFAULE:string='normal';
+	public imgW:number = 0;
+
+	
+	public imgH:number = 0;
     public createChildren() {
         
         super.createChildren();
@@ -85,6 +89,41 @@ class BasePage extends eui.Component{
 		for(let i=0;i<len;i++) {
 			this.$children[i].visible = false;
 		}
+	}
+	/**
+	 * 随机出传入数组中的一个值
+	 */
+	public randomShowSameType(list) {
+		let len = list.length;
+		let randomNum ,item;
+
+		if(!len) {
+			alert('随机的跳板数组长度不对!');
+			return;
+		}
+		if(len === 1) {
+			item = list[0];
+		}else {
+			randomNum = Math.floor(Math.random()*len);
+			if(randomNum>=len) {
+				randomNum = len-1;
+			}else if(randomNum<0) {
+				randomNum = 0;
+			}
+			item = list[randomNum];
+		}
+
+		return item;
+	}
+	/**
+	 * 设置当前显示的图片的宽度和高度为计算的宽度和高度
+	 */
+	public setThisWidthHeight(item:{
+		width:number,
+		height:number
+	}){
+		this.imgW = item.width;
+		this.imgH = item.height;
 	}
 	// recycle
 
