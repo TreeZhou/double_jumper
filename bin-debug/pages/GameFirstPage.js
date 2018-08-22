@@ -17,10 +17,20 @@ var GameFirstPage = (function (_super) {
         _super.prototype.partAdded.call(this, partName, instance);
     };
     GameFirstPage.prototype.childrenCreated = function () {
-        this.percentHeight = 100;
-        this.percentWidth = 100;
         _super.prototype.childrenCreated.call(this);
         this.eventListen();
+        var img = new DouDing();
+        console.log(img.width, img.height, img);
+        this.addChild(img);
+        // setTimeout(()=>{
+        // 	img.changeBaseImg('purpleSmallMonster');
+        // 	// img.baseImg.texture = RES.getRes('bean_face_spring_down_normal_png');
+        // 	//  img.baseImg.texture = null;
+        // 	 console.log(img.baseImg);
+        // },1500)
+        // var image = new eui.Image();
+        // image.source = "bean_face_normal_png";
+        // console.log(image.width,image.height,image);
     };
     GameFirstPage.prototype.eventListen = function () {
         this.beginPlayBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showPlayGamePage, this);
@@ -32,6 +42,6 @@ var GameFirstPage = (function (_super) {
         Main.gamePage.beginGame();
     };
     return GameFirstPage;
-}(BasePage));
+}(BaseNormalPage));
 __reflect(GameFirstPage.prototype, "GameFirstPage");
 //# sourceMappingURL=GameFirstPage.js.map

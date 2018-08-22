@@ -76,5 +76,10 @@
         "path": "..\\resource\\skins\\SpringShoesProp.ts",
         "class": "SpringShoesProp",
         "parentPath": ""
+    },
+    "1655f6981ef": {
+        "path": "..\\resource\\skins\\BaseSkin.ts",
+        "class": "BaseSkin",
+        "parentPath": ""
     }
 }

@@ -21,7 +21,7 @@
 			"name": "stickPng"
 		},
 		{
-			"keys": "rocket_stage_default_png,protection_stage_default_png,wing_stage_default_png,mushroom1_png,mushroom2_png,springShoe_png",
+			"keys": "rocket_stage_default_png,protection_stage_default_png,wing_stage_default_png,mushroom1_png,mushroom2_png,springShoe_png,normalSpringMove_json,normalSpringMove_png",
 			"name": "stageProps"
 		},
 		{

@@ -8,9 +8,9 @@ var __extends = this && this.__extends || function __extends(t, e) {
 for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
 r.prototype = e.prototype, t.prototype = new r();
 };
-var GamePage = (function (_super) {
-    __extends(GamePage, _super);
-    function GamePage() {
+var GamePage2 = (function (_super) {
+    __extends(GamePage2, _super);
+    function GamePage2() {
         var _this = _super.call(this) || this;
         _this.endGame = false;
         // private doodlePlayer:eui.Component;
@@ -24,10 +24,10 @@ var GamePage = (function (_super) {
         _this.playerBeforeY = 0;
         return _this;
     }
-    GamePage.prototype.partAdded = function (partName, instance) {
+    GamePage2.prototype.partAdded = function (partName, instance) {
         _super.prototype.partAdded.call(this, partName, instance);
     };
-    GamePage.prototype.childrenCreated = function () {
+    GamePage2.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
         this.percentHeight = 100;
         this.percentWidth = 100;
@@ -37,7 +37,7 @@ var GamePage = (function (_super) {
     /**
      * 监听点击事件
      */
-    GamePage.prototype.beginListenEvent = function () {
+    GamePage2.prototype.beginListenEvent = function () {
         var _this = this;
         this.playBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
             _this.beginGame();
@@ -47,29 +47,28 @@ var GamePage = (function (_super) {
     /**
      * 开始游戏
      */
-    GamePage.prototype.beginGame = function () {
+    GamePage2.prototype.beginGame = function () {
         this.createDoodle();
         this.createSticket(); // 创建跳板
         this.setInitDataGame(); // 设置游戏的开始数据
         this.beginAnimateEvent(); // 开始动画监听
     };
     // 创建涂鸦
-    GamePage.prototype.createDoodle = function () {
-        this.player = new DouDing();
+    GamePage2.prototype.createDoodle = function () {
+        this.player = new DoodlePlayer();
         this.doodleBox.addChild(this.player);
         this.player.$x = this.stage.$stageWidth / 2;
         // this.player.setInitJumperData();
         this.player.orientationEvent();
     };
     //  创建跳板
-    GamePage.prototype.createSticket = function () {
+    GamePage2.prototype.createSticket = function () {
         this.allSticks = new AllSticks();
         this.addChild(this.allSticks);
         this.stickList = this.allSticks.initSticket(this.stickList);
-        console.log(this.stickList.$children);
         // this.player.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onAddToStage, this);
     };
-    GamePage.prototype.onAddToStage = function () {
+    GamePage2.prototype.onAddToStage = function () {
         // let list = this.stickList.$children;
         // 	console.log(list);
         // 	this.run(list);
@@ -93,7 +92,7 @@ var GamePage = (function (_super) {
     /**
      * 设置初始值
      */
-    GamePage.prototype.setInitDataGame = function () {
+    GamePage2.prototype.setInitDataGame = function () {
         this.player.visible = true;
         this.endGame = false;
         this.player.$y = this.stage.$stageHeight * 0.9;
@@ -106,13 +105,13 @@ var GamePage = (function (_super) {
     /**
      * 开始监听动画
      */
-    GamePage.prototype.beginAnimateEvent = function () {
+    GamePage2.prototype.beginAnimateEvent = function () {
         this.addEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
     };
     /**
      * 动画监听函数
      */
-    GamePage.prototype.onEnterFrame = function () {
+    GamePage2.prototype.onEnterFrame = function () {
         this.player.movePlayerY();
         if (this.player.isJumperTopStop) {
             this.mapObjectMove();
@@ -124,7 +123,7 @@ var GamePage = (function (_super) {
         else {
             this.checkIsGameOver();
             this.checkISOverStage(this.stickList, this.allSticks.recycleAllObject.bind(this.allSticks));
-            this.allSticks.addNewPetals(this.stickList, this.doodleChangeToMeter(this.player.douDingJumperMeter));
+            this.allSticks.addNewPetals(this.stickList, this.doodleChangeToMeter(this.player.doodelMeter));
             this.allSticks.stickMoveLeftAndRight(this.stickList.$children);
         }
         if (this.player.isDown) {
@@ -133,16 +132,16 @@ var GamePage = (function (_super) {
         }
         // console.log(this.stickList.$children.length);
     };
-    GamePage.prototype.checkIsGameOver = function () {
+    GamePage2.prototype.checkIsGameOver = function () {
         if (this.player.$y > this.stage.$stageHeight) {
-            this.player.jumpMaxHeight = this.stage.$stageHeight * 0.3;
+            this.player.jumpHeightHight = this.stage.$stageHeight * 0.3;
             this.player.setStartJumpeSpeed(this.stage.$stageHeight, this.player.frameNum);
             this.player.setDownAddSpeed(this.stage.$stageHeight, this.player.frameNum);
             this.endGame = true;
-            this.player.isStopCaulteScore = true;
+            this.player.isStopCaulte = true;
         }
     };
-    GamePage.prototype.gotoMoveBg = function () {
+    GamePage2.prototype.gotoMoveBg = function () {
         this.removeAllList();
         if (this.player.$y > this.stage.$stageHeight + this.player.height * 1.5) {
             this.gameOver();
@@ -151,7 +150,7 @@ var GamePage = (function (_super) {
             this.longBg.$y = this.longBg.$y - 10;
         }
     };
-    GamePage.prototype.gameOver = function () {
+    GamePage2.prototype.gameOver = function () {
         this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
         this.player.visible = false;
         // this.playBtnBox.visible = true;
@@ -172,7 +171,7 @@ var GamePage = (function (_super) {
         }
         this.showPlayGameOverPage();
     };
-    GamePage.prototype.showPlayGameOverPage = function () {
+    GamePage2.prototype.showPlayGameOverPage = function () {
         Main.gameOver = new GameOverPage();
         Main.instance.addChild(Main.gameOver);
         Main.gameOver.setScoreText(this.setScoreText());
@@ -180,17 +179,17 @@ var GamePage = (function (_super) {
         this.longBg.$y = 0;
         this.parent.removeChild(this);
     };
-    GamePage.prototype.setScoreText = function () {
+    GamePage2.prototype.setScoreText = function () {
         var score = null;
         // console.log(this.player.jumpStartY);
-        console.log('tingzhi', this.player.douDingJumperMeter);
-        score = '分数：' + Math.ceil(this.doodleChangeToMeter(this.player.douDingJumperMeter));
+        console.log('tingzhi', this.player.doodelMeter);
+        score = '分数：' + Math.ceil(this.doodleChangeToMeter(this.player.doodelMeter));
         return score;
     };
-    GamePage.prototype.removeAllList = function () {
+    GamePage2.prototype.removeAllList = function () {
         this.stickList.removeChildren();
     };
-    GamePage.prototype.mapObjectMove = function () {
+    GamePage2.prototype.mapObjectMove = function () {
         var list = this.stickList.$children;
         // let springList = this.springList.$children;
         // let springLen = springList.length;
@@ -208,14 +207,14 @@ var GamePage = (function (_super) {
         // }
         this.allSticks.lastOneStickY = this.allSticks.lastOneStickY + speed;
     };
-    GamePage.prototype.checkIsHitDoodle = function (list, callback) {
+    GamePage2.prototype.checkIsHitDoodle = function (list, callback) {
         var item, itemMinX, itemMaxX, itemMaxY, itemMinY, itemHalf, itemMiddleY, pointDistance, maxDistance;
         var listLen = list.length;
         var playerMaxY = this.player.$y + this.player.anchorOffsetY;
         var playerMinY = this.player.$y - this.player.anchorOffsetY;
         var playerHalf = this.player.height / 2;
-        var playerMinX = this.player.$x - this.player.anchorOffsetX + 44;
-        var playerMaxX = this.player.$x + this.player.anchorOffsetX - 44;
+        var playerMinX = this.player.$x - this.player.anchorOffsetX + this.player.missDiastance[this.player.COLOR_STATUS];
+        var playerMaxX = this.player.$x + this.player.anchorOffsetX - this.player.missDiastance[this.player.COLOR_STATUS];
         var playerMiddel = this.player.$y; //-this.player.anchorOffsetY/2 this.player.anchorOffsetY
         for (var i = 0; i < listLen; i++) {
             item = list[i];
@@ -246,33 +245,29 @@ var GamePage = (function (_super) {
             }
         }
     };
-    GamePage.prototype.checkIsStickHit = function (item) {
+    GamePage2.prototype.checkIsStickHit = function (item) {
         this.player.$y = item.$y - this.player.anchorOffsetY;
         this.player.jumpStartY = item.$y;
         if (item.TYPE_NAME === 'trampoline') {
             this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, 100);
-            this.player.setSkinUpStatus(this.player.JUMP_UP);
-            this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+            this.player.setJumperStatus(this.player.JUMP_NORMAL);
             // this.player.isPlayCircle =true;
         }
         else if (item.TYPE_NAME === 'wing') {
             this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, 200);
-            this.player.setSkinUpStatus(this.player.WING_UP);
-            this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+            this.player.setJumperStatus(this.player.JUMP_WING);
         }
         else if (item.TYPE_NAME === 'rocket') {
             this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, 200);
-            this.player.setSkinUpStatus(this.player.ROCKET_UP);
-            this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+            this.player.setJumperStatus(this.player.JUMP_ROCKET);
         }
         else {
             this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum);
-            this.player.setSkinUpStatus(this.player.JUMP_UP);
-            this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+            this.player.setJumperStatus(this.player.JUMP_NORMAL);
         }
-        this.player.changeDouDingSkin(false);
+        this.player.changePlaySide(false);
     };
-    return GamePage;
+    return GamePage2;
 }(BasePage));
-__reflect(GamePage.prototype, "GamePage");
-//# sourceMappingURL=GamePage.js.map
+__reflect(GamePage2.prototype, "GamePage2");
+//# sourceMappingURL=gamepage2.js.map

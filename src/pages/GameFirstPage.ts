@@ -1,4 +1,4 @@
-class GameFirstPage extends BasePage {
+class GameFirstPage extends BaseNormalPage {
 	public constructor() {
 		super();
 	}
@@ -15,10 +15,25 @@ class GameFirstPage extends BasePage {
 
 	protected childrenCreated():void
 	{
-		this.percentHeight=100;
-		this.percentWidth=100;
 		super.childrenCreated();
 		this.eventListen();
+		let img = new DouDing();
+
+		console.log(img.width,img.height,img);
+		this.addChild(img);
+
+		// setTimeout(()=>{
+		// 	img.changeBaseImg('purpleSmallMonster');
+		// 	// img.baseImg.texture = RES.getRes('bean_face_spring_down_normal_png');
+		// 	//  img.baseImg.texture = null;
+		// 	 console.log(img.baseImg);
+		// },1500)
+
+		// var image = new eui.Image();
+        // image.source = "bean_face_normal_png";
+
+		// console.log(image.width,image.height,image);
+	
 	}
 
 	private eventListen() {
@@ -30,6 +45,7 @@ class GameFirstPage extends BasePage {
 		Main.instance.addChild(Main.gamePage);
 		Main.gamePage.beginGame();
 	}
+	
 
 	
 }

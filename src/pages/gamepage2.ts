@@ -1,4 +1,4 @@
-class GamePage extends BasePage{
+class GamePage2 extends BasePage{
 	public constructor() {
 		super();
 	}
@@ -10,7 +10,7 @@ class GamePage extends BasePage{
 	private orientation: any;
 
 
-	private player: DouDing;
+	private player: DoodlePlayer;
 	private allSticks:AllSticks;
 	private gamePage: eui.Group;
 	private stickList: eui.Group;
@@ -71,7 +71,7 @@ class GamePage extends BasePage{
 
 	// 创建涂鸦
 	private createDoodle() {
-		this.player = new DouDing();
+		this.player = new DoodlePlayer();
 		this.doodleBox.addChild(this.player);
 		this.player.$x = this.stage.$stageWidth / 2;
 		// this.player.setInitJumperData();
@@ -82,7 +82,6 @@ class GamePage extends BasePage{
 		this.allSticks = new AllSticks();
 		this.addChild(this.allSticks);
 		this.stickList = this.allSticks.initSticket(this.stickList);
-		console.log(this.stickList.$children);
 		// this.player.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onAddToStage, this);
 	}
 	private onAddToStage(){
@@ -142,7 +141,7 @@ class GamePage extends BasePage{
 		} else {
 			this.checkIsGameOver();
 			this.checkISOverStage(this.stickList,this.allSticks.recycleAllObject.bind(this.allSticks));
-			this.allSticks.addNewPetals(this.stickList,this.doodleChangeToMeter(this.player.douDingJumperMeter));
+			this.allSticks.addNewPetals(this.stickList,this.doodleChangeToMeter(this.player.doodelMeter));
 			this.allSticks.stickMoveLeftAndRight(this.stickList.$children);
 		}
 
@@ -156,11 +155,11 @@ class GamePage extends BasePage{
 	}
 	private checkIsGameOver(){
 		if(this.player.$y > this.stage.$stageHeight) {
-			this.player.jumpMaxHeight = this.stage.$stageHeight*0.3;
+			this.player.jumpHeightHight = this.stage.$stageHeight*0.3;
 			this.player.setStartJumpeSpeed(this.stage.$stageHeight,this.player.frameNum);
 			this.player.setDownAddSpeed(this.stage.$stageHeight,this.player.frameNum);
 			this.endGame = true;
-			this.player.isStopCaulteScore = true;
+			this.player.isStopCaulte = true;
 		}
 	}
 	private gotoMoveBg(){
@@ -205,8 +204,8 @@ class GamePage extends BasePage{
 	private setScoreText() {
 		let score = null;
 		// console.log(this.player.jumpStartY);
-		console.log('tingzhi',this.player.douDingJumperMeter);
-		score = '分数：' + Math.ceil(this.doodleChangeToMeter(this.player.douDingJumperMeter));
+		console.log('tingzhi',this.player.doodelMeter);
+		score = '分数：' + Math.ceil(this.doodleChangeToMeter(this.player.doodelMeter));
 		return score;
 	}
 	private removeAllList() {
@@ -237,8 +236,8 @@ class GamePage extends BasePage{
 		let playerMaxY = this.player.$y+this.player.anchorOffsetY;
 		let playerMinY = this.player.$y-this.player.anchorOffsetY;
 		let playerHalf = this.player.height/2;
-		let playerMinX = this.player.$x-this.player.anchorOffsetX+44;
-		let playerMaxX = this.player.$x + this.player.anchorOffsetX-44;
+		let playerMinX = this.player.$x-this.player.anchorOffsetX+this.player.missDiastance[this.player.COLOR_STATUS];
+		let playerMaxX = this.player.$x + this.player.anchorOffsetX-this.player.missDiastance[this.player.COLOR_STATUS];
 		let playerMiddel = this.player.$y; //-this.player.anchorOffsetY/2 this.player.anchorOffsetY
 
 		for (let i = 0; i < listLen; i++) {
@@ -275,24 +274,21 @@ class GamePage extends BasePage{
 		this.player.jumpStartY = item.$y;
 		if(item.TYPE_NAME === 'trampoline') {
 			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,100);
-			this.player.setSkinUpStatus(this.player.JUMP_UP);
-			 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+			this.player.setJumperStatus(this.player.JUMP_NORMAL);
 			// this.player.isPlayCircle =true;
 		}else if(item.TYPE_NAME === 'wing'){
 			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,200);
-			this.player.setSkinUpStatus(this.player.WING_UP);
-			 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+			this.player.setJumperStatus(this.player.JUMP_WING);
 		}else if(item.TYPE_NAME === 'rocket'){
 			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,200);
-			this.player.setSkinUpStatus(this.player.ROCKET_UP);
-			 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+			this.player.setJumperStatus(this.player.JUMP_ROCKET);
 		}else {
 			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum);
-			this.player.setSkinUpStatus(this.player.JUMP_UP);
-			 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+			this.player.setJumperStatus(this.player.JUMP_NORMAL);
 		}
 
-		this.player.changeDouDingSkin(false);
+
+		this.player.changePlaySide(false);
 		
 	}
 	// private checkListOverMapObject(checkList) {
