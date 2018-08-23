@@ -12,18 +12,21 @@ var GamePage = (function (_super) {
     __extends(GamePage, _super);
     function GamePage() {
         var _this = _super.call(this) || this;
-        _this.endGame = false;
-        // private doodlePlayer:eui.Component;
-        _this.stickNum = 30;
-        _this.childList = [];
-        _this.stickMoveList = [];
-        _this.isStickMove = false;
-        _this.hitNowNum = null;
-        _this.speedX = 0;
-        _this.playerChangeY = 0;
-        _this.playerBeforeY = 0;
+        _this.endGame = false; // 是否结束游戏
         return _this;
     }
+    // // private gamePage: eui.Group;
+    // private playBtn: eui.Image;
+    // private springList: eui.Group;
+    // private doodleBox: eui.Group;
+    // private stickNum: number = 30;
+    // public childList: any = [];
+    // private stickMoveList: any = [];
+    // private isStickMove: boolean = false;
+    // private hitNowNum: number = null;
+    // private speedX: number = 0;
+    // private playerChangeY: number = 0;
+    // private playerBeforeY: number = 0;
     GamePage.prototype.partAdded = function (partName, instance) {
         _super.prototype.partAdded.call(this, partName, instance);
     };
@@ -31,77 +34,42 @@ var GamePage = (function (_super) {
         _super.prototype.childrenCreated.call(this);
         this.percentHeight = 100;
         this.percentWidth = 100;
-        this.gamePage.percentHeight = 100;
-        // this.beginListenEvent();  //  监听点击开始的按钮
-    };
-    /**
-     * 监听点击事件
-     */
-    GamePage.prototype.beginListenEvent = function () {
-        var _this = this;
-        this.playBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            _this.beginGame();
-            _this.playBtnBox.visible = false;
-        }, this);
+        this.createAllGameObj();
     };
     /**
      * 开始游戏
      */
     GamePage.prototype.beginGame = function () {
-        this.createDoodle();
-        this.createSticket(); // 创建跳板
         this.setInitDataGame(); // 设置游戏的开始数据
         this.beginAnimateEvent(); // 开始动画监听
     };
-    // 创建涂鸦
+    /**
+     * 创建豆丁和跳板
+     */
+    GamePage.prototype.createAllGameObj = function () {
+        this.createDoodle();
+        this.createSticket(); // 创建跳板
+    };
+    // 创建豆丁
     GamePage.prototype.createDoodle = function () {
         this.player = new DouDing();
         this.doodleBox.addChild(this.player);
         this.player.$x = this.stage.$stageWidth / 2;
-        // this.player.setInitJumperData();
+        this.player.$y = this.stage.$stageHeight - this.player.anchorOffsetY;
         this.player.orientationEvent();
     };
     //  创建跳板
     GamePage.prototype.createSticket = function () {
-        this.allSticks = new AllSticks();
-        this.addChild(this.allSticks);
-        this.stickList = this.allSticks.initSticket(this.stickList);
-        console.log(this.stickList.$children);
-        // this.player.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onAddToStage, this);
+        this.allBarrier = new AllGameBarrier();
+        this.addChild(this.allBarrier);
+        this.stickList = this.allBarrier.initSticket(this.stickList);
     };
-    GamePage.prototype.onAddToStage = function () {
-        // let list = this.stickList.$children;
-        // 	console.log(list);
-        // 	this.run(list);
-        // // for(let i=0;i<	list.length;i++) {
-        // // 	if(list.playDiasbleHitClip ) {
-        // // 		list.playDiasbleHitClip (()=>{})
-        // // 	}
-        // // }
-        var movePescide = this.createMoveObj("woodDefaultMove", this.stickList);
-        console.log('rena', movePescide, this.stickList);
-        // this.waterMoveCilpDefault = movePescide;
-        movePescide.play();
-    };
-    // private run(list){
-    // 	for(let i=0;i<	list.length;i++) {
-    // 		if(list[i].playDiasbleHitClip) {
-    // 			list[i].playDiasbleHitClip (()=>{})
-    // 		}
-    // 	}
-    // }
     /**
      * 设置初始值
      */
     GamePage.prototype.setInitDataGame = function () {
-        this.player.visible = true;
         this.endGame = false;
-        this.player.$y = this.stage.$stageHeight * 0.9;
         this.longBg.$y = 0;
-        // this.nowStage = 1;
-        // this.scoreText.visible = false;
-        // this.getRandomPosition();  // 初始化弹簧的数据
-        console.log('对象', this.player.width, this.player.height, this.player.$y, this.player.$x, this.player.anchorOffsetX, this.player.anchorOffsetY);
     };
     /**
      * 开始监听动画
@@ -114,25 +82,64 @@ var GamePage = (function (_super) {
      */
     GamePage.prototype.onEnterFrame = function () {
         this.player.movePlayerY();
+        this.player.moveplayerX();
         if (this.player.isJumperTopStop) {
             this.mapObjectMove();
         }
-        this.player.moveplayerX();
         if (this.endGame) {
             this.gotoMoveBg();
         }
         else {
             this.checkIsGameOver();
-            this.checkISOverStage(this.stickList, this.allSticks.recycleAllObject.bind(this.allSticks));
-            this.allSticks.addNewPetals(this.stickList, this.doodleChangeToMeter(this.player.douDingJumperMeter));
-            this.allSticks.stickMoveLeftAndRight(this.stickList.$children);
+            this.checkISOverStage(this.stickList, this.allBarrier.recycleAllObject.bind(this.allBarrier));
+            this.allBarrier.addNewSticket(this.stickList, this.doodleChangeToMeter(this.player.douDingJumperMeter));
+            this.allBarrier.barrierMoved(this.stickList.$children);
         }
         if (this.player.isDown) {
-            this.checkIsHitDoodle(this.stickList.$children, this.checkIsStickHit.bind(this));
-            // this.checkIsHitDoodle(this.springList.$children,this.checkIsHitSpring.bind(this));
+            this.checkIsHitDoodle(this.stickList.$children, this.checkDouDingHitType.bind(this));
         }
-        // console.log(this.stickList.$children.length);
     };
+    /**
+     * 移动地图上的物体
+     */
+    GamePage.prototype.mapObjectMove = function () {
+        var list = this.stickList.$children;
+        var len = list.length;
+        var item, springItem;
+        var speed;
+        speed = this.player.nowSpeed;
+        for (var i = 0; i < len; i++) {
+            item = list[i];
+            item.$y = item.$y + speed;
+        }
+        this.allBarrier.lastBarrierY = this.allBarrier.lastBarrierY + speed;
+    };
+    // 检查是否超过屏幕底线，是的话就移除该对象
+    GamePage.prototype.checkISOverStage = function (fatherBox, callback) {
+        var list = fatherBox.$children;
+        var len = list.length;
+        var item;
+        var removeChildList = [];
+        var nowLen, nowList;
+        for (var i = 0; i < len; i++) {
+            item = list[i];
+            if (item.$y >= this.stage.$stageHeight) {
+                removeChildList.push(item);
+            }
+        }
+        if (removeChildList.length) {
+            for (var j = 0; j < removeChildList.length; j++) {
+                if (removeChildList[j]) {
+                    fatherBox.removeChild(removeChildList[j]);
+                    callback(removeChildList[j]);
+                }
+            }
+        }
+        return fatherBox;
+    };
+    /**
+     * 检查是否豆丁触碰到地步，要进行游戏结束的画面
+     */
     GamePage.prototype.checkIsGameOver = function () {
         if (this.player.$y > this.stage.$stageHeight) {
             this.player.jumpMaxHeight = this.stage.$stageHeight * 0.3;
@@ -142,6 +149,9 @@ var GamePage = (function (_super) {
             this.player.isStopCaulteScore = true;
         }
     };
+    /**
+     * 进行游戏结束时的移动背景
+     */
     GamePage.prototype.gotoMoveBg = function () {
         this.removeAllList();
         if (this.player.$y > this.stage.$stageHeight + this.player.height * 1.5) {
@@ -151,12 +161,13 @@ var GamePage = (function (_super) {
             this.longBg.$y = this.longBg.$y - 10;
         }
     };
+    /**
+     * 当游戏画面做完之后，停止游戏的监听和画面
+     */
     GamePage.prototype.gameOver = function () {
         this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
         this.player.visible = false;
-        // this.playBtnBox.visible = true;
         this.doodleBox.removeChildren();
-        // this.showScoreText();
         try {
             if (wx && wx.stopAccelerometer) {
                 wx.stopAccelerometer(function () {
@@ -172,6 +183,9 @@ var GamePage = (function (_super) {
         }
         this.showPlayGameOverPage();
     };
+    /**
+     * 移除游戏界面，展示游戏结束页面
+     */
     GamePage.prototype.showPlayGameOverPage = function () {
         Main.gameOver = new GameOverPage();
         Main.instance.addChild(Main.gameOver);
@@ -180,34 +194,23 @@ var GamePage = (function (_super) {
         this.longBg.$y = 0;
         this.parent.removeChild(this);
     };
+    /**
+     * 计算游戏的分数
+     */
     GamePage.prototype.setScoreText = function () {
         var score = null;
-        // console.log(this.player.jumpStartY);
-        console.log('tingzhi', this.player.douDingJumperMeter);
         score = '分数：' + Math.ceil(this.doodleChangeToMeter(this.player.douDingJumperMeter));
         return score;
     };
+    /**
+     * 移除所有障碍物
+     */
     GamePage.prototype.removeAllList = function () {
         this.stickList.removeChildren();
     };
-    GamePage.prototype.mapObjectMove = function () {
-        var list = this.stickList.$children;
-        // let springList = this.springList.$children;
-        // let springLen = springList.length;
-        var len = list.length;
-        var item, springItem;
-        var speed;
-        speed = this.player.nowSpeed;
-        for (var i = 0; i < len; i++) {
-            item = list[i];
-            item.$y = item.$y + speed; // this.frameNum
-        }
-        // for (let j = 0; j < springLen; j++) {
-        // 	springItem = springList[j];
-        // 	springItem.$y = springItem.$y + speed;
-        // }
-        this.allSticks.lastOneStickY = this.allSticks.lastOneStickY + speed;
-    };
+    /**
+     * 检测是否撞击了豆丁
+     */
     GamePage.prototype.checkIsHitDoodle = function (list, callback) {
         var item, itemMinX, itemMaxX, itemMaxY, itemMinY, itemHalf, itemMiddleY, pointDistance, maxDistance;
         var listLen = list.length;
@@ -227,50 +230,64 @@ var GamePage = (function (_super) {
             itemMiddleY = itemMinY + itemHalf;
             pointDistance = itemMiddleY - playerMiddel;
             maxDistance = itemHalf + playerHalf;
-            // && playerMinY<itemMinY&&pointDistance > 0 && pointDistance < maxDistance &&
+            // this.checkIsHisProps(item,callback);
             if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerMaxY <= itemMaxY && playerMaxY >= itemMinY && item.visible) {
-                if (item.TYPE_HIT_DISABLE && item.TYPE_STATUS === item.TYPE_HIT_DISABLE) {
-                    // this.player.nowSpeed = this.player.nowSpeed-20;
-                    item.playDiasbleHitClip(function () {
-                        item.visible = false;
-                    });
-                    break;
-                }
-                if (item.TYPE_ONECE_HIT && item.TYPE_STATUS === item.TYPE_ONECE_HIT) {
-                    item.playOneceClip(function () {
-                        item.visible = false;
-                    });
-                }
                 callback(item);
                 break;
             }
         }
     };
-    GamePage.prototype.checkIsStickHit = function (item) {
+    /**
+     * 检测豆丁是否碰撞到跳板中的道具
+     *
+     */
+    GamePage.prototype.checkIsHisProps = function (sticketItem, callback) {
+        var childList = sticketItem.$children;
+        var item, itemMinX, itemMaxX, itemMaxY, itemMinY;
+        if (sticketItem.$children[1]) {
+            var playerMaxY = this.player.$y + this.player.anchorOffsetY;
+            var playerMinY = this.player.$y - this.player.anchorOffsetY;
+            var playerHalf = this.player.height / 2;
+            var playerMinX = this.player.$x - this.player.anchorOffsetX + 44;
+            var playerMaxX = this.player.$x + this.player.anchorOffsetX - 44;
+            var playerMiddel = this.player.$y;
+            item = sticketItem.$children[1];
+            itemMaxX = item.$x + item.width + sticketItem.$x;
+            itemMinX = item.$x + sticketItem.$x;
+            itemMinY = item.$y + sticketItem.$y;
+            itemMaxY = itemMinY + item.height + sticketItem.height;
+            if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerMaxY <= itemMaxY && playerMaxY >= itemMinY && item.visible) {
+                // debugger
+                callback(item);
+            }
+        }
+    };
+    /**
+     * 撞击豆丁后需要做的操作
+     */
+    GamePage.prototype.checkDouDingHitType = function (item) {
         this.player.$y = item.$y - this.player.anchorOffsetY;
         this.player.jumpStartY = item.$y;
-        if (item.TYPE_NAME === 'trampoline') {
-            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, 100);
-            this.player.setSkinUpStatus(this.player.JUMP_UP);
-            this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-            // this.player.isPlayCircle =true;
-        }
-        else if (item.TYPE_NAME === 'wing') {
-            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, 200);
-            this.player.setSkinUpStatus(this.player.WING_UP);
-            this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-        }
-        else if (item.TYPE_NAME === 'rocket') {
-            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, 200);
-            this.player.setSkinUpStatus(this.player.ROCKET_UP);
-            this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-        }
-        else {
-            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum);
-            this.player.setSkinUpStatus(this.player.JUMP_UP);
-            this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-        }
+        this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum);
         this.player.changeDouDingSkin(false);
+        // if(item.TYPE_NAME === 'trampoline') {
+        // 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,100);
+        // 	this.player.setSkinUpStatus(this.player.JUMP_UP);
+        // 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+        // 	// this.player.isPlayCircle =true;
+        // }else if(item.TYPE_NAME === 'wing'){
+        // 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,200);
+        // 	this.player.setSkinUpStatus(this.player.WING_UP);
+        // 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+        // }else if(item.TYPE_NAME === 'rocket'){
+        // 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,200);
+        // 	this.player.setSkinUpStatus(this.player.ROCKET_UP);
+        // 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+        // }else {
+        // 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum);
+        // 	this.player.setSkinUpStatus(this.player.JUMP_UP);
+        // 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
+        // }	
     };
     return GamePage;
 }(BasePage));

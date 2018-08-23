@@ -24,7 +24,6 @@
 		"RocketProp": "resource/skins/RocketProp.exml",
 		"GameOverPage": "resource/skins/GameOverPage.exml",
 		"MonsterProp": "resource/skins/MonsterProp.exml",
-		"SpiderWeb": "resource/skins/SpiderWeb.exml",
 		"SpringShoesProp": "resource/skins/SpringShoesProp.exml"
 	},
 	"autoGenerateExmlsList": true,
@@ -49,7 +48,6 @@
 		"resource/skins/GamePage.exml",
 		"resource/skins/MonsterProp.exml",
 		"resource/skins/RocketProp.exml",
-		"resource/skins/SpiderWeb.exml",
 		"resource/skins/SpringShoesProp.exml",
 		"resource/skins/StickItem.exml",
 		"resource/skins/Trampoline.exml",

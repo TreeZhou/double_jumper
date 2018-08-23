@@ -67,7 +67,7 @@ class DouDing extends eui.Component {
     }
     public setInitJumperData(){
         this.jumpMaxHeight = this.stage.$stageHeight*0.6;
-		this.jumpDistance = this.stage.$stageHeight*0.4;
+		this.jumpDistance = this.stage.$stageHeight*0.3;
 		this.jumpStartY = this.stage.$stageHeight;
         this.setStartJumpeSpeed(this.jumpDistance,this.frameNum);
 		this.setDownAddSpeed(this.jumpDistance,this.frameNum);

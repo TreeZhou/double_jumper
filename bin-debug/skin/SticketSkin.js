@@ -17,7 +17,7 @@ var SticketSkin = (function (_super) {
                 'soilStick': 'soilStick_png',
                 'stoneStick': 'stoneStick_png',
                 'leafStick': 'leafStick_png',
-                'cloud_default': 'cloud_default_png'
+                'cloudDefault': 'cloud_default_png'
             }
         };
         _this.createSkinImg(skinObjName);

@@ -33,6 +33,8 @@ var BaseSkin = (function (_super) {
     };
     BaseSkin.prototype.changeSkinTexture = function (skinImg) {
         this.baseImg.texture = RES.getRes(skinImg);
+        this.width = this.baseImg.width;
+        this.height = this.baseImg.height;
     };
     BaseSkin.prototype.getSkinID = function (skinObjName) {
         var skinID = this.skinList[this.skinType][skinObjName];

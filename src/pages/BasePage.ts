@@ -2,29 +2,14 @@ class BasePage extends eui.Component{
     constructor(){
         super();
     }
-    public group_container: eui.Group;
     public STAGE_METER: number = 200; // 一屏等于多少米
-	public COLOR_STATUS:string='normal';
-	public COLOR_DEFAULE:string='normal';
-	public imgW:number = 0;
 
 	
-	public imgH:number = 0;
+	// public imgH:number = 0;
     public createChildren() {
         
         super.createChildren();
-        //  this.percentHeight=100;
-        // this.percentWidth =100;
     }
-    public createMoveObj(dataName:string,thisMoveObj){
-         let data = RES.getRes(dataName+"_png");
-         let textr = RES.getRes(dataName+"_json");
-         let mcFactory = new egret.MovieClipDataFactory(textr,data);
-         let movePesticide = new egret.MovieClip(mcFactory.generateMovieClipData(dataName));
-         thisMoveObj.addChild(movePesticide);
-         return movePesticide;
-    }
-
     /**
 	 * 像素更换成多少米
 	*/
@@ -51,45 +36,37 @@ class BasePage extends eui.Component{
 	public changeToPixel(meter) {
 		let pixel = 0;
 		let stage =meter/this.STAGE_METER;
-		// let leftStage = (meter%this.STAGE_METER)/this.STAGE_METER;
 
 		pixel = stage*this.stage.$stageHeight;
 
 		return pixel;
 	}
     // 检查是否超过屏幕底线，是的话就移除该对象
-    public checkISOverStage(fatherBox,callback:Function) {
-		let list = fatherBox.$children;
-		let len = list.length;
-		let item;
-		let removeChildList = [];
-		let nowLen, nowList;
+    // public checkISOverStage(fatherBox,callback:Function) {
+	// 	let list = fatherBox.$children;
+	// 	let len = list.length;
+	// 	let item;
+	// 	let removeChildList = [];
+	// 	let nowLen, nowList;
 
-		for (let i = 0; i < len; i++) {
-			item = list[i];
-			if (item.$y >= this.stage.$stageHeight) {
-				removeChildList.push(item);
-			}
+	// 	for (let i = 0; i < len; i++) {
+	// 		item = list[i];
+	// 		if (item.$y >= this.stage.$stageHeight) {
+	// 			removeChildList.push(item);
+	// 		}
 
-		}
-		if (removeChildList.length) {
-			for (let j = 0; j < removeChildList.length; j++) {
-				if (removeChildList[j]) {
-					fatherBox.removeChild(removeChildList[j]);
-					callback(removeChildList[j]);
-				}
+	// 	}
+	// 	if (removeChildList.length) {
+	// 		for (let j = 0; j < removeChildList.length; j++) {
+	// 			if (removeChildList[j]) {
+	// 				fatherBox.removeChild(removeChildList[j]);
+	// 				callback(removeChildList[j]);
+	// 			}
 
-			}
-		}
-        return fatherBox;
-	}
-	public hideAllChildren() {
-		let len = this.$children.length;
-
-		for(let i=0;i<len;i++) {
-			this.$children[i].visible = false;
-		}
-	}
+	// 		}
+	// 	}
+    //     return fatherBox;
+	// }
 	/**
 	 * 随机出传入数组中的一个值
 	 */
@@ -115,19 +92,5 @@ class BasePage extends eui.Component{
 
 		return item;
 	}
-	/**
-	 * 设置当前显示的图片的宽度和高度为计算的宽度和高度
-	 */
-	public setThisWidthHeight(item:{
-		width:number,
-		height:number
-	}){
-		this.imgW = item.width;
-		this.imgH = item.height;
-	}
-	// recycle
 
-	// public recycleObj(obj:Object,list:Array<any>){
-	// 	list.push(obj);
-	// }
 }

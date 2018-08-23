@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="SpiderWebSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
-	<w:Config id="1655b94587a" ></w:Config>
-	<e:Image id="spideWebDefault" width="281" height="301" x="0" y="0" source="spiderWeb_png"/>
-</e:Skin>

@@ -18,7 +18,6 @@ var MonsterSkin = (function (_super) {
                 'purpleSmallMonster': 'smallPurpleMonster_png'
             }
         };
-        // console.log('123');
         _this.createSkinImg(skinObjName);
         return _this;
     }
