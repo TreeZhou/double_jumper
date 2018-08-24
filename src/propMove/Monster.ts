@@ -14,4 +14,5 @@ class Monster extends BaseProps {
 
 	}
     public TYPE_NAME = 'monsterProp';
+    public JUMP_DISTANCE:number = 200;
 }

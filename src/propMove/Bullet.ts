@@ -1,8 +1,7 @@
-class Mushroom extends BaseProps {
+class Bullet extends BaseProps {
     constructor(sticketObj){
         super();
-        this.createPropSkin(MushroomSkin,'mushroom_down');
-        this.setChildXY(sticketObj);
+        this.createPropSkin(BulletSkin,'bullet');
     }
     protected partAdded(partName:string,instance:any):void
 	{
@@ -13,5 +12,9 @@ class Mushroom extends BaseProps {
 		super.childrenCreated();
 
 	}
-    public TYPE_NAME = 'mushroomProp';
+    public TYPE_NAME = 'bulletProp';
+    public resertData(){
+        
+    }
+
 }

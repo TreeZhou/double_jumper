@@ -35,8 +35,8 @@ var DoudingSkin = (function (_super) {
                     right: 'bean_right_wing_default_png'
                 },
                 'rocket_up': {
-                    left: 'bean_left_rocket_default_png',
-                    right: 'bean_right_rocket_default_png'
+                    left: 'bean_rocket_default_png',
+                    right: 'bean_rocket_default_png'
                 },
                 'springshoe_up': {
                     left: 'bean_left_spring_up_normal_png',

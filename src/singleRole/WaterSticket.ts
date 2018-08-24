@@ -13,6 +13,11 @@ class WaterSticket extends Stickets {
         this.randomStatus();
       
 	}
+    public resertData(){
+        this.visible = true;
+        this.myClipSkinObj.movePesticide.gotoAndStop(1);
+
+    }
     private randomStatus(){
         let random = Math.random();
         if(random>0.6) {
@@ -23,9 +28,10 @@ class WaterSticket extends Stickets {
     }
     public TYPE_NAME = 'waterSticket';
     public sticketSelfSkill(){
+        let self = this;
         this.myClipSkinObj.movePesticide.play();
         this.myClipSkinObj.movePesticide.addEventListener('complete',function(){
-			console.log('完成啦');
+            self.visible = false;
 		},this)
     }
 }

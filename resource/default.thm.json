@@ -28,6 +28,17 @@
 	},
 	"autoGenerateExmlsList": true,
 	"exmls": [
+		"resource/skins/DoodlePlayer.exml",
+		"resource/skins/FloorSpring.exml",
+		"resource/skins/GameFirstPage.exml",
+		"resource/skins/GameOverPage.exml",
+		"resource/skins/GamePage.exml",
+		"resource/skins/MonsterProp.exml",
+		"resource/skins/RocketProp.exml",
+		"resource/skins/SpringShoesProp.exml",
+		"resource/skins/StickItem.exml",
+		"resource/skins/Trampoline.exml",
+		"resource/skins/WingProp.exml",
 		"resource/eui_skins/ButtonSkin.exml",
 		"resource/eui_skins/CheckBoxSkin.exml",
 		"resource/eui_skins/HScrollBarSkin.exml",
@@ -40,18 +51,7 @@
 		"resource/eui_skins/TextInputSkin.exml",
 		"resource/eui_skins/ToggleSwitchSkin.exml",
 		"resource/eui_skins/VScrollBarSkin.exml",
-		"resource/eui_skins/VSliderSkin.exml",
-		"resource/skins/DoodlePlayer.exml",
-		"resource/skins/FloorSpring.exml",
-		"resource/skins/GameFirstPage.exml",
-		"resource/skins/GameOverPage.exml",
-		"resource/skins/GamePage.exml",
-		"resource/skins/MonsterProp.exml",
-		"resource/skins/RocketProp.exml",
-		"resource/skins/SpringShoesProp.exml",
-		"resource/skins/StickItem.exml",
-		"resource/skins/Trampoline.exml",
-		"resource/skins/WingProp.exml"
+		"resource/eui_skins/VSliderSkin.exml"
 	],
 	"path": "resource/default.thm.json"
 }

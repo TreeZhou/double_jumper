@@ -8,22 +8,23 @@ var __extends = this && this.__extends || function __extends(t, e) {
 for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
 r.prototype = e.prototype, t.prototype = new r();
 };
-var Wing = (function (_super) {
-    __extends(Wing, _super);
-    function Wing(sticketObj) {
+var SpringShoe = (function (_super) {
+    __extends(SpringShoe, _super);
+    function SpringShoe(sticketObj) {
         var _this = _super.call(this) || this;
-        _this.TYPE_NAME = 'wingProp';
-        _this.createPropSkin(WingSkin, 'wing');
+        _this.TYPE_NAME = 'springShoeProp';
+        _this.JUMP_DISTANCE = 120;
+        _this.createPropSkin(SpringShoeSkin, 'springShoeSkin');
         _this.setChildXY(sticketObj);
         return _this;
     }
-    Wing.prototype.partAdded = function (partName, instance) {
+    SpringShoe.prototype.partAdded = function (partName, instance) {
         _super.prototype.partAdded.call(this, partName, instance);
     };
-    Wing.prototype.childrenCreated = function () {
+    SpringShoe.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
     };
-    return Wing;
+    return SpringShoe;
 }(BaseProps));
-__reflect(Wing.prototype, "Wing");
-//# sourceMappingURL=Wing.js.map
+__reflect(SpringShoe.prototype, "SpringShoe");
+//# sourceMappingURL=SpringShoe.js.map

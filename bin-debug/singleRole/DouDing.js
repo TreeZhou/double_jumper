@@ -12,13 +12,14 @@ var DouDing = (function (_super) {
     __extends(DouDing, _super);
     function DouDing() {
         var _this = _super.call(this) || this;
-        _this.frameNum = 40; // 帧率，控制速度
+        _this.frameNum = 43; // 帧率，控制速度
         _this.isDown = false; // 判断是下落还是上升状态
         _this.speedX = 0; // 左右移动的增量
         _this.isJumperTopStop = false; // 判断是否跳跃到最高点，轮到跳板运动
         _this.douDingJumperMeter = 0; // 豆丁跳跃累计的像素值
         _this.isStopCaulteScore = false; // 是否停止累计分数
         _this.isWearSpringShoes = false; // 是否正在穿弹簧鞋
+        _this.isCanPlayButtle = true; // 是否可以发子弹
         _this.isLauching = false; // 是否正在发射子弹
         _this.SIDE_STATUS = 'left';
         _this.JUMP_UP_STATUS = 'jump_up';
@@ -206,8 +207,9 @@ var DouDing = (function (_super) {
                     this.setSkinUpStatus(this.JUMP_UP);
                 }
             }
-            this.changeDouDingSkin(true);
+            this.isCanPlayButtle = true;
         }
+        this.changeDouDingSkin(true);
     };
     /**
      * 检查豆丁是否超过最高点，是的话就停住，转变状态为跳板移动
@@ -247,7 +249,6 @@ var DouDing = (function (_super) {
             this.orientation.addEventListener(egret.Event.CHANGE, this.onOrientation, this);
             this.orientation.start();
             document.addEventListener('keydown', function (event) {
-                console.log(event.keyCode);
                 switch (event.keyCode) {
                     case 65:
                         _this.setSideStatus(_this.SIDE_LEFT);
@@ -307,6 +308,15 @@ var DouDing = (function (_super) {
         else if (this.$x > this.stage.$stageWidth) {
             this.$x = -this.width;
         }
+    };
+    /**
+     *取消弹簧鞋的时间
+     */
+    DouDing.prototype.cancelSpringShoe = function () {
+        var _this = this;
+        setTimeout(function () {
+            _this.isWearSpringShoes = false;
+        }, 5000);
     };
     return DouDing;
 }(eui.Component));

@@ -4,7 +4,7 @@ class SpringSkin extends BaseMovieClip {
     }
     constructor(){
         super();
-        this.createMoveObj(this.skinList[this.skinType],{width:35,height:36});
+        this.createMoveObj(this.skinList[this.skinType],{width:35,height:26});
     }
   
 }

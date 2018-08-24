@@ -115,4 +115,10 @@ class Stickets extends BasePage  {
     public sticketSelfSkill(){
         
     }
+    /**
+     * 各自重置数据的函数
+     */
+    public resertData(){
+        this.visible = true;
+    }
 }

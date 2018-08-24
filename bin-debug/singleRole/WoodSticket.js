@@ -23,10 +23,15 @@ var WoodSticket = (function (_super) {
         _super.prototype.childrenCreated.call(this);
         this.setStickNormalMoveStatus(this.MOVE_FIXATION);
     };
-    WoodSticket.prototype.sticketSelfSkill = function () {
+    WoodSticket.prototype.resertData = function () {
+        this.visible = true;
+        this.myClipSkinObj.movePesticide.gotoAndStop(1);
+    };
+    WoodSticket.prototype.sticketTimeSelfSkill = function () {
+        var self = this;
         this.myClipSkinObj.movePesticide.play();
         this.myClipSkinObj.movePesticide.addEventListener('complete', function () {
-            console.log('完成啦2');
+            self.visible = false;
         }, this);
     };
     return WoodSticket;

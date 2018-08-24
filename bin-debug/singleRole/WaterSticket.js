@@ -23,6 +23,10 @@ var WaterSticket = (function (_super) {
         _super.prototype.childrenCreated.call(this);
         this.randomStatus();
     };
+    WaterSticket.prototype.resertData = function () {
+        this.visible = true;
+        this.myClipSkinObj.movePesticide.gotoAndStop(1);
+    };
     WaterSticket.prototype.randomStatus = function () {
         var random = Math.random();
         if (random > 0.6) {
@@ -33,9 +37,10 @@ var WaterSticket = (function (_super) {
         }
     };
     WaterSticket.prototype.sticketSelfSkill = function () {
+        var self = this;
         this.myClipSkinObj.movePesticide.play();
         this.myClipSkinObj.movePesticide.addEventListener('complete', function () {
-            console.log('完成啦');
+            self.visible = false;
         }, this);
     };
     return WaterSticket;

@@ -21,7 +21,7 @@ class DouDing extends eui.Component {
     public nowUpAddSpeed:number;  // 上升的加速度
 	public nowDownAddSpeed:number; // 下落的加速度
     public nowSpeed:number; // 现在的速度
-    public frameNum:number=40; // 帧率，控制速度
+    public frameNum:number=43; // 帧率，控制速度
 	public isDown:boolean=false; // 判断是下落还是上升状态
 	public speedX:number=0;  // 左右移动的增量
 
@@ -30,6 +30,7 @@ class DouDing extends eui.Component {
     public douDingJumperMeter:number = 0;  // 豆丁跳跃累计的像素值
     public isStopCaulteScore:boolean = false;  // 是否停止累计分数
     public isWearSpringShoes:boolean = false;  // 是否正在穿弹簧鞋
+    public isCanPlayButtle:boolean = true; // 是否可以发子弹
     public isLauching:boolean = false;  // 是否正在发射子弹
 
     public orientation:egret.DeviceOrientation; // 常规H5的重力感应事件
@@ -216,9 +217,11 @@ class DouDing extends eui.Component {
                     this.setSkinUpStatus(this.JUMP_UP);
                 }
             }
+            this.isCanPlayButtle = true;
 		
-			this.changeDouDingSkin(true);
+		
 		}
+        this.changeDouDingSkin(true);
     }
     /**
      * 检查豆丁是否超过最高点，是的话就停住，转变状态为跳板移动
@@ -256,7 +259,6 @@ class DouDing extends eui.Component {
 			this.orientation.addEventListener(egret.Event.CHANGE,this.onOrientation,this);
 			this.orientation.start();
 			document.addEventListener('keydown',(event:KeyboardEvent)=>{
-				console.log(event.keyCode);
 				switch(event.keyCode) {
 					case 65:
 					this.setSideStatus(this.SIDE_LEFT);
@@ -315,4 +317,13 @@ class DouDing extends eui.Component {
 			this.$x = -this.width;
 		}
 	}
+    /**
+     *取消弹簧鞋的时间
+     */
+    public cancelSpringShoe(){
+        setTimeout(()=>{
+            this.isWearSpringShoes = false;
+        },5000)
+    }
+
 }

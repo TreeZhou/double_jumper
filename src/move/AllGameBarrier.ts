@@ -12,19 +12,20 @@ class AllGameBarrier extends eui.Component{
     public lastBarrierY:number; // 最后一个物体的Y值
 
     public gameLevel:GameLevel;
+    public probabilityLevel:ProbabilityClass;
   
 
     private setInitData(){
         this.lastBarrierY = this.stage.$stageHeight;
         this.gameLevel = new GameLevel();
+        this.probabilityLevel = new ProbabilityClass();
     }
     /**
      * 初始化刚开始的跳板
      */
     public initSticket(groupBox:eui.Group){
         let pedalObj = null;
-        let list = this.gameLevel.norWingPropLevel({
-            num:10,
+        let list = this.gameLevel.normalSticketLevel({
             maxDistance:40,
             minDistance:30,
             lastY:this.stage.$stageHeight,
@@ -35,7 +36,7 @@ class AllGameBarrier extends eui.Component{
 			groupBox.addChild(list[i].roleObj);
 			pedalObj = list[i].roleObj;
 		}
-		this.lastBarrierY = pedalObj.$y - pedalObj.height;
+        this.lastBarrierY = pedalObj.$y - pedalObj.height-this.gameLevel.checkIsHasChildHeight(pedalObj);
 
         return groupBox;
     }
@@ -46,31 +47,18 @@ class AllGameBarrier extends eui.Component{
         let pedalObj = null;
 
         if (this.lastBarrierY > (this.eachStageDistance + this.minDistance)) {
-			// rateObj = this.getNowStageItem(playerMeter);
-			// // nowStage++;
-			// if(!rateObj) {
-			// 	alert('概率对象为空');
-			// 	return;
-			// }
-			// let list =this.randomShowPoint(rateObj);
-            let list = this.gameLevel.norHorSticketLevel({
-                num:10,
-                maxDistance:40,
-                minDistance:30,
+            let levelFun = this.probabilityLevel.getLevelName(playerMeter);
+            let list = this.gameLevel[levelFun.levelName]({
+                maxDistance:levelFun.maxDistance,
+                minDistance:levelFun.minDistance,
                 lastY:this.lastBarrierY,
                 stageW:this.stage.$stageWidth
             });
 			for(let i=0;i<list.length;i++) {
 				groupBox.addChild(list[i].roleObj);
-				// if(list[i].resetIniData) {
-				// 	list[i].resetIniData();
-				// }
 				pedalObj = list[i].roleObj;
-				// if(pedalObj.typeName) {
-				// 	pedalObj.setStickTypeName(pedalObj.typeName);
-				// }
 			}
-			this.lastBarrierY = pedalObj.$y - pedalObj.height-20;
+			this.lastBarrierY = pedalObj.$y - pedalObj.height-20-this.gameLevel.checkIsHasChildHeight(pedalObj);
 		}
     }
     /**
@@ -78,6 +66,11 @@ class AllGameBarrier extends eui.Component{
      */
     public recycleAllObject(obj){
 		if(obj.TYPE_NAME) {
+            if(obj.$children[1]) {
+                let item = obj.$children[1];
+                obj.removeChild(item);
+                this.gameLevel.recycleObj(item,item.TYPE_NAME);
+            }
 			this.gameLevel.recycleObj(obj,obj.TYPE_NAME);
 		}
 	}
@@ -90,7 +83,10 @@ class AllGameBarrier extends eui.Component{
 		let item;
 		for (let i = 0; i < len; i++) {
 			item = list[i];
-            item.horzontalMove();
+            if(item.horzontalMove) {
+                item.horzontalMove();
+            }
+         
 		}
 	}
 

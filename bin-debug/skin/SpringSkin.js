@@ -15,7 +15,7 @@ var SpringSkin = (function (_super) {
         _this.skinList = {
             'default': 'normalSpringMove'
         };
-        _this.createMoveObj(_this.skinList[_this.skinType], { width: 35, height: 36 });
+        _this.createMoveObj(_this.skinList[_this.skinType], { width: 35, height: 26 });
         return _this;
     }
     return SpringSkin;

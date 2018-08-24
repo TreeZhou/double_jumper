@@ -270,7 +270,7 @@
 // 	}
 //     private initStickData(){
 // 		this.hasPropsStage = 3;
-//         this.preStickY = this.stage.$stageHeight;
+//      this.preStickY = this.stage.$stageHeight;
 // 		this.setCheckPoints = new SetCheckPoints();
 //     }
 //     /**

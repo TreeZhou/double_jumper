@@ -1,7 +1,7 @@
-class Wing extends BaseProps {
+class SpringShoe extends BaseProps {
     constructor(sticketObj){
         super();
-        this.createPropSkin(WingSkin,'wing');
+        this.createPropSkin(SpringShoeSkin,'springShoeSkin');
         this.setChildXY(sticketObj);
     }
     protected partAdded(partName:string,instance:any):void
@@ -13,6 +13,7 @@ class Wing extends BaseProps {
 		super.childrenCreated();
 
 	}
-    public TYPE_NAME = 'wingProp';
+    public TYPE_NAME = 'springShoeProp';
+    public JUMP_DISTANCE:number = 120;
 
 }

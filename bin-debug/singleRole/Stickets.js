@@ -119,6 +119,12 @@ var Stickets = (function (_super) {
      */
     Stickets.prototype.sticketSelfSkill = function () {
     };
+    /**
+     * 各自重置数据的函数
+     */
+    Stickets.prototype.resertData = function () {
+        this.visible = true;
+    };
     return Stickets;
 }(BasePage));
 __reflect(Stickets.prototype, "Stickets");

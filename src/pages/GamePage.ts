@@ -7,27 +7,9 @@ class GamePage extends BasePage{
 	private longBg: eui.Image;
 	private player: DouDing;  // 豆丁
 	private allBarrier:AllGameBarrier;  // 全部的障碍物的对象
+	private bulletMoveObj:BulletMove;
 
 	private endGame: boolean = false;  // 是否结束游戏
-
-	// // private gamePage: eui.Group;
-	
-
-	// private playBtn: eui.Image;
-
-	// private springList: eui.Group;
-	// private doodleBox: eui.Group;
-
-
-	// private stickNum: number = 30;
-	// public childList: any = [];
-	// private stickMoveList: any = [];
-
-	// private isStickMove: boolean = false;
-	// private hitNowNum: number = null;
-	// private speedX: number = 0;
-	// private playerChangeY: number = 0;
-	// private playerBeforeY: number = 0;
 
 
 	protected partAdded(partName: string, instance: any): void {
@@ -49,6 +31,7 @@ class GamePage extends BasePage{
 	public beginGame() {  // 开始游戏的入口
 		this.setInitDataGame();  // 设置游戏的开始数据
 		this.beginAnimateEvent();  // 开始动画监听
+		this.listenClickStageEvent();
 	}
 	/**
 	 * 创建豆丁和跳板
@@ -57,6 +40,7 @@ class GamePage extends BasePage{
 	private createAllGameObj(){
 		this.createDoodle();
 		this.createSticket();  // 创建跳板
+		this.createBulletMove();
 	}
 
 	// 创建豆丁
@@ -67,11 +51,33 @@ class GamePage extends BasePage{
 		this.player.$y = this.stage.$stageHeight-this.player.anchorOffsetY;
 		this.player.orientationEvent();
 	}
+	/**
+	 * 初始化子弹的对象
+	 */
+	private createBulletMove(){
+		this.bulletMoveObj = new BulletMove();
+		this.addChild(this.bulletMoveObj);
+	}
 	//  创建跳板
 	private createSticket(){
 		this.allBarrier = new AllGameBarrier();
 		this.addChild(this.allBarrier);
 		this.stickList = this.allBarrier.initSticket(this.stickList);
+	}
+	/**
+	 * 监听屏幕的点击事件
+	 */
+	private listenClickStageEvent(){
+		this.addEventListener(egret.TouchEvent.TOUCH_TAP,this.beginSendBullet,this);
+	}
+	/**
+	 * 点击屏幕的时候豆丁需要发射子弹
+	 */
+	private beginSendBullet(){
+		if(this.player.isCanPlayButtle) {
+			this.swichChangeDoudingSkin('face');
+			this.bulletMoveObj.createBullet(this.player);
+		}
 	}
 	/**
 	 * 设置初始值
@@ -92,6 +98,7 @@ class GamePage extends BasePage{
 	private onEnterFrame() {
 		this.player.movePlayerY();
 		this.player.moveplayerX();
+		this.bulletMoveObj.bulletMoveY();
 		if(this.player.isJumperTopStop){
 			this.mapObjectMove();
 		}
@@ -103,10 +110,13 @@ class GamePage extends BasePage{
 			this.checkISOverStage(this.stickList,this.allBarrier.recycleAllObject.bind(this.allBarrier));
 			this.allBarrier.addNewSticket(this.stickList,this.doodleChangeToMeter(this.player.douDingJumperMeter));
 			this.allBarrier.barrierMoved(this.stickList.$children);
+			this.bulletMoveObj.removeBullet(this.bulletMoveObj);
 		}
 		if (this.player.isDown) {
-			this.checkIsHitDoodle(this.stickList.$children, this.checkDouDingHitType.bind(this));
+			this.checkIsHitDoodle(this.stickList.$children, this.checkDouDingHitType.bind(this),this.douDingHitProp.bind(this));
 		}
+
+
 
 	}
 	/**
@@ -161,6 +171,8 @@ class GamePage extends BasePage{
 			this.player.setDownAddSpeed(this.stage.$stageHeight,this.player.frameNum);
 			this.endGame = true;
 			this.player.isStopCaulteScore = true;
+			this.removeEventListener(egret.TouchEvent.TOUCH_TAP,this.beginSendBullet,this)
+			this.removeChild(this.bulletMoveObj);
 		}
 	}
 	/**
@@ -181,6 +193,7 @@ class GamePage extends BasePage{
 		this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
 		this.player.visible = false;
 		this.doodleBox.removeChildren();
+	
 		try{
 			if (wx && wx.stopAccelerometer) {
 				wx.stopAccelerometer(function () {
@@ -220,20 +233,22 @@ class GamePage extends BasePage{
 	 */
 	private removeAllList() {
 		this.stickList.removeChildren();
+		// this.removeChild(this.bulletMoveObj);
 	}
 
 	/**
 	 * 检测是否撞击了豆丁
 	 */
-	private checkIsHitDoodle(list, callback) {
+	private checkIsHitDoodle(list, callback, propCallback) {
 		let item, itemMinX, itemMaxX, itemMaxY, itemMinY, itemHalf, itemMiddleY, pointDistance, maxDistance;
 		let listLen = list.length;
 		let playerMaxY = this.player.$y+this.player.anchorOffsetY;
 		let playerMinY = this.player.$y-this.player.anchorOffsetY;
 		let playerHalf = this.player.height/2;
-		let playerMinX = this.player.$x-this.player.anchorOffsetX+44;
-		let playerMaxX = this.player.$x + this.player.anchorOffsetX-44;
+		let playerMinX = this.player.$x-this.player.anchorOffsetX+22;
+		let playerMaxX = this.player.$x + this.player.anchorOffsetX-22;
 		let playerMiddel = this.player.$y; //-this.player.anchorOffsetY/2 this.player.anchorOffsetY
+		let isHitPop = false;
 
 		for (let i = 0; i < listLen; i++) {
 			item = list[i];
@@ -245,10 +260,14 @@ class GamePage extends BasePage{
 			itemMiddleY = itemMinY + itemHalf;
 			pointDistance = itemMiddleY - playerMiddel;
 			maxDistance = itemHalf + playerHalf;
-			// this.checkIsHisProps(item,callback);
+			isHitPop = this.checkIsHisProps(item,propCallback);
+			if(isHitPop) {
+				break;
+			}
 			if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible) {
 				callback(item);
 				break;
+
 			}
 		}
 	}
@@ -259,14 +278,15 @@ class GamePage extends BasePage{
 	private checkIsHisProps(sticketItem,callback){
 		let childList = sticketItem.$children;
 		let item, itemMinX, itemMaxX, itemMaxY, itemMinY;
+		let isHit = false;
 
 		if(sticketItem.$children[1]) {
 		
 			let playerMaxY = this.player.$y+this.player.anchorOffsetY;
 			let playerMinY = this.player.$y-this.player.anchorOffsetY;
 			let playerHalf = this.player.height/2;
-			let playerMinX = this.player.$x-this.player.anchorOffsetX+44;
-			let playerMaxX = this.player.$x + this.player.anchorOffsetX-44;
+			let playerMinX = this.player.$x-this.player.anchorOffsetX+22;
+			let playerMaxX = this.player.$x + this.player.anchorOffsetX-22;
 			let playerMiddel = this.player.$y;
 			item = sticketItem.$children[1];
 			itemMaxX = item.$x + item.width+sticketItem.$x;
@@ -276,19 +296,29 @@ class GamePage extends BasePage{
 		
 			if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible) {
 					// debugger
-				callback(item);
+				callback(item,sticketItem);
+				isHit = true;
 			}
 		}
+		return isHit;
 	}
 	/**
 	 * 撞击豆丁后需要做的操作
 	 */
 	private checkDouDingHitType(item) {
 		
-		this.player.$y = item.$y-this.player.anchorOffsetY;
-		this.player.jumpStartY = item.$y;
-		this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum);
-		this.player.changeDouDingSkin(false);
+		if(item.TYPE_NAME !== 'waterSticket') {
+			this.player.$y = item.$y-this.player.anchorOffsetY;
+			this.player.jumpStartY = item.$y;
+			if(this.player.isWearSpringShoes) {
+				this.player.setStartJumpeSpeed(item.JUMP_DISTANCE*1.5,this.player.frameNum*1.2);
+			}else {
+				this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum);
+			}
+			
+			this.player.changeDouDingSkin(false);
+		}
+		item.sticketSelfSkill();
 		// if(item.TYPE_NAME === 'trampoline') {
 		// 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,100);
 		// 	this.player.setSkinUpStatus(this.player.JUMP_UP);
@@ -308,5 +338,48 @@ class GamePage extends BasePage{
 		// 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
 		// }	
 	}
+	/**
+	 * 撞击道具豆丁需要做的操作
+	 */
+	private douDingHitProp(item,sticketItem){
+		if(item.TYPE_NAME === 'wingProp'||item.TYPE_NAME === 'rocketProp') {
+			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,200);
+			this.player.isCanPlayButtle = false;
+		}else if(item.TYPE_NAME === 'springShoeProp' && !this.player.isWearSpringShoes){
+			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum*1.1);
+			this.player.isWearSpringShoes = true;
+			this.player.cancelSpringShoe();
+		}else{
+			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum*1.5);
+		}
+		this.swichChangeDoudingSkin(item.TYPE_NAME);
+		this.player.$y = item.$y+sticketItem.$y-this.player.anchorOffsetY;
+		this.player.jumpStartY = item.$y+sticketItem.$y;
+		this.player.changeDouDingSkin(false);
+		item.sticketSelfSkill();
+	}
+	/**
+	 * 根据碰撞的属性来改变豆丁的皮肤
+	 */ 
+	private swichChangeDoudingSkin(typeName){
+		switch(typeName){
+			case 'wingProp':
+			this.player.setSkinUpStatus(this.player.WING_UP);
+			break;
+			case 'springShoeProp':
+			this.player.setSkinUpStatus(this.player.SPRINGSHOE_UP);
+			break;
+			case 'rocketProp':
+			this.player.setSkinUpStatus(this.player.ROCKET_UP);
+			break; 
+			case 'face':
+			if(this.player.isWearSpringShoes) {
+				this.player.setSkinUpStatus(this.player.SPRINGSHOE_FACE_UP);
+			}else {
+				this.player.setSkinUpStatus(this.player.JUMP_FACE_UP);
+			}
+			break;
+		}
+	} 
 
 }

@@ -54,6 +54,12 @@ var BaseProps = (function (_super) {
      */
     BaseProps.prototype.sticketSelfSkill = function () {
     };
+    /**
+    * 各自重置数据的函数
+    */
+    BaseProps.prototype.resertData = function () {
+        this.visible = true;
+    };
     return BaseProps;
 }(BasePage));
 __reflect(BaseProps.prototype, "BaseProps");

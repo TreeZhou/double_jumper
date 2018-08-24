@@ -1,7 +1,7 @@
-class Spring extends BaseProps {
+class ProtectionProp extends BaseProps {
     constructor(sticketObj){
         super();
-        this.createPropSkin(SpringSkin,'');
+        this.createPropSkin(ProtectionPropSkin,'protectionProp');
         this.setChildXY(sticketObj);
     }
     protected partAdded(partName:string,instance:any):void
@@ -13,6 +13,6 @@ class Spring extends BaseProps {
 		super.childrenCreated();
 
 	}
-    public TYPE_NAME = 'springProp';
+    public TYPE_NAME = 'protectionProp';
 
 }

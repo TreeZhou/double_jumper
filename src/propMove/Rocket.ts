@@ -14,5 +14,5 @@ class Rocket extends BaseProps {
 
 	}
     public TYPE_NAME = 'rocketProp';
-
+    public JUMP_DISTANCE:number = 1500;
 }
