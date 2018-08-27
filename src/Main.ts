@@ -114,7 +114,7 @@ class Main extends eui.UILayer {
         this.addChild(RolePlayer2);
         this.keepScreenOn();
     }
-    private keepScreenOn() {
+    public keepScreenOn() {
 		try{
 			wx.setKeepScreenOn({
 				keepScreenOn: true

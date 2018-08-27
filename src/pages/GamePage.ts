@@ -22,6 +22,7 @@ class GamePage extends BasePage{
 		this.percentHeight = 100;
 		this.percentWidth = 100;
 		this.createAllGameObj();
+		Main.instance.keepScreenOn();
 
 	}
 
@@ -31,7 +32,7 @@ class GamePage extends BasePage{
 	public beginGame() {  // 开始游戏的入口
 		this.setInitDataGame();  // 设置游戏的开始数据
 		this.beginAnimateEvent();  // 开始动画监听
-		this.listenClickStageEvent();
+		this.listenClickStageEvent();  // 屏幕点击事件
 	}
 	/**
 	 * 创建豆丁和跳板
@@ -69,6 +70,8 @@ class GamePage extends BasePage{
 	 */
 	private listenClickStageEvent(){
 		this.addEventListener(egret.TouchEvent.TOUCH_TAP,this.beginSendBullet,this);
+		this.addEventListener(egret.TouchEvent.TOUCH_BEGIN,this.beginLauch,this);
+		this.addEventListener(egret.TouchEvent.TOUCH_END,this.endLauch,this);
 	}
 	/**
 	 * 点击屏幕的时候豆丁需要发射子弹
@@ -78,6 +81,18 @@ class GamePage extends BasePage{
 			this.swichChangeDoudingSkin('face');
 			this.bulletMoveObj.createBullet(this.player);
 		}
+	}
+	/**
+	 * 开始射击子弹
+	 */
+	private beginLauch(){
+		this.player.isLauching = true;
+	}
+	/**
+	 * 结束点击子弹
+	 */
+	private endLauch(){
+		this.player.isLauching = false;
 	}
 	/**
 	 * 设置初始值
@@ -111,6 +126,8 @@ class GamePage extends BasePage{
 			this.allBarrier.addNewSticket(this.stickList,this.doodleChangeToMeter(this.player.douDingJumperMeter));
 			this.allBarrier.barrierMoved(this.stickList.$children);
 			this.bulletMoveObj.removeBullet(this.bulletMoveObj);
+			this.player.setIsNoHitMonster();
+			this.checkIsHitOverBar(this.stickList.$children,this.afterHitBarrier.bind(this));
 		}
 		if (this.player.isDown) {
 			this.checkIsHitDoodle(this.stickList.$children, this.checkDouDingHitType.bind(this),this.douDingHitProp.bind(this));
@@ -131,7 +148,9 @@ class GamePage extends BasePage{
 		speed = this.player.nowSpeed;
 		for (let i = 0; i < len; i++) {
 			item = list[i];
-			item.$y = item.$y + speed;    
+			if(!item.IS_OVER) {
+				item.$y = item.$y + speed;   
+			}	
 		}
 		this.allBarrier.lastBarrierY = this.allBarrier.lastBarrierY + speed;
 	}
@@ -145,8 +164,15 @@ class GamePage extends BasePage{
 
 		for (let i = 0; i < len; i++) {
 			item = list[i];
+			if(item.TYPE_NAME === 'monsterProp') {
+				this.bulletMoveObj.checkIsHitMonster(this.bulletMoveObj,item);
+			}
 			if (item.$y >= this.stage.$stageHeight) {
 				removeChildList.push(item);
+			}else {
+				if(item.TYPE_NAME==='woodSticket') {
+					item.sticketTimeSelfSkill();
+				}
 			}
 
 		}
@@ -183,7 +209,7 @@ class GamePage extends BasePage{
 		if (this.player.$y> this.stage.$stageHeight+this.player.height*1.5) {
 			this.gameOver();
 		} else {
-			this.longBg.$y = this.longBg.$y - 10;
+			this.longBg.$y = this.longBg.$y - 8;
 		}
 	}
 	/**
@@ -192,23 +218,11 @@ class GamePage extends BasePage{
 	private gameOver() {
 		this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
 		this.player.visible = false;
+		this.player.removeOriginEvent();
 		this.doodleBox.removeChildren();
-	
-		try{
-			if (wx && wx.stopAccelerometer) {
-				wx.stopAccelerometer(function () {
-					console.log('停止监听左右');
-				})
-			} else {
-				this.player.orientation.stop();
-			}
-		}catch(err) {
-			console.log(err);
-		}
-
 		this.showPlayGameOverPage();
-
 	}
+
 	/**
 	 * 移除游戏界面，展示游戏结束页面
 	 */
@@ -240,35 +254,75 @@ class GamePage extends BasePage{
 	 * 检测是否撞击了豆丁
 	 */
 	private checkIsHitDoodle(list, callback, propCallback) {
-		let item, itemMinX, itemMaxX, itemMaxY, itemMinY, itemHalf, itemMiddleY, pointDistance, maxDistance;
+		let item, itemMinX, itemMaxX, itemMaxY, itemMinY;
 		let listLen = list.length;
-		let playerMaxY = this.player.$y+this.player.anchorOffsetY;
-		let playerMinY = this.player.$y-this.player.anchorOffsetY;
-		let playerHalf = this.player.height/2;
-		let playerMinX = this.player.$x-this.player.anchorOffsetX+22;
-		let playerMaxX = this.player.$x + this.player.anchorOffsetX-22;
-		let playerMiddel = this.player.$y; //-this.player.anchorOffsetY/2 this.player.anchorOffsetY
+		let playerData = this.player.getDoudingPosition();
+		let playerMaxY = playerData.playerMaxY;
+		let playerMinY = playerData.playerMinY;
+		let playerMinX = playerData.playerMinX;
+		let playerMaxX = playerData.playerMaxX;
 		let isHitPop = false;
+		let sticketListArr = list.filter((item,index)=>{
+			return item.HIT_TYPE!=='barrier' && (item.$y+item.height)>0;
+		})
 
-		for (let i = 0; i < listLen; i++) {
-			item = list[i];
-			itemMaxX = item.$x + item.width;
-			itemMinX = item.$x;
-			itemMinY = item.$y;
-			itemMaxY = item.$y + item.height;
-			itemHalf = item.height / 2;
-			itemMiddleY = itemMinY + itemHalf;
-			pointDistance = itemMiddleY - playerMiddel;
-			maxDistance = itemHalf + playerHalf;
+		for (let i = 0; i < sticketListArr.length; i++) {
+			item = sticketListArr[i];
 			isHitPop = this.checkIsHisProps(item,propCallback);
 			if(isHitPop) {
 				break;
 			}
+			itemMaxX = item.$x + item.width;
+			itemMinX = item.$x;
+			itemMinY = item.$y;
+			itemMaxY = item.$y + item.height;
 			if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible) {
 				callback(item);
 				break;
 
 			}
+
+	
+		}
+	}
+	/**
+	 * 检测是否撞击了怪兽或者蜘蛛网
+	*/
+	private checkIsHitOverBar(list:Array<any>,callback){
+		let item, itemMinX, itemMaxX, itemMaxY, itemMinY,barrierList;
+
+		if(this.player.isUpNoHitMonster) {
+			return;
+		}
+		barrierList = list.filter((item,index)=>{
+			return item.HIT_TYPE === 'barrier';
+		})
+
+		if(barrierList.length) {
+			let playerData = this.player.getDoudingPosition();
+			let playerMaxY = playerData.playerMaxY;
+			let playerMinY = playerData.playerMinY;
+			let playerMinX = playerData.playerMinX;
+			let playerMaxX = playerData.playerMaxX;
+			let isTouch = false;
+
+			for(let i=0;i<barrierList.length;i++) {
+				item = barrierList[i];
+				itemMaxX = item.$x + item.width;
+				itemMinX = item.$x;
+				itemMinY = item.$y;
+				itemMaxY = item.$y + item.height;	
+				if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMinY<=itemMaxY  && playerMinY>=itemMinY && item.visible) {
+					isTouch = true;
+					callback(item,isTouch);
+					break;
+				}else if(playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible){
+					isTouch = false;
+					callback(item,isTouch);
+					break;
+				}
+			}
+
 		}
 	}
 	/**
@@ -281,13 +335,11 @@ class GamePage extends BasePage{
 		let isHit = false;
 
 		if(sticketItem.$children[1]) {
-		
-			let playerMaxY = this.player.$y+this.player.anchorOffsetY;
-			let playerMinY = this.player.$y-this.player.anchorOffsetY;
-			let playerHalf = this.player.height/2;
-			let playerMinX = this.player.$x-this.player.anchorOffsetX+22;
-			let playerMaxX = this.player.$x + this.player.anchorOffsetX-22;
-			let playerMiddel = this.player.$y;
+			let playerData = this.player.getDoudingPosition();
+			let playerMaxY = playerData.playerMaxY;
+			let playerMinY = playerData.playerMinY;
+			let playerMinX = playerData.playerMinX;
+			let playerMaxX = playerData.playerMaxX;
 			item = sticketItem.$children[1];
 			itemMaxX = item.$x + item.width+sticketItem.$x;
 			itemMinX = item.$x+sticketItem.$x;
@@ -295,12 +347,85 @@ class GamePage extends BasePage{
 			itemMaxY = itemMinY + item.height+sticketItem.height;
 		
 			if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible) {
-					// debugger
 				callback(item,sticketItem);
 				isHit = true;
 			}
 		}
 		return isHit;
+	}
+
+	// private checkIsHitOverBarrier(barrierItem,callback){
+	// 	let item, itemMinX, itemMaxX, itemMaxY, itemMinY;
+	// 	let playerData = this.player.getDoudingPosition();
+	// 	let playerMaxY = playerData.playerMaxY;
+	// 	let playerMinY = playerData.playerMinY;
+	// 	let playerMinX = playerData.playerMinX;
+	// 	let playerMaxX = playerData.playerMaxX;
+	// 	let isTouch = false; // false 为撞击，true为触碰
+
+	// 	item = barrierItem;
+	// 	itemMaxX = item.$x + item.width;
+	// 	itemMinX = item.$x;
+	// 	itemMinY = item.$y;
+	// 	itemMaxY = itemMinY + item.height;
+		
+	// 	if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMinY<=itemMaxY  && playerMinY>=itemMinY && item.visible) {
+	// 		isTouch = true;
+	// 		callback(item,isTouch);
+	// 	}else if(playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible){
+	// 		isTouch = false;
+	// 		callback(item,isTouch);
+	// 	}
+	// }
+	/**
+	 * 撞击或者触碰到怪兽或者蜘蛛网后要做的操作
+	 */
+	private afterHitBarrier(item,isTouch){
+		if(item.TYPE_NAME === 'monsterProp') {
+			if(isTouch) {
+				if(!this.player.isProtecting) {
+					this.removeClickAndFrameListen();
+					this.player.gameOverMove();
+					this.shortVibrate();
+					setTimeout(()=>{
+						this.player.removeOriginEvent();
+						this.showPlayGameOverPage();
+					},1000)
+				}
+			
+			}else {
+				// this.removeClickAndFrameListen();
+				item.sticketSelfSkill();
+				this.player.$y = item.$y-this.player.anchorOffsetY;
+				this.player.jumpStartY = item.$y;
+				this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum*1.5);
+				this.player.changeDouDingSkin(false);
+		
+			}
+		}else if(item.TYPE_NAME === 'spiderWebProp'){
+			this.removeClickAndFrameListen();
+			this.player.moveToSpiderWeb(item);
+			this.player.removeOriginEvent();
+			setTimeout(()=>{
+				this.showPlayGameOverPage();
+			},1000)
+		}
+	}
+	private shortVibrate(){
+		try{
+			wx.vibrateLong({});
+		}catch(err){
+			console.log(err);
+		}
+	}
+	/**
+	 * 移除当前点击屏幕和帧率动画的监听事件
+	 */
+	private removeClickAndFrameListen(){
+		this.removeEventListener(egret.TouchEvent.TOUCH_TAP,this.beginSendBullet,this)
+		this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
+		this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN,this.beginLauch,this);
+		this.removeEventListener(egret.TouchEvent.TOUCH_END,this.endLauch,this);
 	}
 	/**
 	 * 撞击豆丁后需要做的操作
@@ -311,32 +436,13 @@ class GamePage extends BasePage{
 			this.player.$y = item.$y-this.player.anchorOffsetY;
 			this.player.jumpStartY = item.$y;
 			if(this.player.isWearSpringShoes) {
-				this.player.setStartJumpeSpeed(item.JUMP_DISTANCE*1.5,this.player.frameNum*1.2);
+				this.player.setStartJumpeSpeed(item.JUMP_DISTANCE*1.5,this.player.frameNum*1.5);
 			}else {
 				this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum);
 			}
-			
 			this.player.changeDouDingSkin(false);
 		}
 		item.sticketSelfSkill();
-		// if(item.TYPE_NAME === 'trampoline') {
-		// 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,100);
-		// 	this.player.setSkinUpStatus(this.player.JUMP_UP);
-		// 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-		// 	// this.player.isPlayCircle =true;
-		// }else if(item.TYPE_NAME === 'wing'){
-		// 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,200);
-		// 	this.player.setSkinUpStatus(this.player.WING_UP);
-		// 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-		// }else if(item.TYPE_NAME === 'rocket'){
-		// 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,200);
-		// 	this.player.setSkinUpStatus(this.player.ROCKET_UP);
-		// 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-		// }else {
-		// 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum);
-		// 	this.player.setSkinUpStatus(this.player.JUMP_UP);
-		// 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-		// }	
 	}
 	/**
 	 * 撞击道具豆丁需要做的操作
@@ -349,8 +455,14 @@ class GamePage extends BasePage{
 			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum*1.1);
 			this.player.isWearSpringShoes = true;
 			this.player.cancelSpringShoe();
+		}else if(item.TYPE_NAME === 'protectionProp'){
+			this.player.createProtectSkin();
+			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum*1.3);
+		}else if(item.TYPE_NAME === 'mushroomProp'){
+			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum*2.5);
+			this.player.rotationMove();
 		}else{
-			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum*1.5);
+			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum*1.7);
 		}
 		this.swichChangeDoudingSkin(item.TYPE_NAME);
 		this.player.$y = item.$y+sticketItem.$y-this.player.anchorOffsetY;

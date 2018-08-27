@@ -11,6 +11,10 @@ class Stickets extends BasePage  {
 		super.childrenCreated();
         this.setInitData();
 	}
+
+    public HIT_TYPE = 'sticket';
+
+
     public MOVE_STATUS:string = 'fixation';
     public MOVE_FIXATION:string = 'fixation'; // 固定不动
     public MOVE_HORZONTAL:string = 'horzontal'; //  水平移动
@@ -23,7 +27,7 @@ class Stickets extends BasePage  {
     private verNowSpeed:number=3; // 垂直速度
     public  verDistance:number=50; // 垂直的位移
     private initY:number; // 垂直移动时的初始位置
-    public JUMP_DISTANCE:number = 80;
+    public JUMP_DISTANCE:number = 70;
 
     public myClipSkinObj:any;
 

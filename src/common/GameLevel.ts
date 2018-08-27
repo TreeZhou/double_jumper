@@ -8,7 +8,7 @@ class GameLevel extends CalculatePonitXY{
         lastY:number,
         stageW:number
     }){
-        let objNum = 10;
+        let objNum = 5;
         let list = this.getCreateClassList(['normalSticket'],objNum,obj.maxDistance,obj.minDistance);
         let pointList = this.randomPointXY(list,obj.lastY,obj.stageW);
         return pointList;
@@ -23,12 +23,82 @@ class GameLevel extends CalculatePonitXY{
         lastY:number,
         stageW:number
     }){
-        let objNum = 6;
+        let objNum = 3;
         let list = this.getCreateClassList(['normalSticket','leafSticket'],objNum,obj.maxDistance,obj.minDistance);
         let pointList = this.randomPointXY(list,obj.lastY,obj.stageW);
         return pointList;
     }
-
+    /**
+     * 随机移动跳板
+     */
+    public horSticketLevel(obj:{
+        maxDistance:number,
+        minDistance:number,
+        lastY:number,
+        stageW:number
+    }){
+        let objNum = 5;
+        let list = this.getCreateClassList(['leafSticket'],objNum,obj.maxDistance,obj.minDistance);
+        let pointList = this.randomPointXY(list,obj.lastY,obj.stageW);
+        return pointList;
+    }
+    
+    /**
+     * 随机常规和水滴
+     */
+    public norWaterSticketLevel(obj:{
+        maxDistance:number,
+        minDistance:number,
+        lastY:number,
+        stageW:number
+    }){
+        let objNum = 3;
+        let list = this.getCreateClassList(['normalSticket','waterSticket'],objNum,obj.maxDistance,obj.minDistance);
+        let pointList = this.randomPointXY(list,obj.lastY,obj.stageW);
+        return pointList;
+    }
+    /**
+     * 水滴跳板和一次性跳板左右排列
+     */
+    public waterOneHitLeftRight(obj:{
+        maxDistance:number,
+        minDistance:number,
+        lastY:number,
+        stageW:number
+    }){
+        let objNum = 3;
+        let list = this.getCreateClassList(['waterSticket','cloudSticket','cloudSticket','waterSticket'],objNum,obj.maxDistance,obj.minDistance);
+        let pointList = this.leftAndRightPointXY(list,obj.lastY,obj.stageW);
+        return pointList;
+    }
+    /**
+     * 木材跳板左右排列
+     */
+    public woodSticketLeftRight(obj:{
+        maxDistance:number,
+        minDistance:number,
+        lastY:number,
+        stageW:number
+    }){
+        let objNum = 4;
+        let list = this.getCreateClassList(['woodSticket'],objNum,80,60);
+        let pointList = this.leftAndRightPointXY(list,obj.lastY,obj.stageW);
+        return pointList;
+    }
+    /**
+     * 一次性的左右跳
+     */
+      public oneHitSticketLeftRight(obj:{
+        maxDistance:number,
+        minDistance:number,
+        lastY:number,
+        stageW:number
+    }){
+        let objNum = 6;
+        let list = this.getCreateClassList(['cloudSticket'],objNum,obj.maxDistance,obj.minDistance);
+        let pointList = this.leftAndRightPointXY(list,obj.lastY,obj.stageW);
+        return pointList;
+    }
     /**
      * 常规跳板和翅膀道具
      */
@@ -87,33 +157,34 @@ class GameLevel extends CalculatePonitXY{
         return pointList;
     }
     /**
-     * 水滴跳板和一次性跳板左右排列
+     * 常规跳板和蘑菇
      */
-    public waterOneHitLeftRight(obj:{
+    public norMushroomLevel(obj:{
         maxDistance:number,
         minDistance:number,
         lastY:number,
         stageW:number
     }){
-        let objNum = 3;
-        let list = this.getCreateClassList(['waterSticket','cloudSticket','cloudSticket','waterSticket'],objNum,obj.maxDistance,obj.minDistance);
-        let pointList = this.leftAndRightPointXY(list,obj.lastY,obj.stageW);
+        let objNum = 1;
+        let list = this.singleSticketAndProp(['normalSticket','mushroomProp'],objNum,obj.maxDistance,obj.minDistance);
+        let pointList = this.randomPointXY(list,obj.lastY,obj.stageW);
         return pointList;
     }
     /**
-     * 木材跳板左右排列
+     * 常规跳板和保护罩
      */
-    public woodSticketLeftRight(obj:{
+    public norProtectionLevel(obj:{
         maxDistance:number,
         minDistance:number,
         lastY:number,
         stageW:number
     }){
-        let objNum = 6;
-        let list = this.getCreateClassList(['woodSticket'],objNum,80,50);
-        let pointList = this.leftAndRightPointXY(list,obj.lastY,obj.stageW);
+        let objNum = 1;
+        let list = this.singleSticketAndProp(['normalSticket','protectionProp'],objNum,obj.maxDistance,obj.minDistance);
+        let pointList = this.randomPointXY(list,obj.lastY,obj.stageW);
         return pointList;
     }
+
     /**
      *  绿色怪兽关卡左右
      */
@@ -147,6 +218,24 @@ class GameLevel extends CalculatePonitXY{
         let monsterlist = this.createMonster('monsterProp','purpleSmallMonster',50,30);
         let sticketList = this.getCreateClassList(['normalSticket'],6,50,30);
         let concatList = singleList.concat(normalStickt,monsterlist,sticketList);
+        let pointList = this.monsterOne(concatList,obj.lastY,obj.stageW);
+        return pointList;
+    }
+    /**
+     * 蜘蛛网关卡
+     */
+    public spiderWebAndNorLeftRight(obj:{
+        maxDistance:number,
+        minDistance:number,
+        lastY:number,
+        stageW:number
+    }){
+        let objNum = 1;
+        // let singleList = this.singleSticketAndProp(['normalSticket','protectionProp'],objNum,obj.maxDistance,obj.minDistance);
+        let normalStickt = this.getCreateClassList(['normalSticket'],4,50,30)
+        let monsterlist = this.createMonster('spiderWebProp','spideWeb',50,30);
+        let sticketList = this.getCreateClassList(['normalSticket'],6,50,30);
+        let concatList = normalStickt.concat(normalStickt,monsterlist,sticketList);
         let pointList = this.monsterOne(concatList,obj.lastY,obj.stageW);
         return pointList;
     }

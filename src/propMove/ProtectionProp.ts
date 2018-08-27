@@ -14,5 +14,6 @@ class ProtectionProp extends BaseProps {
 
 	}
     public TYPE_NAME = 'protectionProp';
+    public JUMP_DISTANCE:number = 80;
 
 }

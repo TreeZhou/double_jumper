@@ -13,8 +13,5 @@ class Bullet extends BaseProps {
 
 	}
     public TYPE_NAME = 'bulletProp';
-    public resertData(){
-        
-    }
 
 }

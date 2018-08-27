@@ -14,5 +14,14 @@ class Mushroom extends BaseProps {
 
 	}
     public TYPE_NAME = 'mushroomProp';
-    public JUMP_DISTANCE:number = 400;
+    public JUMP_DISTANCE:number = 300;
+    public sticketSelfSkill(){
+        let self = this;
+        this.mySkinObj.changeBaseImg('mushroom_up');
+        setTimeout(()=>{
+            this.mySkinObj.changeBaseImg('mushroom_down');
+        },300)
+       
+    }
+    
 }

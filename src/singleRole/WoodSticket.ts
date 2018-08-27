@@ -14,15 +14,25 @@ class WoodSticket extends Stickets {
         this.setStickNormalMoveStatus(this.MOVE_FIXATION);
 	}
     public TYPE_NAME = 'woodSticket';
+    public IS_TIMING:boolean = false;
     public resertData(){
         this.visible = true;
         this.myClipSkinObj.movePesticide.gotoAndStop(1);
     }
     public sticketTimeSelfSkill(){
         let self = this;
-        this.myClipSkinObj.movePesticide.play();
-        this.myClipSkinObj.movePesticide.addEventListener('complete',function(){
-            self.visible = false;
-		},this)
+
+        if(this.y>this.stage.$stageHeight*0.2&& !this.IS_TIMING) {
+            let randomTime = Math.random()*2000+1000;
+            this.IS_TIMING = true;
+            setTimeout(()=>{
+                this.myClipSkinObj.movePesticide.play();
+                this.myClipSkinObj.movePesticide.addEventListener('complete',function(){
+                    self.visible = false;
+                    self.IS_TIMING  = false;
+                },this)
+            },randomTime)
+        }
+       
     }
 }

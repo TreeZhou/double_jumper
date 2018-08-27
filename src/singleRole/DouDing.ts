@@ -3,7 +3,7 @@ class DouDing extends eui.Component {
         super();
         this.createDoudingSkin();
     }
-    public doudingSkin:DoudingSkin;
+
     protected partAdded(partName:string,instance:any):void
 	{
 		super.partAdded(partName,instance);
@@ -14,6 +14,9 @@ class DouDing extends eui.Component {
         this.setInitJumperData();
        
 	}
+    public doudingSkin:DoudingSkin;
+    public protectSkin:ProtectPlayerSkin;
+
     public jumpMaxHeight:number; //跳跃的最高高度,
     public jumpStartY:number;  // 起跳的高度
     public jumpDistance:number; // 正常跳跃时的路程
@@ -21,7 +24,7 @@ class DouDing extends eui.Component {
     public nowUpAddSpeed:number;  // 上升的加速度
 	public nowDownAddSpeed:number; // 下落的加速度
     public nowSpeed:number; // 现在的速度
-    public frameNum:number=43; // 帧率，控制速度
+    public frameNum:number=50; // 帧率，控制速度
 	public isDown:boolean=false; // 判断是下落还是上升状态
 	public speedX:number=0;  // 左右移动的增量
 
@@ -32,6 +35,8 @@ class DouDing extends eui.Component {
     public isWearSpringShoes:boolean = false;  // 是否正在穿弹簧鞋
     public isCanPlayButtle:boolean = true; // 是否可以发子弹
     public isLauching:boolean = false;  // 是否正在发射子弹
+    public isProtecting:boolean = false; // 是否正在拥有保护罩
+    public isUpNoHitMonster:boolean = false;  // 是否特殊效果中，在特殊效果中上升过程中不触碰怪物， 例如翅膀，火箭
 
     public orientation:egret.DeviceOrientation; // 常规H5的重力感应事件
 
@@ -66,6 +71,39 @@ class DouDing extends eui.Component {
         this.height = this.doudingSkin.height;
         this.setPlayerSkewXY();
     }
+    /**
+     * 创建保护罩的皮肤
+     */
+    public createProtectSkin(){
+        if(this.isProtecting) {
+            return;
+        }
+        if(!this.protectSkin) {
+            this.protectSkin = new ProtectPlayerSkin('protectionCover');
+        }
+        this.addChild(this.protectSkin);
+        this.protectSkin.anchorOffsetX = this.protectSkin.width/2;
+        this.protectSkin.anchorOffsetY = this.protectSkin.height/2;
+        this.protectSkin.$x = this.width/2;
+        this.protectSkin.$y = this.height/2+this.protectSkin.anchorOffsetY/2.5;
+        this.isProtecting = true;
+        this.setTimeProtect();
+    }
+    /**
+     * 移除保护罩
+     */
+    public removeProtectSkin(){
+        this.removeChild(this.protectSkin);
+        this.isProtecting = false;
+    }
+    /**
+     * 设置定时保护罩消失
+     */
+    public setTimeProtect(){
+        setTimeout(()=>{
+            this.removeProtectSkin();
+        },5000)
+    }
     public setInitJumperData(){
         this.jumpMaxHeight = this.stage.$stageHeight*0.6;
 		this.jumpDistance = this.stage.$stageHeight*0.3;
@@ -84,7 +122,7 @@ class DouDing extends eui.Component {
 	 * 设置向下的加速度
 	 */
 	public setDownAddSpeed(jumpStickDistan,frame) {
-		let moveX = Math.abs(jumpStickDistan) * 2 / (frame * (frame + 1));
+		let moveX = Math.abs(jumpStickDistan*0.8) * 2 / (frame * (frame + 1));
 		this.nowDownAddSpeed = moveX;
 	}
     /**
@@ -217,6 +255,7 @@ class DouDing extends eui.Component {
                     this.setSkinUpStatus(this.JUMP_UP);
                 }
             }
+            this.isUpNoHitMonster = false;
             this.isCanPlayButtle = true;
 		
 		
@@ -287,7 +326,7 @@ class DouDing extends eui.Component {
 			this.setSideStatus(this.SIDE_LEFT);
 		} 
 		this.changeDouDingSkin(true);
-		this.speedX =Math.sin(e.gamma*(Math.PI/180))*this.stage.$stageWidth/22;
+		this.speedX =Math.sin(e.gamma*(Math.PI/180))*this.stage.$stageWidth/24;
 		// console.log('左右移动',Math.sin(e.gamma*(Math.PI/180)));
     }
     /**
@@ -303,7 +342,7 @@ class DouDing extends eui.Component {
 		} else if (res.x < 0) {  // 向左
 			this.setSideStatus(this.SIDE_LEFT);
 		} 
-		this.speedX = Math.sin(res.x * Math.PI / 2) * this.stage.$stageWidth/22;
+		this.speedX = Math.sin(res.x * Math.PI / 2) * this.stage.$stageWidth/40;
 		this.changeDouDingSkin(true);
 	}
     /**
@@ -324,6 +363,74 @@ class DouDing extends eui.Component {
         setTimeout(()=>{
             this.isWearSpringShoes = false;
         },5000)
+    }
+    /** 
+     * 豆丁旋转的动画
+    */
+    public rotationMove(){
+        let tw = egret.Tween.get(this);
+        tw.to({rotation:-360},1000)
+    }
+    /**
+	 * 停止左右监听
+	 */
+	public removeOriginEvent(){
+			
+		try{
+			if (wx && wx.stopAccelerometer) {
+				wx.stopAccelerometer(function () {
+					console.log('停止监听左右');
+				})
+			} else {
+				this.orientation.stop();
+			}
+		}catch(err) {
+			console.log(err);
+		}
+	}
+    /**
+     * 豆丁移动到蜘蛛网中心
+     */
+
+    public moveToSpiderWeb(item){
+        let tw = egret.Tween.get(this);
+        tw.to({x:item.$x+item.width/2,y:item.$y+item.height/2},300)
+    }
+    /**
+     * 豆丁触碰到怪兽的死亡运动
+     */
+    public gameOverMove(){
+        let tw = egret.Tween.get(this);
+        tw.to({y:this.stage.$stageHeight},1000,egret.Ease.circIn)
+    }
+    /**
+     * 获取豆丁的位置数据
+     */
+    public getDoudingPosition(){
+        let playerMaxY = this.$y+this.anchorOffsetY;
+        let playerMinY = this.$y-this.anchorOffsetY;
+        let playerMinX = this.$x-this.anchorOffsetX+22;
+        let playerMaxX = this.$x + this.anchorOffsetX-22;
+
+        return {
+            playerMaxY:playerMaxY,
+            playerMinY:playerMinY,
+            playerMinX:playerMinX,
+            playerMaxX:playerMaxX
+        }
+    }
+    /**
+     * 设置豆丁在特殊效果中的状态
+     */
+    public setIsNoHitMonster(){
+        switch(this.JUMP_UP_STATUS) {
+            case this.WING_UP:
+            this.isUpNoHitMonster = true;
+            break;
+            case this.ROCKET_UP:
+            this.isUpNoHitMonster = true;
+            break;
+        }
     }
 
 }

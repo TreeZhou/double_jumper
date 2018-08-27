@@ -13,7 +13,7 @@ var Mushroom = (function (_super) {
     function Mushroom(sticketObj) {
         var _this = _super.call(this) || this;
         _this.TYPE_NAME = 'mushroomProp';
-        _this.JUMP_DISTANCE = 400;
+        _this.JUMP_DISTANCE = 300;
         _this.createPropSkin(MushroomSkin, 'mushroom_down');
         _this.setChildXY(sticketObj);
         return _this;
@@ -23,6 +23,14 @@ var Mushroom = (function (_super) {
     };
     Mushroom.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
+    };
+    Mushroom.prototype.sticketSelfSkill = function () {
+        var _this = this;
+        var self = this;
+        this.mySkinObj.changeBaseImg('mushroom_up');
+        setTimeout(function () {
+            _this.mySkinObj.changeBaseImg('mushroom_down');
+        }, 300);
     };
     return Mushroom;
 }(BaseProps));

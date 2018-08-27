@@ -12,6 +12,7 @@ var Stickets = (function (_super) {
     __extends(Stickets, _super);
     function Stickets() {
         var _this = _super.call(this) || this;
+        _this.HIT_TYPE = 'sticket';
         _this.MOVE_STATUS = 'fixation';
         _this.MOVE_FIXATION = 'fixation'; // 固定不动
         _this.MOVE_HORZONTAL = 'horzontal'; //  水平移动
@@ -21,7 +22,7 @@ var Stickets = (function (_super) {
         _this.verAddSpeed = 3; // 垂直恒定加速度
         _this.verNowSpeed = 3; // 垂直速度
         _this.verDistance = 50; // 垂直的位移
-        _this.JUMP_DISTANCE = 80;
+        _this.JUMP_DISTANCE = 70;
         return _this;
     }
     Stickets.prototype.partAdded = function (partName, instance) {

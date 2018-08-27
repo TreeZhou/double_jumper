@@ -17,7 +17,7 @@ var GameLevel = (function (_super) {
      * 常规随机跳板
      */
     GameLevel.prototype.normalSticketLevel = function (obj) {
-        var objNum = 10;
+        var objNum = 5;
         var list = this.getCreateClassList(['normalSticket'], objNum, obj.maxDistance, obj.minDistance);
         var pointList = this.randomPointXY(list, obj.lastY, obj.stageW);
         return pointList;
@@ -26,9 +26,54 @@ var GameLevel = (function (_super) {
      * 随机常规和移动跳板
      */
     GameLevel.prototype.norHorSticketLevel = function (obj) {
-        var objNum = 6;
+        var objNum = 3;
         var list = this.getCreateClassList(['normalSticket', 'leafSticket'], objNum, obj.maxDistance, obj.minDistance);
         var pointList = this.randomPointXY(list, obj.lastY, obj.stageW);
+        return pointList;
+    };
+    /**
+     * 随机移动跳板
+     */
+    GameLevel.prototype.horSticketLevel = function (obj) {
+        var objNum = 5;
+        var list = this.getCreateClassList(['leafSticket'], objNum, obj.maxDistance, obj.minDistance);
+        var pointList = this.randomPointXY(list, obj.lastY, obj.stageW);
+        return pointList;
+    };
+    /**
+     * 随机常规和水滴
+     */
+    GameLevel.prototype.norWaterSticketLevel = function (obj) {
+        var objNum = 3;
+        var list = this.getCreateClassList(['normalSticket', 'waterSticket'], objNum, obj.maxDistance, obj.minDistance);
+        var pointList = this.randomPointXY(list, obj.lastY, obj.stageW);
+        return pointList;
+    };
+    /**
+     * 水滴跳板和一次性跳板左右排列
+     */
+    GameLevel.prototype.waterOneHitLeftRight = function (obj) {
+        var objNum = 3;
+        var list = this.getCreateClassList(['waterSticket', 'cloudSticket', 'cloudSticket', 'waterSticket'], objNum, obj.maxDistance, obj.minDistance);
+        var pointList = this.leftAndRightPointXY(list, obj.lastY, obj.stageW);
+        return pointList;
+    };
+    /**
+     * 木材跳板左右排列
+     */
+    GameLevel.prototype.woodSticketLeftRight = function (obj) {
+        var objNum = 4;
+        var list = this.getCreateClassList(['woodSticket'], objNum, 80, 60);
+        var pointList = this.leftAndRightPointXY(list, obj.lastY, obj.stageW);
+        return pointList;
+    };
+    /**
+     * 一次性的左右跳
+     */
+    GameLevel.prototype.oneHitSticketLeftRight = function (obj) {
+        var objNum = 6;
+        var list = this.getCreateClassList(['cloudSticket'], objNum, obj.maxDistance, obj.minDistance);
+        var pointList = this.leftAndRightPointXY(list, obj.lastY, obj.stageW);
         return pointList;
     };
     /**
@@ -68,21 +113,21 @@ var GameLevel = (function (_super) {
         return pointList;
     };
     /**
-     * 水滴跳板和一次性跳板左右排列
+     * 常规跳板和蘑菇
      */
-    GameLevel.prototype.waterOneHitLeftRight = function (obj) {
-        var objNum = 3;
-        var list = this.getCreateClassList(['waterSticket', 'cloudSticket', 'cloudSticket', 'waterSticket'], objNum, obj.maxDistance, obj.minDistance);
-        var pointList = this.leftAndRightPointXY(list, obj.lastY, obj.stageW);
+    GameLevel.prototype.norMushroomLevel = function (obj) {
+        var objNum = 1;
+        var list = this.singleSticketAndProp(['normalSticket', 'mushroomProp'], objNum, obj.maxDistance, obj.minDistance);
+        var pointList = this.randomPointXY(list, obj.lastY, obj.stageW);
         return pointList;
     };
     /**
-     * 木材跳板左右排列
+     * 常规跳板和保护罩
      */
-    GameLevel.prototype.woodSticketLeftRight = function (obj) {
-        var objNum = 6;
-        var list = this.getCreateClassList(['woodSticket'], objNum, 80, 50);
-        var pointList = this.leftAndRightPointXY(list, obj.lastY, obj.stageW);
+    GameLevel.prototype.norProtectionLevel = function (obj) {
+        var objNum = 1;
+        var list = this.singleSticketAndProp(['normalSticket', 'protectionProp'], objNum, obj.maxDistance, obj.minDistance);
+        var pointList = this.randomPointXY(list, obj.lastY, obj.stageW);
         return pointList;
     };
     /**
@@ -108,6 +153,19 @@ var GameLevel = (function (_super) {
         var monsterlist = this.createMonster('monsterProp', 'purpleSmallMonster', 50, 30);
         var sticketList = this.getCreateClassList(['normalSticket'], 6, 50, 30);
         var concatList = singleList.concat(normalStickt, monsterlist, sticketList);
+        var pointList = this.monsterOne(concatList, obj.lastY, obj.stageW);
+        return pointList;
+    };
+    /**
+     * 蜘蛛网关卡
+     */
+    GameLevel.prototype.spiderWebAndNorLeftRight = function (obj) {
+        var objNum = 1;
+        // let singleList = this.singleSticketAndProp(['normalSticket','protectionProp'],objNum,obj.maxDistance,obj.minDistance);
+        var normalStickt = this.getCreateClassList(['normalSticket'], 4, 50, 30);
+        var monsterlist = this.createMonster('spiderWebProp', 'spideWeb', 50, 30);
+        var sticketList = this.getCreateClassList(['normalSticket'], 6, 50, 30);
+        var concatList = normalStickt.concat(normalStickt, monsterlist, sticketList);
         var pointList = this.monsterOne(concatList, obj.lastY, obj.stageW);
         return pointList;
     };

@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<e:Skin class="RocketPropSkin" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" >
-	<w:Config id="1653ce047e9" ></w:Config>
-	<e:Image id="rocketDefault" width="56" height="62" x="0" y="0" source="rocket_stage_default_png"/>
-</e:Skin>

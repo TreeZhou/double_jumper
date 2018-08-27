@@ -193,7 +193,7 @@ class CalculatePonitXY {  // 设计好关卡的点
                 item.roleObj.x = this.randomIsLeftRightX(stageW,item.roleObj.width,isLeft);
                 item.roleObj.y = preY - item.roleObj.height - this.setRandomDistance(item.maxDistance,item.minDistance);
                 preY = item.roleObj.y-this.checkIsHasChildHeight(item.roleObj);
-                console.log(item.roleObj.height );
+                // console.log(item.roleObj.height );
                 isLeft = !isLeft;
             }
         }

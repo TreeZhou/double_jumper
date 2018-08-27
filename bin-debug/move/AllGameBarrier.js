@@ -50,17 +50,19 @@ var AllGameBarrier = (function (_super) {
         var pedalObj = null;
         if (this.lastBarrierY > (this.eachStageDistance + this.minDistance)) {
             var levelFun = this.probabilityLevel.getLevelName(playerMeter);
-            var list = this.gameLevel[levelFun.levelName]({
-                maxDistance: levelFun.maxDistance,
-                minDistance: levelFun.minDistance,
-                lastY: this.lastBarrierY,
-                stageW: this.stage.$stageWidth
-            });
-            for (var i = 0; i < list.length; i++) {
-                groupBox.addChild(list[i].roleObj);
-                pedalObj = list[i].roleObj;
+            if (this.gameLevel && levelFun.levelName) {
+                var list = this.gameLevel[levelFun.levelName]({
+                    maxDistance: levelFun.maxDistance,
+                    minDistance: levelFun.minDistance,
+                    lastY: this.lastBarrierY,
+                    stageW: this.stage.$stageWidth
+                });
+                for (var i = 0; i < list.length; i++) {
+                    groupBox.addChild(list[i].roleObj);
+                    pedalObj = list[i].roleObj;
+                }
+                this.lastBarrierY = pedalObj.$y - pedalObj.height - 20 - this.gameLevel.checkIsHasChildHeight(pedalObj);
             }
-            this.lastBarrierY = pedalObj.$y - pedalObj.height - 20 - this.gameLevel.checkIsHasChildHeight(pedalObj);
         }
     };
     /**
@@ -83,7 +85,12 @@ var AllGameBarrier = (function (_super) {
         var list = allStickList;
         var len = list.length;
         var item;
-        for (var i = 0; i < len; i++) {
+        if (list.length) {
+            list = list.filter(function (item, index) {
+                return (item.$y + item.height) >= 0;
+            });
+        }
+        for (var i = 0; i < list.length; i++) {
             item = list[i];
             if (item.horzontalMove) {
                 item.horzontalMove();

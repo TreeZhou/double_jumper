@@ -13,6 +13,7 @@ var ProtectionProp = (function (_super) {
     function ProtectionProp(sticketObj) {
         var _this = _super.call(this) || this;
         _this.TYPE_NAME = 'protectionProp';
+        _this.JUMP_DISTANCE = 80;
         _this.createPropSkin(ProtectionPropSkin, 'protectionProp');
         _this.setChildXY(sticketObj);
         return _this;

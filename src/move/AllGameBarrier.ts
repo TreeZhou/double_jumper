@@ -48,7 +48,8 @@ class AllGameBarrier extends eui.Component{
 
         if (this.lastBarrierY > (this.eachStageDistance + this.minDistance)) {
             let levelFun = this.probabilityLevel.getLevelName(playerMeter);
-            let list = this.gameLevel[levelFun.levelName]({
+            if(this.gameLevel && levelFun.levelName) {
+                  let list = this.gameLevel[levelFun.levelName]({
                 maxDistance:levelFun.maxDistance,
                 minDistance:levelFun.minDistance,
                 lastY:this.lastBarrierY,
@@ -59,6 +60,8 @@ class AllGameBarrier extends eui.Component{
 				pedalObj = list[i].roleObj;
 			}
 			this.lastBarrierY = pedalObj.$y - pedalObj.height-20-this.gameLevel.checkIsHasChildHeight(pedalObj);
+            }
+          
 		}
     }
     /**
@@ -78,10 +81,15 @@ class AllGameBarrier extends eui.Component{
      * 检测所有在舞台的障碍物，进行相应的运动
      */
     public barrierMoved(allStickList) {
-		let list = allStickList;
+        let list = allStickList
 		let len = list.length;
 		let item;
-		for (let i = 0; i < len; i++) {
+        if(list.length) {
+            list = list.filter((item,index)=>{
+                return (item.$y+item.height)>=0;
+            });
+        }
+		for (let i = 0; i < list.length; i++) {
 			item = list[i];
             if(item.horzontalMove) {
                 item.horzontalMove();

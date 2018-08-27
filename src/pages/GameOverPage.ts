@@ -14,6 +14,8 @@ class GameOverPage extends BasePage{
 	{
 		super.childrenCreated();
 		this.beginListenEvent();
+		this.percentWidth = 100;
+		this.percentHeight = 100;
 	}
 	public setScoreText(text) {
 		this.scoreText.text = text;

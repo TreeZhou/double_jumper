@@ -19,14 +19,18 @@ var GameFirstPage = (function (_super) {
     GameFirstPage.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
         this.eventListen();
-        var img = new NormalSticket();
-        console.log(img.width, img.height, img);
-        var pley = new Spring(img);
-        img.addChild(pley);
-        this.addChild(img);
-        img.$x = this.stage.$stageWidth / 2;
-        img.$y = this.stage.$stageHeight / 2;
-        console.log(img.width, img.height, img);
+        this.percentWidth = 100;
+        this.percentHeight = 100;
+        // let img = new NormalSticket();
+        // console.log(img.width,img.height,img);
+        // let pley= new Spring(img);
+        // img.addChild(pley);
+        // this.addChild(img);
+        // img.$x = this.stage.$stageWidth/2;
+        // img.$y = this.stage.$stageHeight/2;
+        // console.log(img.width,img.height,img);
+        // var tw = egret.Tween.get( img );
+        // tw.to( {x:150}, 1000 );
         // setTimeout(()=>{
         // 	// img.changeBaseImg('purpleSmallMonster');
         // 	// img.baseImg.texture = RES.getRes('bean_face_spring_down_normal_png');
@@ -63,6 +67,6 @@ var GameFirstPage = (function (_super) {
         Main.gamePage.beginGame();
     };
     return GameFirstPage;
-}(BaseNormalPage));
+}(BasePage));
 __reflect(GameFirstPage.prototype, "GameFirstPage");
 //# sourceMappingURL=GameFirstPage.js.map

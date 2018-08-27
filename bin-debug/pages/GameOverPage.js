@@ -19,6 +19,8 @@ var GameOverPage = (function (_super) {
     GameOverPage.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
         this.beginListenEvent();
+        this.percentWidth = 100;
+        this.percentHeight = 100;
     };
     GameOverPage.prototype.setScoreText = function (text) {
         this.scoreText.text = text;

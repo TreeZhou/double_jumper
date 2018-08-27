@@ -23,6 +23,7 @@ var GamePage = (function (_super) {
         this.percentHeight = 100;
         this.percentWidth = 100;
         this.createAllGameObj();
+        Main.instance.keepScreenOn();
     };
     /**
      * 开始游戏
@@ -30,7 +31,7 @@ var GamePage = (function (_super) {
     GamePage.prototype.beginGame = function () {
         this.setInitDataGame(); // 设置游戏的开始数据
         this.beginAnimateEvent(); // 开始动画监听
-        this.listenClickStageEvent();
+        this.listenClickStageEvent(); // 屏幕点击事件
     };
     /**
      * 创建豆丁和跳板
@@ -66,6 +67,8 @@ var GamePage = (function (_super) {
      */
     GamePage.prototype.listenClickStageEvent = function () {
         this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.beginSendBullet, this);
+        this.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.beginLauch, this);
+        this.addEventListener(egret.TouchEvent.TOUCH_END, this.endLauch, this);
     };
     /**
      * 点击屏幕的时候豆丁需要发射子弹
@@ -75,6 +78,18 @@ var GamePage = (function (_super) {
             this.swichChangeDoudingSkin('face');
             this.bulletMoveObj.createBullet(this.player);
         }
+    };
+    /**
+     * 开始射击子弹
+     */
+    GamePage.prototype.beginLauch = function () {
+        this.player.isLauching = true;
+    };
+    /**
+     * 结束点击子弹
+     */
+    GamePage.prototype.endLauch = function () {
+        this.player.isLauching = false;
     };
     /**
      * 设置初始值
@@ -108,6 +123,8 @@ var GamePage = (function (_super) {
             this.allBarrier.addNewSticket(this.stickList, this.doodleChangeToMeter(this.player.douDingJumperMeter));
             this.allBarrier.barrierMoved(this.stickList.$children);
             this.bulletMoveObj.removeBullet(this.bulletMoveObj);
+            this.player.setIsNoHitMonster();
+            this.checkIsHitOverBar(this.stickList.$children, this.afterHitBarrier.bind(this));
         }
         if (this.player.isDown) {
             this.checkIsHitDoodle(this.stickList.$children, this.checkDouDingHitType.bind(this), this.douDingHitProp.bind(this));
@@ -124,7 +141,9 @@ var GamePage = (function (_super) {
         speed = this.player.nowSpeed;
         for (var i = 0; i < len; i++) {
             item = list[i];
-            item.$y = item.$y + speed;
+            if (!item.IS_OVER) {
+                item.$y = item.$y + speed;
+            }
         }
         this.allBarrier.lastBarrierY = this.allBarrier.lastBarrierY + speed;
     };
@@ -137,8 +156,16 @@ var GamePage = (function (_super) {
         var nowLen, nowList;
         for (var i = 0; i < len; i++) {
             item = list[i];
+            if (item.TYPE_NAME === 'monsterProp') {
+                this.bulletMoveObj.checkIsHitMonster(this.bulletMoveObj, item);
+            }
             if (item.$y >= this.stage.$stageHeight) {
                 removeChildList.push(item);
+            }
+            else {
+                if (item.TYPE_NAME === 'woodSticket') {
+                    item.sticketTimeSelfSkill();
+                }
             }
         }
         if (removeChildList.length) {
@@ -174,7 +201,7 @@ var GamePage = (function (_super) {
             this.gameOver();
         }
         else {
-            this.longBg.$y = this.longBg.$y - 10;
+            this.longBg.$y = this.longBg.$y - 8;
         }
     };
     /**
@@ -183,20 +210,8 @@ var GamePage = (function (_super) {
     GamePage.prototype.gameOver = function () {
         this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
         this.player.visible = false;
+        this.player.removeOriginEvent();
         this.doodleBox.removeChildren();
-        try {
-            if (wx && wx.stopAccelerometer) {
-                wx.stopAccelerometer(function () {
-                    console.log('停止监听左右');
-                });
-            }
-            else {
-                this.player.orientation.stop();
-            }
-        }
-        catch (err) {
-            console.log(err);
-        }
         this.showPlayGameOverPage();
     };
     /**
@@ -229,32 +244,67 @@ var GamePage = (function (_super) {
      * 检测是否撞击了豆丁
      */
     GamePage.prototype.checkIsHitDoodle = function (list, callback, propCallback) {
-        var item, itemMinX, itemMaxX, itemMaxY, itemMinY, itemHalf, itemMiddleY, pointDistance, maxDistance;
+        var item, itemMinX, itemMaxX, itemMaxY, itemMinY;
         var listLen = list.length;
-        var playerMaxY = this.player.$y + this.player.anchorOffsetY;
-        var playerMinY = this.player.$y - this.player.anchorOffsetY;
-        var playerHalf = this.player.height / 2;
-        var playerMinX = this.player.$x - this.player.anchorOffsetX + 22;
-        var playerMaxX = this.player.$x + this.player.anchorOffsetX - 22;
-        var playerMiddel = this.player.$y; //-this.player.anchorOffsetY/2 this.player.anchorOffsetY
+        var playerData = this.player.getDoudingPosition();
+        var playerMaxY = playerData.playerMaxY;
+        var playerMinY = playerData.playerMinY;
+        var playerMinX = playerData.playerMinX;
+        var playerMaxX = playerData.playerMaxX;
         var isHitPop = false;
-        for (var i = 0; i < listLen; i++) {
-            item = list[i];
-            itemMaxX = item.$x + item.width;
-            itemMinX = item.$x;
-            itemMinY = item.$y;
-            itemMaxY = item.$y + item.height;
-            itemHalf = item.height / 2;
-            itemMiddleY = itemMinY + itemHalf;
-            pointDistance = itemMiddleY - playerMiddel;
-            maxDistance = itemHalf + playerHalf;
+        var sticketListArr = list.filter(function (item, index) {
+            return item.HIT_TYPE !== 'barrier' && (item.$y + item.height) > 0;
+        });
+        for (var i = 0; i < sticketListArr.length; i++) {
+            item = sticketListArr[i];
             isHitPop = this.checkIsHisProps(item, propCallback);
             if (isHitPop) {
                 break;
             }
+            itemMaxX = item.$x + item.width;
+            itemMinX = item.$x;
+            itemMinY = item.$y;
+            itemMaxY = item.$y + item.height;
             if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerMaxY <= itemMaxY && playerMaxY >= itemMinY && item.visible) {
                 callback(item);
                 break;
+            }
+        }
+    };
+    /**
+     * 检测是否撞击了怪兽或者蜘蛛网
+    */
+    GamePage.prototype.checkIsHitOverBar = function (list, callback) {
+        var item, itemMinX, itemMaxX, itemMaxY, itemMinY, barrierList;
+        if (this.player.isUpNoHitMonster) {
+            return;
+        }
+        barrierList = list.filter(function (item, index) {
+            return item.HIT_TYPE === 'barrier';
+        });
+        if (barrierList.length) {
+            var playerData = this.player.getDoudingPosition();
+            var playerMaxY = playerData.playerMaxY;
+            var playerMinY = playerData.playerMinY;
+            var playerMinX = playerData.playerMinX;
+            var playerMaxX = playerData.playerMaxX;
+            var isTouch = false;
+            for (var i = 0; i < barrierList.length; i++) {
+                item = barrierList[i];
+                itemMaxX = item.$x + item.width;
+                itemMinX = item.$x;
+                itemMinY = item.$y;
+                itemMaxY = item.$y + item.height;
+                if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerMinY <= itemMaxY && playerMinY >= itemMinY && item.visible) {
+                    isTouch = true;
+                    callback(item, isTouch);
+                    break;
+                }
+                else if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerMaxY <= itemMaxY && playerMaxY >= itemMinY && item.visible) {
+                    isTouch = false;
+                    callback(item, isTouch);
+                    break;
+                }
             }
         }
     };
@@ -267,24 +317,95 @@ var GamePage = (function (_super) {
         var item, itemMinX, itemMaxX, itemMaxY, itemMinY;
         var isHit = false;
         if (sticketItem.$children[1]) {
-            var playerMaxY = this.player.$y + this.player.anchorOffsetY;
-            var playerMinY = this.player.$y - this.player.anchorOffsetY;
-            var playerHalf = this.player.height / 2;
-            var playerMinX = this.player.$x - this.player.anchorOffsetX + 22;
-            var playerMaxX = this.player.$x + this.player.anchorOffsetX - 22;
-            var playerMiddel = this.player.$y;
+            var playerData = this.player.getDoudingPosition();
+            var playerMaxY = playerData.playerMaxY;
+            var playerMinY = playerData.playerMinY;
+            var playerMinX = playerData.playerMinX;
+            var playerMaxX = playerData.playerMaxX;
             item = sticketItem.$children[1];
             itemMaxX = item.$x + item.width + sticketItem.$x;
             itemMinX = item.$x + sticketItem.$x;
             itemMinY = item.$y + sticketItem.$y;
             itemMaxY = itemMinY + item.height + sticketItem.height;
             if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerMaxY <= itemMaxY && playerMaxY >= itemMinY && item.visible) {
-                // debugger
                 callback(item, sticketItem);
                 isHit = true;
             }
         }
         return isHit;
+    };
+    // private checkIsHitOverBarrier(barrierItem,callback){
+    // 	let item, itemMinX, itemMaxX, itemMaxY, itemMinY;
+    // 	let playerData = this.player.getDoudingPosition();
+    // 	let playerMaxY = playerData.playerMaxY;
+    // 	let playerMinY = playerData.playerMinY;
+    // 	let playerMinX = playerData.playerMinX;
+    // 	let playerMaxX = playerData.playerMaxX;
+    // 	let isTouch = false; // false 为撞击，true为触碰
+    // 	item = barrierItem;
+    // 	itemMaxX = item.$x + item.width;
+    // 	itemMinX = item.$x;
+    // 	itemMinY = item.$y;
+    // 	itemMaxY = itemMinY + item.height;
+    // 	if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMinY<=itemMaxY  && playerMinY>=itemMinY && item.visible) {
+    // 		isTouch = true;
+    // 		callback(item,isTouch);
+    // 	}else if(playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible){
+    // 		isTouch = false;
+    // 		callback(item,isTouch);
+    // 	}
+    // }
+    /**
+     * 撞击或者触碰到怪兽或者蜘蛛网后要做的操作
+     */
+    GamePage.prototype.afterHitBarrier = function (item, isTouch) {
+        var _this = this;
+        if (item.TYPE_NAME === 'monsterProp') {
+            if (isTouch) {
+                if (!this.player.isProtecting) {
+                    this.removeClickAndFrameListen();
+                    this.player.gameOverMove();
+                    this.shortVibrate();
+                    setTimeout(function () {
+                        _this.player.removeOriginEvent();
+                        _this.showPlayGameOverPage();
+                    }, 1000);
+                }
+            }
+            else {
+                // this.removeClickAndFrameListen();
+                item.sticketSelfSkill();
+                this.player.$y = item.$y - this.player.anchorOffsetY;
+                this.player.jumpStartY = item.$y;
+                this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum * 1.5);
+                this.player.changeDouDingSkin(false);
+            }
+        }
+        else if (item.TYPE_NAME === 'spiderWebProp') {
+            this.removeClickAndFrameListen();
+            this.player.moveToSpiderWeb(item);
+            this.player.removeOriginEvent();
+            setTimeout(function () {
+                _this.showPlayGameOverPage();
+            }, 1000);
+        }
+    };
+    GamePage.prototype.shortVibrate = function () {
+        try {
+            wx.vibrateLong({});
+        }
+        catch (err) {
+            console.log(err);
+        }
+    };
+    /**
+     * 移除当前点击屏幕和帧率动画的监听事件
+     */
+    GamePage.prototype.removeClickAndFrameListen = function () {
+        this.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.beginSendBullet, this);
+        this.removeEventListener(egret.Event.ENTER_FRAME, this.onEnterFrame, this);
+        this.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.beginLauch, this);
+        this.removeEventListener(egret.TouchEvent.TOUCH_END, this.endLauch, this);
     };
     /**
      * 撞击豆丁后需要做的操作
@@ -294,7 +415,7 @@ var GamePage = (function (_super) {
             this.player.$y = item.$y - this.player.anchorOffsetY;
             this.player.jumpStartY = item.$y;
             if (this.player.isWearSpringShoes) {
-                this.player.setStartJumpeSpeed(item.JUMP_DISTANCE * 1.5, this.player.frameNum * 1.2);
+                this.player.setStartJumpeSpeed(item.JUMP_DISTANCE * 1.5, this.player.frameNum * 1.5);
             }
             else {
                 this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum);
@@ -302,24 +423,6 @@ var GamePage = (function (_super) {
             this.player.changeDouDingSkin(false);
         }
         item.sticketSelfSkill();
-        // if(item.TYPE_NAME === 'trampoline') {
-        // 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,100);
-        // 	this.player.setSkinUpStatus(this.player.JUMP_UP);
-        // 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-        // 	// this.player.isPlayCircle =true;
-        // }else if(item.TYPE_NAME === 'wing'){
-        // 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,200);
-        // 	this.player.setSkinUpStatus(this.player.WING_UP);
-        // 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-        // }else if(item.TYPE_NAME === 'rocket'){
-        // 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,200);
-        // 	this.player.setSkinUpStatus(this.player.ROCKET_UP);
-        // 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-        // }else {
-        // 	this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum);
-        // 	this.player.setSkinUpStatus(this.player.JUMP_UP);
-        // 	 this.player.setSkinDownStatus(this.player.JUMP_DOWN);
-        // }	
     };
     /**
      * 撞击道具豆丁需要做的操作
@@ -334,8 +437,16 @@ var GamePage = (function (_super) {
             this.player.isWearSpringShoes = true;
             this.player.cancelSpringShoe();
         }
+        else if (item.TYPE_NAME === 'protectionProp') {
+            this.player.createProtectSkin();
+            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum * 1.3);
+        }
+        else if (item.TYPE_NAME === 'mushroomProp') {
+            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum * 2.5);
+            this.player.rotationMove();
+        }
         else {
-            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum * 1.5);
+            this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum * 1.7);
         }
         this.swichChangeDoudingSkin(item.TYPE_NAME);
         this.player.$y = item.$y + sticketItem.$y - this.player.anchorOffsetY;

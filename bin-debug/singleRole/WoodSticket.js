@@ -13,6 +13,7 @@ var WoodSticket = (function (_super) {
     function WoodSticket() {
         var _this = _super.call(this) || this;
         _this.TYPE_NAME = 'woodSticket';
+        _this.IS_TIMING = false;
         _this.createMovieClipSticket(WoodSticketSkin);
         return _this;
     }
@@ -28,11 +29,19 @@ var WoodSticket = (function (_super) {
         this.myClipSkinObj.movePesticide.gotoAndStop(1);
     };
     WoodSticket.prototype.sticketTimeSelfSkill = function () {
+        var _this = this;
         var self = this;
-        this.myClipSkinObj.movePesticide.play();
-        this.myClipSkinObj.movePesticide.addEventListener('complete', function () {
-            self.visible = false;
-        }, this);
+        if (this.y > this.stage.$stageHeight * 0.2 && !this.IS_TIMING) {
+            var randomTime = Math.random() * 2000 + 1000;
+            this.IS_TIMING = true;
+            setTimeout(function () {
+                _this.myClipSkinObj.movePesticide.play();
+                _this.myClipSkinObj.movePesticide.addEventListener('complete', function () {
+                    self.visible = false;
+                    self.IS_TIMING = false;
+                }, _this);
+            }, randomTime);
+        }
     };
     return WoodSticket;
 }(Stickets));

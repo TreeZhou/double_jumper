@@ -2,26 +2,98 @@ class ProbabilityClass {
     public meterLevel:Array<any> = [
         {
             minHeight:0,
-            maxHeight:4000,
+            maxHeight:400,
             levelName:[
-                'norSpringPropLevel',
-                'norSpringPropLevel',
+                'normalSticketLevel',
+                'norHorSticketLevel',
+                'norWaterSticketLevel',
             ],
-            levelRate:[1,0],
-            maxDistance:40,
+            levelRate:[0.5,0.4,0.1],
+            maxDistance:50,
             minDistance:30
         },
         {
-            minHeight:4000,
-            maxHeight:10000,
+            minHeight:400,
+            maxHeight:600,
             levelName:[
-                'normalSticketLevel',
-                'norWingPropLevel',
-                'norSpringPropLevel'
+                'norSpringPropLevel',
+                'norMushroomLevel',
+                'horSticketLevel'
             ],
-            levelRate:[0.7,0.2,0.1],
+            levelRate:[0.5,0.4,0.1],
             maxDistance:50,
-            minDistance:40
+            minDistance:50
+        },
+        {
+            minHeight:700,
+            maxHeight:1000,
+            levelName:[
+                'norWaterSticketLevel',
+                'norHorSticketLevel',
+                'waterOneHitLeftRight',
+                'norSpringPropLevel',
+                'norSpringShoePropLevel'
+            ],
+            levelRate:[0.4,0.2,0.2,0.1,0.1],
+            maxDistance:60,
+            minDistance:50
+        },
+        {
+            minHeight:1000,
+            maxHeight:2000,
+            levelName:[
+                'norWaterSticketLevel',
+                'norHorSticketLevel',
+                'waterOneHitLeftRight',
+                'norSpringPropLevel',
+                'woodSticketLeftRight',
+                'norMushroomLevel',
+                'normalSticketLevel',
+            ],
+            levelRate:[0.2,0.2,0.2,0.1,0.1,0.1,0.1],
+            maxDistance:80,
+            minDistance:60
+        },
+        {
+            minHeight:2000,
+            maxHeight:2200,
+            levelName:[
+                'purpleMonsterLeftRight',
+                'spiderWebAndNorLeftRight'
+            ],
+            levelRate:[0.5,0.5],
+            maxDistance:80,
+            minDistance:60
+        },
+        {
+            minHeight:2200,
+            maxHeight:4000,
+            levelName:[
+                'woodSticketLeftRight',
+                'waterOneHitLeftRight',
+                'norHorSticketLevel',
+                'horSticketLevel',
+                'normalSticketLevel'
+            ],
+            levelRate:[0.2,0.2,0.2,0.3,0.1],
+            maxDistance:90,
+            minDistance:70
+        },
+        {
+            minHeight:4000,
+            maxHeight:20000,
+            levelName:[
+                'oneHitSticketLeftRight',
+                'norWingPropLevel',
+                'norSpringPropLevel',
+                'norRocketPropLevel',
+                'greenMonsterLeftRight',
+                'norSpringShoePropLevel',
+                'normalSticketLevel'
+            ],
+            levelRate:[0.2,0.1,0.1,0.1,0.1,0.1,0.1],
+            maxDistance:90,
+            minDistance:70
         },
     ]
     public getLevelName(playMeter){

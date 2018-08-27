@@ -14,6 +14,7 @@ var Monster = (function (_super) {
         var _this = _super.call(this) || this;
         _this.TYPE_NAME = 'monsterProp';
         _this.JUMP_DISTANCE = 200;
+        _this.IS_OVER = false;
         _this.createPropSkin(MonsterSkin, skinName);
         return _this;
         // this.setChildXY(sticketObj);
@@ -23,6 +24,21 @@ var Monster = (function (_super) {
     };
     Monster.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
+    };
+    Monster.prototype.resertData = function () {
+        this.visible = true;
+        this.IS_OVER = false;
+    };
+    /**
+     * 怪兽死亡的运动
+     */
+    Monster.prototype.sticketSelfSkill = function () {
+        var _this = this;
+        var tw = egret.Tween.get(this);
+        this.IS_OVER = true;
+        tw.to({ y: this.stage.$stageHeight + this.height }, 200, egret.Ease.circIn).call(function () {
+            _this.visible = false;
+        });
     };
     return Monster;
 }(BaseProps));

@@ -14,6 +14,7 @@ class BaseProps extends BasePage {
 	}
     public mySkinObj:any; // 生成的皮肤
     public JUMP_DISTANCE:number = 120;
+    public HIT_TYPE = 'barrier';
     private setPropsXY(referStick:any) {
 		let randomNum = Math.random();
 		let itemX =0;
@@ -46,7 +47,7 @@ class BaseProps extends BasePage {
      * 每个道具各自的技能点
      */
     public sticketSelfSkill(){
-        
+        this.visible = false;
     }
      /**
      * 各自重置数据的函数

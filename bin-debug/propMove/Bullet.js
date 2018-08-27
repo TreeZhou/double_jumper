@@ -22,8 +22,6 @@ var Bullet = (function (_super) {
     Bullet.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
     };
-    Bullet.prototype.resertData = function () {
-    };
     return Bullet;
 }(BaseProps));
 __reflect(Bullet.prototype, "Bullet");

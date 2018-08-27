@@ -13,6 +13,7 @@ var SpiderWeb = (function (_super) {
     function SpiderWeb(sticketObj) {
         var _this = _super.call(this) || this;
         _this.TYPE_NAME = 'spiderWebProp';
+        _this.JUMP_DISTANCE = 200;
         _this.createPropSkin(SpideWebSkin, 'spideWeb');
         _this.setChildXY(sticketObj);
         return _this;

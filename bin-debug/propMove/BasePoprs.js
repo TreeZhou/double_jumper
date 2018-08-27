@@ -13,6 +13,7 @@ var BaseProps = (function (_super) {
     function BaseProps() {
         var _this = _super.call(this) || this;
         _this.JUMP_DISTANCE = 120;
+        _this.HIT_TYPE = 'barrier';
         return _this;
     }
     BaseProps.prototype.partAdded = function (partName, instance) {
@@ -53,6 +54,7 @@ var BaseProps = (function (_super) {
      * 每个道具各自的技能点
      */
     BaseProps.prototype.sticketSelfSkill = function () {
+        this.visible = false;
     };
     /**
     * 各自重置数据的函数

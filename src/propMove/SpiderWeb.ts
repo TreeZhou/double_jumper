@@ -14,4 +14,5 @@ class SpiderWeb extends BaseProps {
 
 	}
     public TYPE_NAME = 'spiderWebProp';
+    public JUMP_DISTANCE:number = 200;
 }
