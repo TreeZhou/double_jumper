@@ -37,9 +37,9 @@ var GamePage = (function (_super) {
      * 创建豆丁和跳板
      */
     GamePage.prototype.createAllGameObj = function () {
+        this.createBulletMove();
         this.createDoodle();
         this.createSticket(); // 创建跳板
-        this.createBulletMove();
     };
     // 创建豆丁
     GamePage.prototype.createDoodle = function () {
@@ -54,7 +54,7 @@ var GamePage = (function (_super) {
      */
     GamePage.prototype.createBulletMove = function () {
         this.bulletMoveObj = new BulletMove();
-        this.addChild(this.bulletMoveObj);
+        this.doodleBox.addChild(this.bulletMoveObj);
     };
     //  创建跳板
     GamePage.prototype.createSticket = function () {
@@ -73,10 +73,13 @@ var GamePage = (function (_super) {
     /**
      * 点击屏幕的时候豆丁需要发射子弹
      */
-    GamePage.prototype.beginSendBullet = function () {
+    GamePage.prototype.beginSendBullet = function (event) {
+        var angle = null;
         if (this.player.isCanPlayButtle) {
+            angle = this.bulletMoveObj.changeRotation(event);
             this.swichChangeDoudingSkin('face');
             this.bulletMoveObj.createBullet(this.player);
+            this.player.changeMagicWangRotation(angle);
         }
     };
     /**
@@ -164,7 +167,7 @@ var GamePage = (function (_super) {
             }
             else {
                 if (item.TYPE_NAME === 'woodSticket') {
-                    item.sticketTimeSelfSkill();
+                    item.sticketTimeSelfSkill(this.player);
                 }
             }
         }
@@ -189,7 +192,7 @@ var GamePage = (function (_super) {
             this.endGame = true;
             this.player.isStopCaulteScore = true;
             this.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.beginSendBullet, this);
-            this.removeChild(this.bulletMoveObj);
+            this.doodleBox.removeChild(this.bulletMoveObj);
         }
     };
     /**
@@ -334,27 +337,6 @@ var GamePage = (function (_super) {
         }
         return isHit;
     };
-    // private checkIsHitOverBarrier(barrierItem,callback){
-    // 	let item, itemMinX, itemMaxX, itemMaxY, itemMinY;
-    // 	let playerData = this.player.getDoudingPosition();
-    // 	let playerMaxY = playerData.playerMaxY;
-    // 	let playerMinY = playerData.playerMinY;
-    // 	let playerMinX = playerData.playerMinX;
-    // 	let playerMaxX = playerData.playerMaxX;
-    // 	let isTouch = false; // false 为撞击，true为触碰
-    // 	item = barrierItem;
-    // 	itemMaxX = item.$x + item.width;
-    // 	itemMinX = item.$x;
-    // 	itemMinY = item.$y;
-    // 	itemMaxY = itemMinY + item.height;
-    // 	if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMinY<=itemMaxY  && playerMinY>=itemMinY && item.visible) {
-    // 		isTouch = true;
-    // 		callback(item,isTouch);
-    // 	}else if(playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible){
-    // 		isTouch = false;
-    // 		callback(item,isTouch);
-    // 	}
-    // }
     /**
      * 撞击或者触碰到怪兽或者蜘蛛网后要做的操作
      */
@@ -481,4 +463,3 @@ var GamePage = (function (_super) {
     return GamePage;
 }(BasePage));
 __reflect(GamePage.prototype, "GamePage");
-//# sourceMappingURL=GamePage.js.map

@@ -23,4 +23,3 @@ var WingSkin = (function (_super) {
     return WingSkin;
 }(BaseSkin));
 __reflect(WingSkin.prototype, "WingSkin");
-//# sourceMappingURL=WingSkin.js.map

@@ -21,4 +21,3 @@ var SpringSkin = (function (_super) {
     return SpringSkin;
 }(BaseMovieClip));
 __reflect(SpringSkin.prototype, "SpringSkin");
-//# sourceMappingURL=SpringSkin.js.map

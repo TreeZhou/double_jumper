@@ -1,7 +1,9 @@
 class DouDing extends eui.Component {
     constructor(){
         super();
+      
         this.createDoudingSkin();
+        this.createMagicWangSkin();
     }
 
     protected partAdded(partName:string,instance:any):void
@@ -16,6 +18,7 @@ class DouDing extends eui.Component {
 	}
     public doudingSkin:DoudingSkin;
     public protectSkin:ProtectPlayerSkin;
+    public magicWangSkin:MagicWangSkin;
 
     public jumpMaxHeight:number; //跳跃的最高高度,
     public jumpStartY:number;  // 起跳的高度
@@ -24,7 +27,7 @@ class DouDing extends eui.Component {
     public nowUpAddSpeed:number;  // 上升的加速度
 	public nowDownAddSpeed:number; // 下落的加速度
     public nowSpeed:number; // 现在的速度
-    public frameNum:number=50; // 帧率，控制速度
+    public frameNum:number=45; // 帧率，控制速度
 	public isDown:boolean=false; // 判断是下落还是上升状态
 	public speedX:number=0;  // 左右移动的增量
 
@@ -61,6 +64,9 @@ class DouDing extends eui.Component {
     public SIDE_LEFT='left';
     public SIDE_RIGHT='right';
 
+
+    // public addMove:number = 0;
+
     /**
 	 * 创建豆丁皮肤
 	 */
@@ -90,6 +96,61 @@ class DouDing extends eui.Component {
         this.setTimeProtect();
     }
     /**
+     * 创建手杖皮肤
+     */
+    public createMagicWangSkin(){
+        this.magicWangSkin = new MagicWangSkin('magicWang');
+        this.addChild(this.magicWangSkin);
+        this.magicWangSkin.anchorOffsetX = this.magicWangSkin.width/2;
+        this.magicWangSkin.anchorOffsetY = this.magicWangSkin.height/2;
+        this.magicWangSkin.$x = this.width/1.8;
+        this.magicWangSkin.$y = this.height/3;
+        this.magicWangSkin.visible = false;
+        // this.magicWangSkin.rotation = 30;
+        // this.$children = this.$children.reverse();
+    }
+    /**
+     * 跳起手杖的位置设置
+     */
+    public setMagicWangUpPosition(){
+            switch(this.JUMP_UP_STATUS){
+                case this.JUMP_FACE_UP:
+                this.magicWangSkin.$y = this.height/3;
+                this.magicWangSkin.visible = true;
+                break;
+                case this.SPRINGSHOE_FACE_UP:
+                this.magicWangSkin.$y = this.height/3.8;
+                this.magicWangSkin.visible = true;
+                break;
+                default:
+                this.magicWangSkin.visible = false;
+            }      
+     }
+    /**
+     * 下落手杖的位置
+    */
+    public setMagicWangDownPosition(){
+            switch(this.JUMP_DOWN_STATUS){
+                case this.JUMP_FACE_DOWN:
+                this.magicWangSkin.$y = this.height/3+12;
+                this.magicWangSkin.visible = true;
+                break;
+                case this.SPRINGSHOE_FACE_DOWN:
+                this.magicWangSkin.$y = this.height/2.7;
+                this.magicWangSkin.visible = true;
+                break;
+                default:
+                this.magicWangSkin.visible = false;
+
+            }
+    }
+    /**
+     * 改变手杖的角度
+     */
+    public changeMagicWangRotation(angle:number){
+        this.magicWangSkin.rotation = angle;
+    }
+    /**
      * 移除保护罩
      */
     public removeProtectSkin(){
@@ -106,7 +167,7 @@ class DouDing extends eui.Component {
     }
     public setInitJumperData(){
         this.jumpMaxHeight = this.stage.$stageHeight*0.6;
-		this.jumpDistance = this.stage.$stageHeight*0.3;
+		this.jumpDistance = this.stage.$stageHeight*0.4
 		this.jumpStartY = this.stage.$stageHeight;
         this.setStartJumpeSpeed(this.jumpDistance,this.frameNum);
 		this.setDownAddSpeed(this.jumpDistance,this.frameNum);
@@ -129,7 +190,8 @@ class DouDing extends eui.Component {
 	 * 	设置豆丁的跳跃速度
 	*/
 	public setStartJumpeSpeed(jumpStickDistan,frame) {
-		let moveX = Math.abs(jumpStickDistan) * 2 / (frame * (frame + 1));
+        // console.log('距离',jumpStickDistan,this.stage.$stageHeight);
+		let moveX = Math.abs(jumpStickDistan-this.anchorOffsetY*2) * 2 / (frame * (frame + 1));
 		this.nowUpAddSpeed = moveX;
 		this.nowSpeed = moveX * frame;
 	}
@@ -201,10 +263,13 @@ class DouDing extends eui.Component {
     public changeDouDingSkin(isHting:boolean){
         if(isHting) {
             this.doudingSkin.changeBaseImg2(this.JUMP_UP_STATUS,this.SIDE_STATUS);
+            this.setMagicWangUpPosition();
         }else {
             this.doudingSkin.changeBaseImg2(this.JUMP_DOWN_STATUS,this.SIDE_STATUS);
+            this.setMagicWangDownPosition();
             setTimeout(()=>{
                 this.doudingSkin.changeBaseImg2(this.JUMP_UP_STATUS,this.SIDE_STATUS);
+                this.setMagicWangUpPosition();
 			}, 100);
         }
     }
@@ -218,8 +283,12 @@ class DouDing extends eui.Component {
 			this.nowSpeed = this.nowSpeed - this.nowDownAddSpeed;
 		} else {
 			this.isDown = false;
+            // this.addMove = this.addMove+this.nowSpeed;
 			this.nowSpeed = this.nowSpeed - this.nowUpAddSpeed;
+
+            // console.log('gaodu', this.addMove);
 		}
+        	// this.$y = this.$y - this.nowSpeed;
 		if(!this.isDown&& this.$y>this.jumpMaxHeight||this.isDown) {
 			this.$y = this.$y - this.nowSpeed;
 			this.isJumperTopStop = false;

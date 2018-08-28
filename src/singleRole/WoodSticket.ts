@@ -19,10 +19,10 @@ class WoodSticket extends Stickets {
         this.visible = true;
         this.myClipSkinObj.movePesticide.gotoAndStop(1);
     }
-    public sticketTimeSelfSkill(){
+    public sticketTimeSelfSkill(playerItem){
         let self = this;
 
-        if(this.y>this.stage.$stageHeight*0.2&& !this.IS_TIMING) {
+        if(playerItem.$y-this.y<100&& !this.IS_TIMING) {
             let randomTime = Math.random()*2000+1000;
             this.IS_TIMING = true;
             setTimeout(()=>{

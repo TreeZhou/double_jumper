@@ -13,8 +13,8 @@ var ProbabilityClass = (function () {
                     'norWaterSticketLevel',
                 ],
                 levelRate: [0.5, 0.4, 0.1],
-                maxDistance: 50,
-                minDistance: 30
+                maxDistance: 40,
+                minDistance: 24
             },
             {
                 minHeight: 400,
@@ -40,7 +40,7 @@ var ProbabilityClass = (function () {
                 ],
                 levelRate: [0.4, 0.2, 0.2, 0.1, 0.1],
                 maxDistance: 60,
-                minDistance: 50
+                minDistance: 40
             },
             {
                 minHeight: 1000,
@@ -55,8 +55,8 @@ var ProbabilityClass = (function () {
                     'normalSticketLevel',
                 ],
                 levelRate: [0.2, 0.2, 0.2, 0.1, 0.1, 0.1, 0.1],
-                maxDistance: 80,
-                minDistance: 60
+                maxDistance: 50,
+                minDistance: 40
             },
             {
                 minHeight: 2000,
@@ -66,8 +66,8 @@ var ProbabilityClass = (function () {
                     'spiderWebAndNorLeftRight'
                 ],
                 levelRate: [0.5, 0.5],
-                maxDistance: 80,
-                minDistance: 60
+                maxDistance: 50,
+                minDistance: 40
             },
             {
                 minHeight: 2200,
@@ -80,8 +80,8 @@ var ProbabilityClass = (function () {
                     'normalSticketLevel'
                 ],
                 levelRate: [0.2, 0.2, 0.2, 0.3, 0.1],
-                maxDistance: 90,
-                minDistance: 70
+                maxDistance: 60,
+                minDistance: 40
             },
             {
                 minHeight: 4000,
@@ -96,8 +96,8 @@ var ProbabilityClass = (function () {
                     'normalSticketLevel'
                 ],
                 levelRate: [0.2, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
-                maxDistance: 90,
-                minDistance: 70
+                maxDistance: 80,
+                minDistance: 40
             },
         ];
     }
@@ -152,4 +152,3 @@ var ProbabilityClass = (function () {
     return ProbabilityClass;
 }());
 __reflect(ProbabilityClass.prototype, "ProbabilityClass");
-//# sourceMappingURL=ProbabilityClass.js.map

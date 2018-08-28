@@ -21,4 +21,3 @@ var WoodSticketSkin = (function (_super) {
     return WoodSticketSkin;
 }(BaseMovieClip));
 __reflect(WoodSticketSkin.prototype, "WoodSticketSkin");
-//# sourceMappingURL=WoodSticketSkin.js.map

@@ -28,10 +28,10 @@ var WoodSticket = (function (_super) {
         this.visible = true;
         this.myClipSkinObj.movePesticide.gotoAndStop(1);
     };
-    WoodSticket.prototype.sticketTimeSelfSkill = function () {
+    WoodSticket.prototype.sticketTimeSelfSkill = function (playerItem) {
         var _this = this;
         var self = this;
-        if (this.y > this.stage.$stageHeight * 0.2 && !this.IS_TIMING) {
+        if (playerItem.$y - this.y < 100 && !this.IS_TIMING) {
             var randomTime = Math.random() * 2000 + 1000;
             this.IS_TIMING = true;
             setTimeout(function () {
@@ -46,4 +46,3 @@ var WoodSticket = (function (_super) {
     return WoodSticket;
 }(Stickets));
 __reflect(WoodSticket.prototype, "WoodSticket");
-//# sourceMappingURL=WoodSticket.js.map

@@ -51,4 +51,3 @@ var BaseSkin = (function (_super) {
     return BaseSkin;
 }(eui.Component));
 __reflect(BaseSkin.prototype, "BaseSkin", ["eui.UIComponent", "egret.DisplayObject"]);
-//# sourceMappingURL=BaseSkin.js.map

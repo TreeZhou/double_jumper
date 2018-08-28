@@ -35,4 +35,3 @@ var Mushroom = (function (_super) {
     return Mushroom;
 }(BaseProps));
 __reflect(Mushroom.prototype, "Mushroom");
-//# sourceMappingURL=Mushroom.js.map

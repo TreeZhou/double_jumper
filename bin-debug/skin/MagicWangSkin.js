@@ -8,20 +8,18 @@ var __extends = this && this.__extends || function __extends(t, e) {
 for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
 r.prototype = e.prototype, t.prototype = new r();
 };
-var MushroomSkin = (function (_super) {
-    __extends(MushroomSkin, _super);
-    function MushroomSkin(skinObjName) {
+var MagicWangSkin = (function (_super) {
+    __extends(MagicWangSkin, _super);
+    function MagicWangSkin(skinObjName) {
         var _this = _super.call(this) || this;
         _this.skinList = {
             'default': {
-                'mushroom_up': 'mushroom1_png',
-                'mushroom_down': 'mushroom2_png'
+                'magicWang': 'magicWang_png'
             }
         };
-        // console.log('123');
         _this.createSkinImg(skinObjName);
         return _this;
     }
-    return MushroomSkin;
+    return MagicWangSkin;
 }(BaseSkin));
-__reflect(MushroomSkin.prototype, "MushroomSkin");
+__reflect(MagicWangSkin.prototype, "MagicWangSkin");

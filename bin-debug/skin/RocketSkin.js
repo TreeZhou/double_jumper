@@ -23,4 +23,3 @@ var RocketSkin = (function (_super) {
     return RocketSkin;
 }(BaseSkin));
 __reflect(RocketSkin.prototype, "RocketSkin");
-//# sourceMappingURL=RocketSkin.js.map

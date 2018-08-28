@@ -161,15 +161,14 @@ var GameLevel = (function (_super) {
      */
     GameLevel.prototype.spiderWebAndNorLeftRight = function (obj) {
         var objNum = 1;
-        // let singleList = this.singleSticketAndProp(['normalSticket','protectionProp'],objNum,obj.maxDistance,obj.minDistance);
-        var normalStickt = this.getCreateClassList(['normalSticket'], 4, 50, 30);
+        var singleList = this.singleSticketAndProp(['normalSticket', 'mushroomProp'], objNum, obj.maxDistance, obj.minDistance);
+        var normalStickt = this.getCreateClassList(['normalSticket'], 3, 50, 30);
         var monsterlist = this.createMonster('spiderWebProp', 'spideWeb', 50, 30);
         var sticketList = this.getCreateClassList(['normalSticket'], 6, 50, 30);
-        var concatList = normalStickt.concat(normalStickt, monsterlist, sticketList);
+        var concatList = singleList.concat(normalStickt, monsterlist, sticketList);
         var pointList = this.monsterOne(concatList, obj.lastY, obj.stageW);
         return pointList;
     };
     return GameLevel;
 }(CalculatePonitXY));
 __reflect(GameLevel.prototype, "GameLevel");
-//# sourceMappingURL=GameLevel.js.map

@@ -97,4 +97,3 @@ var BasePage = (function (_super) {
     return BasePage;
 }(eui.Component));
 __reflect(BasePage.prototype, "BasePage");
-//# sourceMappingURL=BasePage.js.map

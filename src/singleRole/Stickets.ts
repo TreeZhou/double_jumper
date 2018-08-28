@@ -27,7 +27,7 @@ class Stickets extends BasePage  {
     private verNowSpeed:number=3; // 垂直速度
     public  verDistance:number=50; // 垂直的位移
     private initY:number; // 垂直移动时的初始位置
-    public JUMP_DISTANCE:number = 70;
+    public JUMP_DISTANCE:number = 80;
 
     public myClipSkinObj:any;
 

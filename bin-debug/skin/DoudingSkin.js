@@ -75,4 +75,3 @@ var DoudingSkin = (function (_super) {
     return DoudingSkin;
 }(BaseSkin));
 __reflect(DoudingSkin.prototype, "DoudingSkin");
-//# sourceMappingURL=DoudingSkin.js.map

@@ -1,85 +1,85 @@
 {
-    "global": {
-        "globalAutoLayerMarkEnable": true
-    },
-    "164eabade2d": {
-        "path": "..\\resource\\eui_skins\\StickItem.ts",
-        "class": "StickItem",
-        "parentPath": ""
-    },
-    "1650e9b6881": {
-        "path": "..\\resource\\eui_skins\\FloorSpring.ts",
-        "class": "FloorSpring",
-        "parentPath": ""
-    },
-    "1651d818e93": {
-        "path": "..\\resource\\eui_skins\\DoodlePlayer.ts",
-        "class": "DoodlePlayer",
-        "parentPath": ""
-    },
-    "16521e8d6fb": {
-        "path": "..\\resource\\skins\\GameFirstPage.ts",
-        "class": "GameFirstPage",
-        "parentPath": ""
-    },
-    "165228be5ab": {
-        "path": "..\\resource\\skins\\GamePage.ts",
-        "class": "GamePage",
-        "parentPath": ""
-    },
-    "16537668f03": {
-        "path": "..\\resource\\skins\\AllStickList2.ts",
-        "class": "AllStickList2",
-        "parentPath": ""
-    },
-    "165376b65bd": {
-        "path": "..\\resource\\skins\\AllSticket2.ts",
-        "class": "AllSticket2",
-        "parentPath": ""
-    },
-    "1653b5052ac": {
-        "path": "..\\resource\\skins\\Trampoline.ts",
-        "class": "Trampoline",
-        "parentPath": ""
-    },
-    "1653c974811": {
-        "path": "..\\resource\\skins\\WingProp.ts",
-        "class": "WingProp",
-        "parentPath": ""
-    },
-    "1653cdc8275": {
-        "path": "..\\resource\\skins\\rocketProps.ts",
-        "class": "rocketProps",
-        "parentPath": ""
-    },
-    "1653ce047e9": {
-        "path": "..\\resource\\skins\\RocketProp.ts",
-        "class": "RocketProp",
-        "parentPath": ""
-    },
-    "1653d0e2981": {
-        "path": "..\\resource\\skins\\GameOverPage.ts",
-        "class": "GameOverPage",
-        "parentPath": ""
-    },
-    "1655b6cbbaa": {
-        "path": "..\\resource\\skins\\MonsterProp.ts",
-        "class": "MonsterProp",
-        "parentPath": ""
-    },
-    "1655b94587a": {
-        "path": "..\\resource\\skins\\SpiderWeb.ts",
-        "class": "SpiderWeb",
-        "parentPath": ""
-    },
-    "1655b9ddea4": {
-        "path": "..\\resource\\skins\\SpringShoesProp.ts",
-        "class": "SpringShoesProp",
-        "parentPath": ""
-    },
-    "1655f6981ef": {
-        "path": "..\\resource\\skins\\BaseSkin.ts",
-        "class": "BaseSkin",
-        "parentPath": ""
-    }
+  "global": {
+    "globalAutoLayerMarkEnable": true
+  },
+  "164eabade2d": {
+    "path": "..\\resource\\eui_skins\\StickItem.ts",
+    "class": "StickItem",
+    "parentPath": ""
+  },
+  "1650e9b6881": {
+    "path": "..\\resource\\eui_skins\\FloorSpring.ts",
+    "class": "FloorSpring",
+    "parentPath": ""
+  },
+  "1651d818e93": {
+    "path": "..\\resource\\eui_skins\\DoodlePlayer.ts",
+    "class": "DoodlePlayer",
+    "parentPath": ""
+  },
+  "16521e8d6fb": {
+    "path": "..\\resource\\skins\\GameFirstPage.ts",
+    "class": "GameFirstPage",
+    "parentPath": ""
+  },
+  "165228be5ab": {
+    "path": "..\\resource\\skins\\GamePage.ts",
+    "class": "GamePage",
+    "parentPath": ""
+  },
+  "16537668f03": {
+    "path": "..\\resource\\skins\\AllStickList2.ts",
+    "class": "AllStickList2",
+    "parentPath": ""
+  },
+  "165376b65bd": {
+    "path": "..\\resource\\skins\\AllSticket2.ts",
+    "class": "AllSticket2",
+    "parentPath": ""
+  },
+  "1653b5052ac": {
+    "path": "..\\resource\\skins\\Trampoline.ts",
+    "class": "Trampoline",
+    "parentPath": ""
+  },
+  "1653c974811": {
+    "path": "..\\resource\\skins\\WingProp.ts",
+    "class": "WingProp",
+    "parentPath": ""
+  },
+  "1653cdc8275": {
+    "path": "..\\resource\\skins\\rocketProps.ts",
+    "class": "rocketProps",
+    "parentPath": ""
+  },
+  "1653ce047e9": {
+    "path": "..\\resource\\skins\\RocketProp.ts",
+    "class": "RocketProp",
+    "parentPath": ""
+  },
+  "1653d0e2981": {
+    "path": "..\\resource\\skins\\GameOverPage.ts",
+    "class": "GameOverPage",
+    "parentPath": ""
+  },
+  "1655b6cbbaa": {
+    "path": "..\\resource\\skins\\MonsterProp.ts",
+    "class": "MonsterProp",
+    "parentPath": ""
+  },
+  "1655b94587a": {
+    "path": "..\\resource\\skins\\SpiderWeb.ts",
+    "class": "SpiderWeb",
+    "parentPath": ""
+  },
+  "1655b9ddea4": {
+    "path": "..\\resource\\skins\\SpringShoesProp.ts",
+    "class": "SpringShoesProp",
+    "parentPath": ""
+  },
+  "1655f6981ef": {
+    "path": "..\\resource\\skins\\BaseSkin.ts",
+    "class": "BaseSkin",
+    "parentPath": ""
+  }
 }

@@ -13,6 +13,7 @@ var BulletMove = (function (_super) {
     function BulletMove() {
         var _this = _super.call(this) || this;
         _this.speedY = 20; // 子弹的速度
+        _this.bulletAngle = 90;
         return _this;
     }
     BulletMove.prototype.createChildren = function () {
@@ -27,19 +28,26 @@ var BulletMove = (function (_super) {
      */
     BulletMove.prototype.createBullet = function (playerItem) {
         var bullet;
+        var $childrenOne = playerItem.$children[1];
         bullet = this.gameLevel.createSkinObj('bulletProp');
         this.addChild(bullet);
         bullet.$x = playerItem.$x;
-        bullet.$y = playerItem.$y - playerItem.height / 2;
+        bullet.$y = playerItem.$y - $childrenOne.$y / 2;
+        // console.log('豆丁',playerItem);
+        bullet.rotation = this.bulletAngle;
     };
     /**
      * 子弹移动
      */
     BulletMove.prototype.bulletMoveY = function () {
         var list = this.$children;
+        var angle = null;
         if (list.length) {
             for (var i = 0; i < list.length; i++) {
-                list[i].$y = list[i].$y - this.speedY;
+                angle = list[i].rotation;
+                angle = 90 - angle;
+                list[i].$y = list[i].$y - Math.sin(angle * Math.PI / 180) * this.speedY; //this.speedY;
+                list[i].$x = list[i].$x + Math.cos(angle * Math.PI / 180) * this.speedY;
             }
         }
     };
@@ -83,7 +91,34 @@ var BulletMove = (function (_super) {
             }
         }
     };
+    /**
+     * 点击屏幕改变角度
+     */
+    BulletMove.prototype.changeRotation = function (event) {
+        // console.log('点击事件',event, event.$stageX);
+        var stageX = event.$stageX;
+        var stageY = event.$stageY;
+        var sourceX = this.stage.$stageWidth / 2;
+        var sourceY = this.stage.$stageHeight / 2;
+        var distanceX = stageX - sourceX;
+        var distanceY = sourceY - stageY;
+        var angle = 180 * Math.atan(distanceY / distanceX) / Math.PI;
+        if (distanceX > 0) {
+            angle = angle;
+        }
+        else {
+            angle = 180 + angle;
+        }
+        if (angle > 135) {
+            angle = 135;
+        }
+        if (angle < 45) {
+            angle = 45;
+        }
+        angle = 90 - angle;
+        this.bulletAngle = angle;
+        return angle;
+    };
     return BulletMove;
 }(eui.Component));
 __reflect(BulletMove.prototype, "BulletMove");
-//# sourceMappingURL=BulletMove.js.map

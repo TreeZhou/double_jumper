@@ -26,4 +26,3 @@ var LeafSticket = (function (_super) {
     return LeafSticket;
 }(Stickets));
 __reflect(LeafSticket.prototype, "LeafSticket");
-//# sourceMappingURL=LeafSticket.js.map

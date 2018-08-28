@@ -231,11 +231,11 @@ class GameLevel extends CalculatePonitXY{
         stageW:number
     }){
         let objNum = 1;
-        // let singleList = this.singleSticketAndProp(['normalSticket','protectionProp'],objNum,obj.maxDistance,obj.minDistance);
-        let normalStickt = this.getCreateClassList(['normalSticket'],4,50,30)
+        let singleList = this.singleSticketAndProp(['normalSticket','mushroomProp'],objNum,obj.maxDistance,obj.minDistance);
+        let normalStickt = this.getCreateClassList(['normalSticket'],3,50,30)
         let monsterlist = this.createMonster('spiderWebProp','spideWeb',50,30);
         let sticketList = this.getCreateClassList(['normalSticket'],6,50,30);
-        let concatList = normalStickt.concat(normalStickt,monsterlist,sticketList);
+        let concatList = singleList.concat(normalStickt,monsterlist,sticketList);
         let pointList = this.monsterOne(concatList,obj.lastY,obj.stageW);
         return pointList;
     }

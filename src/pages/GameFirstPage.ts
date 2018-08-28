@@ -19,6 +19,11 @@ class GameFirstPage extends BasePage {
 		this.eventListen();
 		this.percentWidth = 100;
 		this.percentHeight = 100;
+		
+		// this.addEventListener(egret.Event.ADDED_TO_STAGE,function(){
+		// 		console.log('舞台',this.stage.$stageHeight);
+		// },this);
+				
 		// let img = new NormalSticket();
 
 		// console.log(img.width,img.height,img);

@@ -253,4 +253,3 @@ var CalculatePonitXY = (function () {
     return CalculatePonitXY;
 }());
 __reflect(CalculatePonitXY.prototype, "CalculatePonitXY");
-//# sourceMappingURL=CalculatePonitXY.js.map

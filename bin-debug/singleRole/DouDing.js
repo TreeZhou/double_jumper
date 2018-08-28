@@ -12,7 +12,7 @@ var DouDing = (function (_super) {
     __extends(DouDing, _super);
     function DouDing() {
         var _this = _super.call(this) || this;
-        _this.frameNum = 50; // 帧率，控制速度
+        _this.frameNum = 45; // 帧率，控制速度
         _this.isDown = false; // 判断是下落还是上升状态
         _this.speedX = 0; // 左右移动的增量
         _this.isJumperTopStop = false; // 判断是否跳跃到最高点，轮到跳板运动
@@ -39,6 +39,7 @@ var DouDing = (function (_super) {
         _this.SIDE_LEFT = 'left';
         _this.SIDE_RIGHT = 'right';
         _this.createDoudingSkin();
+        _this.createMagicWangSkin();
         return _this;
     }
     DouDing.prototype.partAdded = function (partName, instance) {
@@ -48,6 +49,7 @@ var DouDing = (function (_super) {
         _super.prototype.childrenCreated.call(this);
         this.setInitJumperData();
     };
+    // public addMove:number = 0;
     /**
      * 创建豆丁皮肤
      */
@@ -77,6 +79,60 @@ var DouDing = (function (_super) {
         this.setTimeProtect();
     };
     /**
+     * 创建手杖皮肤
+     */
+    DouDing.prototype.createMagicWangSkin = function () {
+        this.magicWangSkin = new MagicWangSkin('magicWang');
+        this.addChild(this.magicWangSkin);
+        this.magicWangSkin.anchorOffsetX = this.magicWangSkin.width / 2;
+        this.magicWangSkin.anchorOffsetY = this.magicWangSkin.height / 2;
+        this.magicWangSkin.$x = this.width / 1.8;
+        this.magicWangSkin.$y = this.height / 3;
+        this.magicWangSkin.visible = false;
+        // this.magicWangSkin.rotation = 30;
+        // this.$children = this.$children.reverse();
+    };
+    /**
+     * 跳起手杖的位置设置
+     */
+    DouDing.prototype.setMagicWangUpPosition = function () {
+        switch (this.JUMP_UP_STATUS) {
+            case this.JUMP_FACE_UP:
+                this.magicWangSkin.$y = this.height / 3;
+                this.magicWangSkin.visible = true;
+                break;
+            case this.SPRINGSHOE_FACE_UP:
+                this.magicWangSkin.$y = this.height / 3.8;
+                this.magicWangSkin.visible = true;
+                break;
+            default:
+                this.magicWangSkin.visible = false;
+        }
+    };
+    /**
+     * 下落手杖的位置
+    */
+    DouDing.prototype.setMagicWangDownPosition = function () {
+        switch (this.JUMP_DOWN_STATUS) {
+            case this.JUMP_FACE_DOWN:
+                this.magicWangSkin.$y = this.height / 3 + 12;
+                this.magicWangSkin.visible = true;
+                break;
+            case this.SPRINGSHOE_FACE_DOWN:
+                this.magicWangSkin.$y = this.height / 2.7;
+                this.magicWangSkin.visible = true;
+                break;
+            default:
+                this.magicWangSkin.visible = false;
+        }
+    };
+    /**
+     * 改变手杖的角度
+     */
+    DouDing.prototype.changeMagicWangRotation = function (angle) {
+        this.magicWangSkin.rotation = angle;
+    };
+    /**
      * 移除保护罩
      */
     DouDing.prototype.removeProtectSkin = function () {
@@ -94,7 +150,7 @@ var DouDing = (function (_super) {
     };
     DouDing.prototype.setInitJumperData = function () {
         this.jumpMaxHeight = this.stage.$stageHeight * 0.6;
-        this.jumpDistance = this.stage.$stageHeight * 0.3;
+        this.jumpDistance = this.stage.$stageHeight * 0.4;
         this.jumpStartY = this.stage.$stageHeight;
         this.setStartJumpeSpeed(this.jumpDistance, this.frameNum);
         this.setDownAddSpeed(this.jumpDistance, this.frameNum);
@@ -117,7 +173,8 @@ var DouDing = (function (_super) {
      * 	设置豆丁的跳跃速度
     */
     DouDing.prototype.setStartJumpeSpeed = function (jumpStickDistan, frame) {
-        var moveX = Math.abs(jumpStickDistan) * 2 / (frame * (frame + 1));
+        // console.log('距离',jumpStickDistan,this.stage.$stageHeight);
+        var moveX = Math.abs(jumpStickDistan - this.anchorOffsetY * 2) * 2 / (frame * (frame + 1));
         this.nowUpAddSpeed = moveX;
         this.nowSpeed = moveX * frame;
     };
@@ -185,11 +242,14 @@ var DouDing = (function (_super) {
         var _this = this;
         if (isHting) {
             this.doudingSkin.changeBaseImg2(this.JUMP_UP_STATUS, this.SIDE_STATUS);
+            this.setMagicWangUpPosition();
         }
         else {
             this.doudingSkin.changeBaseImg2(this.JUMP_DOWN_STATUS, this.SIDE_STATUS);
+            this.setMagicWangDownPosition();
             setTimeout(function () {
                 _this.doudingSkin.changeBaseImg2(_this.JUMP_UP_STATUS, _this.SIDE_STATUS);
+                _this.setMagicWangUpPosition();
             }, 100);
         }
     };
@@ -203,8 +263,11 @@ var DouDing = (function (_super) {
         }
         else {
             this.isDown = false;
+            // this.addMove = this.addMove+this.nowSpeed;
             this.nowSpeed = this.nowSpeed - this.nowUpAddSpeed;
+            // console.log('gaodu', this.addMove);
         }
+        // this.$y = this.$y - this.nowSpeed;
         if (!this.isDown && this.$y > this.jumpMaxHeight || this.isDown) {
             this.$y = this.$y - this.nowSpeed;
             this.isJumperTopStop = false;
@@ -425,4 +488,3 @@ var DouDing = (function (_super) {
     return DouDing;
 }(eui.Component));
 __reflect(DouDing.prototype, "DouDing");
-//# sourceMappingURL=DouDing.js.map

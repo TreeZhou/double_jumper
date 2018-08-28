@@ -27,4 +27,3 @@ var ProtectionProp = (function (_super) {
     return ProtectionProp;
 }(BaseProps));
 __reflect(ProtectionProp.prototype, "ProtectionProp");
-//# sourceMappingURL=ProtectionProp.js.map

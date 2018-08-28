@@ -27,4 +27,3 @@ var SpiderWeb = (function (_super) {
     return SpiderWeb;
 }(BaseProps));
 __reflect(SpiderWeb.prototype, "SpiderWeb");
-//# sourceMappingURL=SpiderWeb.js.map

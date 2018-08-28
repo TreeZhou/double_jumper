@@ -21,6 +21,9 @@ var GameFirstPage = (function (_super) {
         this.eventListen();
         this.percentWidth = 100;
         this.percentHeight = 100;
+        // this.addEventListener(egret.Event.ADDED_TO_STAGE,function(){
+        // 		console.log('舞台',this.stage.$stageHeight);
+        // },this);
         // let img = new NormalSticket();
         // console.log(img.width,img.height,img);
         // let pley= new Spring(img);
@@ -69,4 +72,3 @@ var GameFirstPage = (function (_super) {
     return GameFirstPage;
 }(BasePage));
 __reflect(GameFirstPage.prototype, "GameFirstPage");
-//# sourceMappingURL=GameFirstPage.js.map

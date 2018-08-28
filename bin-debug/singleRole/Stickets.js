@@ -22,7 +22,7 @@ var Stickets = (function (_super) {
         _this.verAddSpeed = 3; // 垂直恒定加速度
         _this.verNowSpeed = 3; // 垂直速度
         _this.verDistance = 50; // 垂直的位移
-        _this.JUMP_DISTANCE = 70;
+        _this.JUMP_DISTANCE = 80;
         return _this;
     }
     Stickets.prototype.partAdded = function (partName, instance) {
@@ -129,4 +129,3 @@ var Stickets = (function (_super) {
     return Stickets;
 }(BasePage));
 __reflect(Stickets.prototype, "Stickets");
-//# sourceMappingURL=Stickets.js.map

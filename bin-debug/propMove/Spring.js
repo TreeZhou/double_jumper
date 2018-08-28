@@ -38,4 +38,3 @@ var Spring = (function (_super) {
     return Spring;
 }(BaseProps));
 __reflect(Spring.prototype, "Spring");
-//# sourceMappingURL=Spring.js.map

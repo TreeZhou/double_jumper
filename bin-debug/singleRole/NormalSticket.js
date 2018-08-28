@@ -28,15 +28,14 @@ var NormalSticket = (function (_super) {
         var random = Math.random();
         var skinName = null;
         var skinObj = null;
-        if (random > 0.5) {
-            skinName = this.sticketName[0];
-        }
-        else {
-            skinName = this.sticketName[1];
-        }
+        skinName = this.sticketName[1];
+        // if(random > 0.5) {
+        //     skinName = this.sticketName[0];
+        // }else {
+        //     skinName = this.sticketName[1];
+        // }
         this.createSticketSkin(skinName);
     };
     return NormalSticket;
 }(Stickets));
 __reflect(NormalSticket.prototype, "NormalSticket");
-//# sourceMappingURL=NormalSticket.js.map

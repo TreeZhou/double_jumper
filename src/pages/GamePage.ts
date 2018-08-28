@@ -39,9 +39,10 @@ class GamePage extends BasePage{
 	 */
 
 	private createAllGameObj(){
+		this.createBulletMove();
 		this.createDoodle();
 		this.createSticket();  // 创建跳板
-		this.createBulletMove();
+
 	}
 
 	// 创建豆丁
@@ -57,7 +58,7 @@ class GamePage extends BasePage{
 	 */
 	private createBulletMove(){
 		this.bulletMoveObj = new BulletMove();
-		this.addChild(this.bulletMoveObj);
+		this.doodleBox.addChild(this.bulletMoveObj);
 	}
 	//  创建跳板
 	private createSticket(){
@@ -76,10 +77,13 @@ class GamePage extends BasePage{
 	/**
 	 * 点击屏幕的时候豆丁需要发射子弹
 	 */
-	private beginSendBullet(){
+	private beginSendBullet(event:TouchEvent){
+		let angle = null;
 		if(this.player.isCanPlayButtle) {
+			angle = this.bulletMoveObj.changeRotation(event);
 			this.swichChangeDoudingSkin('face');
 			this.bulletMoveObj.createBullet(this.player);
+			this.player.changeMagicWangRotation(angle);
 		}
 	}
 	/**
@@ -171,7 +175,7 @@ class GamePage extends BasePage{
 				removeChildList.push(item);
 			}else {
 				if(item.TYPE_NAME==='woodSticket') {
-					item.sticketTimeSelfSkill();
+					item.sticketTimeSelfSkill(this.player);
 				}
 			}
 
@@ -198,7 +202,7 @@ class GamePage extends BasePage{
 			this.endGame = true;
 			this.player.isStopCaulteScore = true;
 			this.removeEventListener(egret.TouchEvent.TOUCH_TAP,this.beginSendBullet,this)
-			this.removeChild(this.bulletMoveObj);
+			this.doodleBox.removeChild(this.bulletMoveObj);
 		}
 	}
 	/**
@@ -353,30 +357,6 @@ class GamePage extends BasePage{
 		}
 		return isHit;
 	}
-
-	// private checkIsHitOverBarrier(barrierItem,callback){
-	// 	let item, itemMinX, itemMaxX, itemMaxY, itemMinY;
-	// 	let playerData = this.player.getDoudingPosition();
-	// 	let playerMaxY = playerData.playerMaxY;
-	// 	let playerMinY = playerData.playerMinY;
-	// 	let playerMinX = playerData.playerMinX;
-	// 	let playerMaxX = playerData.playerMaxX;
-	// 	let isTouch = false; // false 为撞击，true为触碰
-
-	// 	item = barrierItem;
-	// 	itemMaxX = item.$x + item.width;
-	// 	itemMinX = item.$x;
-	// 	itemMinY = item.$y;
-	// 	itemMaxY = itemMinY + item.height;
-		
-	// 	if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMinY<=itemMaxY  && playerMinY>=itemMinY && item.visible) {
-	// 		isTouch = true;
-	// 		callback(item,isTouch);
-	// 	}else if(playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible){
-	// 		isTouch = false;
-	// 		callback(item,isTouch);
-	// 	}
-	// }
 	/**
 	 * 撞击或者触碰到怪兽或者蜘蛛网后要做的操作
 	 */

@@ -43,4 +43,3 @@ var Monster = (function (_super) {
     return Monster;
 }(BaseProps));
 __reflect(Monster.prototype, "Monster");
-//# sourceMappingURL=Monster.js.map

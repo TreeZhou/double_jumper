@@ -113,6 +113,7 @@ class Main extends eui.UILayer {
         let RolePlayer2 = new GameFirstPage(); 
         this.addChild(RolePlayer2);
         this.keepScreenOn();
+        // console.log('舞台',this.stage.$stageHeight);
     }
     public keepScreenOn() {
 		try{

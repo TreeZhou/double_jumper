@@ -23,4 +23,3 @@ var BulletSkin = (function (_super) {
     return BulletSkin;
 }(BaseSkin));
 __reflect(BulletSkin.prototype, "BulletSkin");
-//# sourceMappingURL=BulletSkin.js.map

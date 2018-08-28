@@ -189,6 +189,7 @@ var Main = (function (_super) {
         var RolePlayer2 = new GameFirstPage();
         this.addChild(RolePlayer2);
         this.keepScreenOn();
+        // console.log('舞台',this.stage.$stageHeight);
     };
     Main.prototype.keepScreenOn = function () {
         try {
@@ -251,4 +252,3 @@ var Main = (function (_super) {
     return Main;
 }(eui.UILayer));
 __reflect(Main.prototype, "Main");
-//# sourceMappingURL=Main.js.map

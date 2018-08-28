@@ -20,11 +20,12 @@ class NormalSticket extends Stickets {
         let skinName = null;
         let skinObj = null;
 
-        if(random > 0.5) {
-            skinName = this.sticketName[0];
-        }else {
-            skinName = this.sticketName[1];
-        }
+        skinName = this.sticketName[1];
+        // if(random > 0.5) {
+        //     skinName = this.sticketName[0];
+        // }else {
+        //     skinName = this.sticketName[1];
+        // }
         this.createSticketSkin(skinName);
     }
 }
