@@ -122,3 +122,4 @@ var BulletMove = (function (_super) {
     return BulletMove;
 }(eui.Component));
 __reflect(BulletMove.prototype, "BulletMove");
+//# sourceMappingURL=BulletMove.js.map

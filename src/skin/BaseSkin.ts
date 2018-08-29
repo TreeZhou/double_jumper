@@ -48,4 +48,16 @@ class BaseSkin extends  eui.Component implements  eui.UIComponent {
         let skinID = this.getSkinID(skinObjName);
         this.changeSkinTexture(skinID);
     }
+	public getSkinID2(skinObjName,sideName){
+        let skinID = this.skinList[this.skinType][skinObjName][sideName];
+        return skinID;
+    }
+    public createSkinImg2(skinObjName,sideName){
+        let skinID = this.getSkinID2(skinObjName,sideName);
+        this.setSkinSource(skinID);
+    }
+    public changeBaseImg2(skinObjName,sideName){
+        let skinID = this.getSkinID2(skinObjName,sideName);
+        this.changeSkinTexture(skinID);
+    }
 }

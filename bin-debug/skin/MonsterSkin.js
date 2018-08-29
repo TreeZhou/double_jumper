@@ -24,3 +24,4 @@ var MonsterSkin = (function (_super) {
     return MonsterSkin;
 }(BaseSkin));
 __reflect(MonsterSkin.prototype, "MonsterSkin");
+//# sourceMappingURL=MonsterSkin.js.map

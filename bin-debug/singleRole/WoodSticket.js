@@ -46,3 +46,4 @@ var WoodSticket = (function (_super) {
     return WoodSticket;
 }(Stickets));
 __reflect(WoodSticket.prototype, "WoodSticket");
+//# sourceMappingURL=WoodSticket.js.map

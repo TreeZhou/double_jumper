@@ -21,3 +21,4 @@ var WaterSticketSkin = (function (_super) {
     return WaterSticketSkin;
 }(BaseMovieClip));
 __reflect(WaterSticketSkin.prototype, "WaterSticketSkin");
+//# sourceMappingURL=WaterSticketSkin.js.map

@@ -23,3 +23,4 @@ var SpideWebSkin = (function (_super) {
     return SpideWebSkin;
 }(BaseSkin));
 __reflect(SpideWebSkin.prototype, "SpideWebSkin");
+//# sourceMappingURL=SpiderWebSkin.js.map

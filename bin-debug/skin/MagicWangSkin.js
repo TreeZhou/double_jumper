@@ -23,3 +23,4 @@ var MagicWangSkin = (function (_super) {
     return MagicWangSkin;
 }(BaseSkin));
 __reflect(MagicWangSkin.prototype, "MagicWangSkin");
+//# sourceMappingURL=MagicWangSkin.js.map

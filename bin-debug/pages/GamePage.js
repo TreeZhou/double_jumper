@@ -29,9 +29,18 @@ var GamePage = (function (_super) {
      * 开始游戏
      */
     GamePage.prototype.beginGame = function () {
+        this.createLongBg();
         this.setInitDataGame(); // 设置游戏的开始数据
         this.beginAnimateEvent(); // 开始动画监听
         this.listenClickStageEvent(); // 屏幕点击事件
+    };
+    /**
+     * 创建背景
+     */
+    GamePage.prototype.createLongBg = function () {
+        this.longBg = new LongBgClass();
+        this.bgBox.addChild(this.longBg);
+        // console.log(this.longBg);
     };
     /**
      * 创建豆丁和跳板
@@ -99,7 +108,7 @@ var GamePage = (function (_super) {
      */
     GamePage.prototype.setInitDataGame = function () {
         this.endGame = false;
-        this.longBg.$y = 0;
+        // this.longBg.$y = 0;
     };
     /**
      * 开始监听动画
@@ -147,6 +156,9 @@ var GamePage = (function (_super) {
             if (!item.IS_OVER) {
                 item.$y = item.$y + speed;
             }
+        }
+        if (!this.endGame) {
+            this.longBg.run(speed);
         }
         this.allBarrier.lastBarrierY = this.allBarrier.lastBarrierY + speed;
     };
@@ -204,7 +216,8 @@ var GamePage = (function (_super) {
             this.gameOver();
         }
         else {
-            this.longBg.$y = this.longBg.$y - 8;
+            // this.longBg.$y = this.longBg.$y - 8;
+            this.longBg.runDown(25);
         }
     };
     /**
@@ -225,7 +238,7 @@ var GamePage = (function (_super) {
         Main.instance.addChild(Main.gameOver);
         Main.gameOver.setScoreText(this.setScoreText());
         this.visible = false;
-        this.longBg.$y = 0;
+        // this.longBg.$y = 0;
         this.parent.removeChild(this);
     };
     /**
@@ -288,7 +301,7 @@ var GamePage = (function (_super) {
         if (barrierList.length) {
             var playerData = this.player.getDoudingPosition();
             var playerMaxY = playerData.playerMaxY;
-            var playerMinY = playerData.playerMinY;
+            var playerMinY = playerData.playerMinY + this.player.anchorOffsetY;
             var playerMinX = playerData.playerMinX;
             var playerMaxX = playerData.playerMaxX;
             var isTouch = false;
@@ -463,3 +476,4 @@ var GamePage = (function (_super) {
     return GamePage;
 }(BasePage));
 __reflect(GamePage.prototype, "GamePage");
+//# sourceMappingURL=GamePage.js.map

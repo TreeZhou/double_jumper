@@ -41,3 +41,4 @@ var GameOverPage = (function (_super) {
     return GameOverPage;
 }(BasePage));
 __reflect(GameOverPage.prototype, "GameOverPage");
+//# sourceMappingURL=GameOverPage.js.map

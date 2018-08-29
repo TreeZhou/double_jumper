@@ -72,3 +72,4 @@ var GameFirstPage = (function (_super) {
     return GameFirstPage;
 }(BasePage));
 __reflect(GameFirstPage.prototype, "GameFirstPage");
+//# sourceMappingURL=GameFirstPage.js.map

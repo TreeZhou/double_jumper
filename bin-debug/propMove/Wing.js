@@ -28,3 +28,4 @@ var Wing = (function (_super) {
     return Wing;
 }(BaseProps));
 __reflect(Wing.prototype, "Wing");
+//# sourceMappingURL=Wing.js.map

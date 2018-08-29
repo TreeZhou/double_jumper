@@ -4,7 +4,8 @@ class GamePage extends BasePage{
 	}
 	private doodleBox: eui.Group;
 	private stickList: eui.Group;
-	private longBg: eui.Image;
+	private bgBox:eui.Group;
+	private longBg: LongBgClass;
 	private player: DouDing;  // 豆丁
 	private allBarrier:AllGameBarrier;  // 全部的障碍物的对象
 	private bulletMoveObj:BulletMove;
@@ -30,9 +31,18 @@ class GamePage extends BasePage{
 	 * 开始游戏
 	 */
 	public beginGame() {  // 开始游戏的入口
+		this.createLongBg();
 		this.setInitDataGame();  // 设置游戏的开始数据
 		this.beginAnimateEvent();  // 开始动画监听
 		this.listenClickStageEvent();  // 屏幕点击事件
+	}
+	/**
+	 * 创建背景
+	 */
+	private createLongBg(){
+		this.longBg = new LongBgClass();
+		this.bgBox.addChild(this.longBg);
+		// console.log(this.longBg);
 	}
 	/**
 	 * 创建豆丁和跳板
@@ -103,7 +113,7 @@ class GamePage extends BasePage{
 	 */
 	public setInitDataGame() {
 		this.endGame = false;
-		this.longBg.$y = 0;
+		// this.longBg.$y = 0;
 	}
 	/**
 	 * 开始监听动画
@@ -155,6 +165,9 @@ class GamePage extends BasePage{
 			if(!item.IS_OVER) {
 				item.$y = item.$y + speed;   
 			}	
+		}
+		if(!this.endGame) {
+			this.longBg.run(speed);
 		}
 		this.allBarrier.lastBarrierY = this.allBarrier.lastBarrierY + speed;
 	}
@@ -213,7 +226,8 @@ class GamePage extends BasePage{
 		if (this.player.$y> this.stage.$stageHeight+this.player.height*1.5) {
 			this.gameOver();
 		} else {
-			this.longBg.$y = this.longBg.$y - 8;
+			// this.longBg.$y = this.longBg.$y - 8;
+			this.longBg.runDown(25);
 		}
 	}
 	/**
@@ -235,7 +249,7 @@ class GamePage extends BasePage{
 		Main.instance.addChild(Main.gameOver);
 		Main.gameOver.setScoreText(this.setScoreText());
 		this.visible = false;
-		this.longBg.$y = 0;
+		// this.longBg.$y = 0;
 		this.parent.removeChild(this);
 	}
 	/**
@@ -305,7 +319,7 @@ class GamePage extends BasePage{
 		if(barrierList.length) {
 			let playerData = this.player.getDoudingPosition();
 			let playerMaxY = playerData.playerMaxY;
-			let playerMinY = playerData.playerMinY;
+			let playerMinY = playerData.playerMinY+this.player.anchorOffsetY;
 			let playerMinX = playerData.playerMinX;
 			let playerMaxX = playerData.playerMaxX;
 			let isTouch = false;

@@ -48,6 +48,19 @@ var BaseSkin = (function (_super) {
         var skinID = this.getSkinID(skinObjName);
         this.changeSkinTexture(skinID);
     };
+    BaseSkin.prototype.getSkinID2 = function (skinObjName, sideName) {
+        var skinID = this.skinList[this.skinType][skinObjName][sideName];
+        return skinID;
+    };
+    BaseSkin.prototype.createSkinImg2 = function (skinObjName, sideName) {
+        var skinID = this.getSkinID2(skinObjName, sideName);
+        this.setSkinSource(skinID);
+    };
+    BaseSkin.prototype.changeBaseImg2 = function (skinObjName, sideName) {
+        var skinID = this.getSkinID2(skinObjName, sideName);
+        this.changeSkinTexture(skinID);
+    };
     return BaseSkin;
 }(eui.Component));
 __reflect(BaseSkin.prototype, "BaseSkin", ["eui.UIComponent", "egret.DisplayObject"]);
+//# sourceMappingURL=BaseSkin.js.map

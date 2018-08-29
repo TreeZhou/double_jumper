@@ -48,20 +48,20 @@ class DoudingSkin extends BaseSkin {
             }
         }
     }
-    public getSkinID2(skinObjName,sideName){
-        let skinID = this.skinList[this.skinType][skinObjName][sideName];
-        return skinID;
-    }
+    // public getSkinID2(skinObjName,sideName){
+    //     let skinID = this.skinList[this.skinType][skinObjName][sideName];
+    //     return skinID;
+    // }
 
 
-    public createSkinImg2(skinObjName,sideName){
-        let skinID = this.getSkinID2(skinObjName,sideName);
-        this.setSkinSource(skinID);
-    }
-    public changeBaseImg2(skinObjName,sideName){
-        let skinID = this.getSkinID2(skinObjName,sideName);
-        this.changeSkinTexture(skinID);
-    }
+    // public createSkinImg2(skinObjName,sideName){
+    //     let skinID = this.getSkinID2(skinObjName,sideName);
+    //     this.setSkinSource(skinID);
+    // }
+    // public changeBaseImg2(skinObjName,sideName){
+    //     let skinID = this.getSkinID2(skinObjName,sideName);
+    //     this.changeSkinTexture(skinID);
+    // }
 
   
 }

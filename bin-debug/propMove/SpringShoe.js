@@ -27,3 +27,4 @@ var SpringShoe = (function (_super) {
     return SpringShoe;
 }(BaseProps));
 __reflect(SpringShoe.prototype, "SpringShoe");
+//# sourceMappingURL=SpringShoe.js.map

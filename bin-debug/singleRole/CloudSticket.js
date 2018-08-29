@@ -29,3 +29,4 @@ var CloudSticket = (function (_super) {
     return CloudSticket;
 }(Stickets));
 __reflect(CloudSticket.prototype, "CloudSticket");
+//# sourceMappingURL=CloudSticket.js.map

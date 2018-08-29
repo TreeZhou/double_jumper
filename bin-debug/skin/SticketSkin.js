@@ -26,3 +26,4 @@ var SticketSkin = (function (_super) {
     return SticketSkin;
 }(BaseSkin));
 __reflect(SticketSkin.prototype, "SticketSkin");
+//# sourceMappingURL=SticketSkin.js.map

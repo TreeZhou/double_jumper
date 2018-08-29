@@ -39,3 +39,4 @@ var NormalSticket = (function (_super) {
     return NormalSticket;
 }(Stickets));
 __reflect(NormalSticket.prototype, "NormalSticket");
+//# sourceMappingURL=NormalSticket.js.map

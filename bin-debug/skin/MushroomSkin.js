@@ -25,3 +25,4 @@ var MushroomSkin = (function (_super) {
     return MushroomSkin;
 }(BaseSkin));
 __reflect(MushroomSkin.prototype, "MushroomSkin");
+//# sourceMappingURL=MushroomSkin.js.map

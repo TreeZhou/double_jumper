@@ -60,18 +60,7 @@ var DoudingSkin = (function (_super) {
         _this.createSkinImg2(skinObjName, sideName);
         return _this;
     }
-    DoudingSkin.prototype.getSkinID2 = function (skinObjName, sideName) {
-        var skinID = this.skinList[this.skinType][skinObjName][sideName];
-        return skinID;
-    };
-    DoudingSkin.prototype.createSkinImg2 = function (skinObjName, sideName) {
-        var skinID = this.getSkinID2(skinObjName, sideName);
-        this.setSkinSource(skinID);
-    };
-    DoudingSkin.prototype.changeBaseImg2 = function (skinObjName, sideName) {
-        var skinID = this.getSkinID2(skinObjName, sideName);
-        this.changeSkinTexture(skinID);
-    };
     return DoudingSkin;
 }(BaseSkin));
 __reflect(DoudingSkin.prototype, "DoudingSkin");
+//# sourceMappingURL=DoudingSkin.js.map

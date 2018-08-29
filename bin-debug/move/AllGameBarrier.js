@@ -100,3 +100,4 @@ var AllGameBarrier = (function (_super) {
     return AllGameBarrier;
 }(eui.Component));
 __reflect(AllGameBarrier.prototype, "AllGameBarrier");
+//# sourceMappingURL=AllGameBarrier.js.map

@@ -23,3 +23,4 @@ var ProtectPlayerSkin = (function (_super) {
     return ProtectPlayerSkin;
 }(BaseSkin));
 __reflect(ProtectPlayerSkin.prototype, "ProtectPlayerSkin");
+//# sourceMappingURL=ProtectPlayerSkin.js.map

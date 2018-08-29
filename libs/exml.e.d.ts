@@ -1,3 +1,9 @@
+declare class GameFirstPageSkin extends eui.Skin{
+}
+declare class GameOverPageSkin extends eui.Skin{
+}
+declare class GamePageSkin extends eui.Skin{
+}
 declare module skins{
 	class ButtonSkin extends eui.Skin{
 	}
@@ -49,10 +55,4 @@ declare module skins{
 declare module skins{
 	class VSliderSkin extends eui.Skin{
 	}
-}
-declare class GameFirstPageSkin extends eui.Skin{
-}
-declare class GameOverPageSkin extends eui.Skin{
-}
-declare class GamePageSkin extends eui.Skin{
 }

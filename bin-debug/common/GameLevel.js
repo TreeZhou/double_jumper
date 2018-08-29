@@ -14,6 +14,17 @@ var GameLevel = (function (_super) {
         return _super !== null && _super.apply(this, arguments) || this;
     }
     /**
+     * 初始化的随机跳板
+     */
+    GameLevel.prototype.normalInitSticketLevel = function (obj) {
+        var objNum = 10;
+        var list = this.getCreateClassList(['normalSticket'], objNum, obj.maxDistance, obj.minDistance);
+        var waterList = this.getCreateClassList(['normalSticket', 'waterSticket'], objNum / 2, obj.maxDistance, obj.minDistance);
+        var concatList = list.concat(waterList);
+        var pointList = this.randomPointXY(concatList, obj.lastY, obj.stageW);
+        return pointList;
+    };
+    /**
      * 常规随机跳板
      */
     GameLevel.prototype.normalSticketLevel = function (obj) {
@@ -172,3 +183,4 @@ var GameLevel = (function (_super) {
     return GameLevel;
 }(CalculatePonitXY));
 __reflect(GameLevel.prototype, "GameLevel");
+//# sourceMappingURL=GameLevel.js.map

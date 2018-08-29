@@ -65,3 +65,4 @@ var BaseProps = (function (_super) {
     return BaseProps;
 }(BasePage));
 __reflect(BaseProps.prototype, "BaseProps");
+//# sourceMappingURL=BasePoprs.js.map

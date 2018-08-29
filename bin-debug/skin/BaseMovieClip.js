@@ -35,3 +35,4 @@ var BaseMovieClip = (function (_super) {
     return BaseMovieClip;
 }(eui.Component));
 __reflect(BaseMovieClip.prototype, "BaseMovieClip");
+//# sourceMappingURL=BaseMovieClip.js.map

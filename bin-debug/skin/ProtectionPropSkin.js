@@ -23,3 +23,4 @@ var ProtectionPropSkin = (function (_super) {
     return ProtectionPropSkin;
 }(BaseSkin));
 __reflect(ProtectionPropSkin.prototype, "ProtectionPropSkin");
+//# sourceMappingURL=ProtectionPropSkin.js.map

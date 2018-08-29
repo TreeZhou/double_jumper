@@ -23,3 +23,4 @@ var SpringShoeSkin = (function (_super) {
     return SpringShoeSkin;
 }(BaseSkin));
 __reflect(SpringShoeSkin.prototype, "SpringShoeSkin");
+//# sourceMappingURL=SpringShoesSkin.js.map

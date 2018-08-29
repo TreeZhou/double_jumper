@@ -81,10 +81,9 @@ class CalculatePonitXY {  // 设计好关卡的点
     }
     public checkIsHasChildHeight(item){
         let height = 0;
-        // console.log('高度1',item);
+
         if(item.$children[1]) {
             height = item.$children[1].height;
-            // console.log('高度2',height);
         }
 
         return height;
@@ -193,7 +192,6 @@ class CalculatePonitXY {  // 设计好关卡的点
                 item.roleObj.x = this.randomIsLeftRightX(stageW,item.roleObj.width,isLeft);
                 item.roleObj.y = preY - item.roleObj.height - this.setRandomDistance(item.maxDistance,item.minDistance);
                 preY = item.roleObj.y-this.checkIsHasChildHeight(item.roleObj);
-                // console.log(item.roleObj.height );
                 isLeft = !isLeft;
             }
         }
@@ -207,6 +205,7 @@ class CalculatePonitXY {  // 设计好关卡的点
         let listLength = pointList.length;
         let preY = lastY;
         let item = null;
+        let roleObj = null;
         let random = Math.random();
         let isLeft = random>0.5?false:true;
         let leftDistance=0;
@@ -214,43 +213,30 @@ class CalculatePonitXY {  // 设计好关卡的点
         if(listLength) {
             for(let i=0;i<listLength;i++) {
                 item = pointList[i];
+                roleObj = item.roleObj;
                 if(i<4) {
-                    item.roleObj.x = this.randomIsLeftRightX(stageW,item.roleObj.width,isLeft);
-                    item.roleObj.y = preY - item.roleObj.height - this.setRandomDistance(item.maxDistance,item.minDistance);
+                    roleObj.x = this.randomIsLeftRightX(stageW,roleObj.width,isLeft);
+                    roleObj.y = preY - roleObj.height - this.setRandomDistance(item.maxDistance,item.minDistance);
                     isLeft = !isLeft;
-                    preY = item.roleObj.y-this.checkIsHasChildHeight(item.roleObj);
+                    preY = roleObj.y-this.checkIsHasChildHeight(roleObj);
                 }else if(i>=4) {
                     if(i===4) {
-                        item.roleObj.x = this.randomObjX(stageW,item.roleObj.width);
-                        item.roleObj.y = preY - item.roleObj.height - this.setRandomDistance(item.maxDistance,item.minDistance);
-                        leftDistance = item.roleObj.x;
-                        rightDistance = stageW - item.roleObj.x-item.roleObj.width;
+                        roleObj.x = this.randomObjX(stageW,roleObj.width);
+                        roleObj.y = preY - roleObj.height - this.setRandomDistance(item.maxDistance,item.minDistance);
+                        leftDistance = roleObj.x;
+                        rightDistance = stageW - roleObj.x-roleObj.width;
                     }else {
                         if(leftDistance>rightDistance) {
-                            item.roleObj.x = this.randomObjX(leftDistance,item.roleObj.width);
-                            item.roleObj.y = preY - item.roleObj.height - this.setRandomDistance(item.maxDistance,item.minDistance);
-                            preY = item.roleObj.y-this.checkIsHasChildHeight(item.roleObj);
+                            roleObj.x = this.randomObjX(leftDistance,roleObj.width);
+                            roleObj.y = preY - roleObj.height - this.setRandomDistance(item.maxDistance,item.minDistance);
+                            preY = roleObj.y-this.checkIsHasChildHeight(roleObj);
                         }else {
-                            item.roleObj.x = this.randomMinX (rightDistance,pointList[4].roleObj.x+pointList[4].roleObj.width,item.roleObj.width);
-                            item.roleObj.y = preY - item.roleObj.height - this.setRandomDistance(item.maxDistance,item.minDistance);
-                            preY = item.roleObj.y-this.checkIsHasChildHeight(item.roleObj);
+                            roleObj.x = this.randomMinX (rightDistance,pointList[4].roleObj.x+pointList[4].roleObj.width,roleObj.width);
+                            roleObj.y = preY - roleObj.height - this.setRandomDistance(item.maxDistance,item.minDistance);
+                            preY = roleObj.y-this.checkIsHasChildHeight(roleObj);
                         }
                     }
-                }
-                // if(i>3) {
-                //     item.roleObj.x = this.randomIsLeftRightX(stageW,pointList[4].roleObj.x +pointList[4].roleObj.width,item.roleObj.width,isLeft);
-                // }else {
-                //     item.roleObj.x = this.randomIsLeftRightX(stageW,stageW/2,item.roleObj.width,isLeft);
-                // }
-             
-                // item.roleObj.y = preY - item.roleObj.height - this.setRandomDistance(item.maxDistance,item.minDistance);
-                // if(i!=4) {
-                //     preY = item.roleObj.y-this.checkIsHasChildHeight(item.roleObj);
-                // }
-                // if(i<=4||item.roleObj.y<pointList[4].roleObj.y) {
-                //     isLeft = !isLeft;
-                // }
-         
+                } 
             }
         }
         return pointList;

@@ -25,3 +25,4 @@ var Bullet = (function (_super) {
     return Bullet;
 }(BaseProps));
 __reflect(Bullet.prototype, "Bullet");
+//# sourceMappingURL=Bullet.js.map
