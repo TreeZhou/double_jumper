@@ -18,8 +18,8 @@ var GameLevel = (function (_super) {
      */
     GameLevel.prototype.normalInitSticketLevel = function (obj) {
         var objNum = 10;
-        var list = this.getCreateClassList(['normalSticket'], objNum, obj.maxDistance, obj.minDistance);
-        var waterList = this.getCreateClassList(['normalSticket', 'waterSticket'], objNum / 2, obj.maxDistance, obj.minDistance);
+        var list = this.getCreateClassList(['verticalSticket'], objNum, obj.maxDistance, obj.minDistance);
+        var waterList = this.getCreateClassList(['verticalSticket', 'verticalSticket'], objNum / 2, obj.maxDistance, obj.minDistance);
         var concatList = list.concat(waterList);
         var pointList = this.randomPointXY(concatList, obj.lastY, obj.stageW);
         return pointList;

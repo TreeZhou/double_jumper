@@ -7,12 +7,12 @@ class BulletMove extends eui.Component {
         super.createChildren();
         this.setInitData();
     }
-    public gameLevel:GameLevel;
+    public objectPool:ObjectPool;
     public speedY:number=20;  // 子弹的速度
     private bulletAngle:number=90;
 
     private setInitData(){
-        this.gameLevel = new GameLevel();
+        this.objectPool = new ObjectPool();
     }
     /**
      * 创建子弹
@@ -20,11 +20,10 @@ class BulletMove extends eui.Component {
     public createBullet(playerItem){
         let bullet:Bullet;
         let $childrenOne = playerItem.$children[1];
-        bullet = this.gameLevel.createSkinObj('bulletProp');
+        bullet = this.objectPool.createSkinObj('bulletProp');
         this.addChild(bullet);
         bullet.$x = playerItem.$x;
         bullet.$y = playerItem.$y-$childrenOne.$y/2;
-        // console.log('豆丁',playerItem);
         bullet.rotation = this.bulletAngle;
     }
     /**
@@ -54,7 +53,7 @@ class BulletMove extends eui.Component {
                 let item = list[i];
                 if(item.$y<0) {
                     obj.removeChild(item);
-                    this.gameLevel.recycleObj(item,item.TYPE_NAME);
+                    this.objectPool.recycleObj(item,item.TYPE_NAME);
                 } 
             }
         }
@@ -87,7 +86,6 @@ class BulletMove extends eui.Component {
      * 点击屏幕改变角度
      */
     public changeRotation(event){
-        // console.log('点击事件',event, event.$stageX);
         let stageX = event.$stageX;
         let stageY = event.$stageY;
         let sourceX = this.stage.$stageWidth/2;

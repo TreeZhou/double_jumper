@@ -21,7 +21,7 @@ var Stickets = (function (_super) {
         _this.nowSpeed = 2; //左右的速度
         _this.verAddSpeed = 3; // 垂直恒定加速度
         _this.verNowSpeed = 3; // 垂直速度
-        _this.verDistance = 50; // 垂直的位移
+        _this.verDistance = 150; // 垂直的位移
         _this.JUMP_DISTANCE = 80;
         return _this;
     }
@@ -68,17 +68,18 @@ var Stickets = (function (_super) {
      * 垂直移动
      */
     Stickets.prototype.verticalMove = function () {
+        var item = this.$children[0];
         if (this.MOVE_STATUS === this.MOVE_VERTICAL) {
             if (!this.initY && this.initY !== 0) {
-                this.initY = this.y;
+                this.initY = item.y;
             }
-            if ((this.y + this.height) >= (this.initY + this.verDistance)) {
+            if ((item.y + item.height) >= (this.initY + this.verDistance)) {
                 this.verNowSpeed = -this.verAddSpeed;
             }
-            else if (this.y <= (this.initY - this.verDistance)) {
+            else if (item.y <= (this.initY - this.verDistance)) {
                 this.verNowSpeed = this.verAddSpeed;
             }
-            this.y = this.y + this.verNowSpeed;
+            item.y = item.y + this.verNowSpeed;
         }
     };
     /**

@@ -3,58 +3,8 @@ var __reflect = (this && this.__reflect) || function (p, c, t) {
 };
 var CalculatePonitXY = (function () {
     function CalculatePonitXY() {
-        this.allPropsClass = {
-            woodSticket: WoodSticket,
-            waterSticket: WaterSticket,
-            normalSticket: NormalSticket,
-            leafSticket: LeafSticket,
-            cloudSticket: CloudSticket,
-            monsterProp: Monster,
-            mushroomProp: Mushroom,
-            rocketProp: Rocket,
-            spiderWebProp: SpiderWeb,
-            springProp: Spring,
-            springShoeProp: SpringShoe,
-            wingProp: Wing,
-            protectionProp: ProtectionProp,
-            bulletProp: Bullet
-        };
-        this.allPropsPool = {
-            woodSticket: [],
-            waterSticket: [],
-            normalSticket: [],
-            leafSticket: [],
-            cloudSticket: [],
-            monsterProp: [],
-            mushroomProp: [],
-            rocketProp: [],
-            spiderWebProp: [],
-            springProp: [],
-            springShoeProp: [],
-            wingProp: [],
-            protectionProp: [],
-            bulletProp: []
-        };
+        this.objectPool = new ObjectPool();
     }
-    CalculatePonitXY.prototype.createSkinObj = function (recycleName, fatherObj) {
-        var item = null;
-        var propsList = this.allPropsPool[recycleName];
-        var objClass = this.allPropsClass[recycleName];
-        if (this.allPropsPool[recycleName].length) {
-            item = this.allPropsPool[recycleName][0];
-            this.allPropsPool[recycleName].shift();
-            item.resertData();
-        }
-        else {
-            if (fatherObj) {
-                item = new objClass(fatherObj);
-            }
-            else {
-                item = new objClass();
-            }
-        }
-        return item;
-    };
     CalculatePonitXY.prototype.randomObjX = function (stageWidth, objWidth) {
         var randomX = 0;
         randomX = Math.random() * (stageWidth - objWidth);
@@ -94,7 +44,7 @@ var CalculatePonitXY = (function () {
         var item = null;
         for (var i = 0; i < createNum; i++) {
             for (var j = 0; j < recycleNameList.length; j++) {
-                item = this.createSkinObj(recycleNameList[j]);
+                item = this.objectPool.createSkinObj(recycleNameList[j]);
                 list.push({
                     roleObj: item,
                     maxDistance: maxDiastance,
@@ -110,7 +60,7 @@ var CalculatePonitXY = (function () {
     CalculatePonitXY.prototype.createMonster = function (recycleName, monsterType, maxDiastance, minDistance) {
         var list = [];
         var item = null;
-        item = this.createSkinObj(recycleName, monsterType);
+        item = this.objectPool.createSkinObj(recycleName, monsterType);
         list.push({
             roleObj: item,
             maxDistance: maxDiastance,
@@ -128,8 +78,8 @@ var CalculatePonitXY = (function () {
         var list = [];
         if (listLength) {
             for (var i = 0; i < createNum; i++) {
-                item = this.createSkinObj(recycleNameList[0]);
-                propItem = this.createSkinObj(recycleNameList[1], item);
+                item = this.objectPool.createSkinObj(recycleNameList[0]);
+                propItem = this.objectPool.createSkinObj(recycleNameList[1], item);
                 item.addChild(propItem);
                 list.push({
                     roleObj: item,
@@ -143,9 +93,9 @@ var CalculatePonitXY = (function () {
     /**
      * 存入回收的数据
      */
-    CalculatePonitXY.prototype.recycleObj = function (obj, typeName) {
-        this.allPropsPool[typeName].push(obj);
-    };
+    // public recycleObj(obj,typeName){
+    //     this.allPropsPool[typeName].push(obj);
+    // }
     /**
      *设计关卡点的XY
      */

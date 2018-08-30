@@ -260,7 +260,7 @@ var GamePage = (function (_super) {
      * 检测是否撞击了豆丁
      */
     GamePage.prototype.checkIsHitDoodle = function (list, callback, propCallback) {
-        var item, itemMinX, itemMaxX, itemMaxY, itemMinY;
+        var item, itemMinX, itemMaxX, itemMaxY, itemMinY, childrenOne;
         var listLen = list.length;
         var playerData = this.player.getDoudingPosition();
         var playerMaxY = playerData.playerMaxY;
@@ -277,10 +277,11 @@ var GamePage = (function (_super) {
             if (isHitPop) {
                 break;
             }
+            // childrenOne = item.$children[0]; +childrenOne.$y
             itemMaxX = item.$x + item.width;
             itemMinX = item.$x;
             itemMinY = item.$y;
-            itemMaxY = item.$y + item.height;
+            itemMaxY = itemMinY + item.height;
             if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerMaxY <= itemMaxY && playerMaxY >= itemMinY && item.visible) {
                 callback(item);
                 break;

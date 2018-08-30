@@ -21,7 +21,7 @@ var BulletMove = (function (_super) {
         this.setInitData();
     };
     BulletMove.prototype.setInitData = function () {
-        this.gameLevel = new GameLevel();
+        this.objectPool = new ObjectPool();
     };
     /**
      * 创建子弹
@@ -29,11 +29,10 @@ var BulletMove = (function (_super) {
     BulletMove.prototype.createBullet = function (playerItem) {
         var bullet;
         var $childrenOne = playerItem.$children[1];
-        bullet = this.gameLevel.createSkinObj('bulletProp');
+        bullet = this.objectPool.createSkinObj('bulletProp');
         this.addChild(bullet);
         bullet.$x = playerItem.$x;
         bullet.$y = playerItem.$y - $childrenOne.$y / 2;
-        // console.log('豆丁',playerItem);
         bullet.rotation = this.bulletAngle;
     };
     /**
@@ -62,7 +61,7 @@ var BulletMove = (function (_super) {
                 var item_1 = list[i];
                 if (item_1.$y < 0) {
                     obj.removeChild(item_1);
-                    this.gameLevel.recycleObj(item_1, item_1.TYPE_NAME);
+                    this.objectPool.recycleObj(item_1, item_1.TYPE_NAME);
                 }
             }
         }
@@ -95,7 +94,6 @@ var BulletMove = (function (_super) {
      * 点击屏幕改变角度
      */
     BulletMove.prototype.changeRotation = function (event) {
-        // console.log('点击事件',event, event.$stageX);
         var stageX = event.$stageX;
         var stageY = event.$stageY;
         var sourceX = this.stage.$stageWidth / 2;

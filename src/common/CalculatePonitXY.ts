@@ -1,59 +1,9 @@
 class CalculatePonitXY {  // 设计好关卡的点
 
+    public objectPool:ObjectPool;
     constructor (){
+        this.objectPool = new ObjectPool();
     }
-    public allPropsClass:Object = {
-			woodSticket: WoodSticket,
-			waterSticket: WaterSticket,
-			normalSticket:NormalSticket,
-            leafSticket:LeafSticket,
-            cloudSticket:CloudSticket,
-            monsterProp:Monster,
-            mushroomProp:Mushroom,
-            rocketProp:Rocket,
-            spiderWebProp:SpiderWeb,
-            springProp:Spring,
-            springShoeProp:SpringShoe,
-            wingProp:Wing,
-            protectionProp:ProtectionProp,
-            bulletProp:Bullet
-	}
-    public allPropsPool:Object = {
-			woodSticket: [],
-			waterSticket: [],
-			normalSticket:[],
-            leafSticket:[],
-            cloudSticket:[],
-            monsterProp:[],
-            mushroomProp:[],
-            rocketProp:[],
-            spiderWebProp:[],
-            springProp:[],
-            springShoeProp:[],
-            wingProp:[],
-            protectionProp:[],
-            bulletProp:[]
-	}
-
-    public createSkinObj(recycleName:string,fatherObj?:any){
-		let item = null;
-        let propsList = this.allPropsPool[recycleName];
-        let objClass = this.allPropsClass[recycleName];
-		if(this.allPropsPool[recycleName].length) {
-			item = this.allPropsPool[recycleName][0];
-			this.allPropsPool[recycleName].shift();
-            item.resertData();
-		}else {
-            if(fatherObj) {
-                item = new objClass(fatherObj);
-            }else {
-                item = new objClass();
-            }
-			
-		}
-
-		return item;
-	}
     private randomObjX(stageWidth:number,objWidth:number){
         let randomX = 0;
 
@@ -96,7 +46,7 @@ class CalculatePonitXY {  // 设计好关卡的点
         let item = null;
         for(let i=0; i<createNum;i++) {
             for(let j=0;j<recycleNameList.length;j++) {
-                item = this.createSkinObj(recycleNameList[j]);
+                item = this.objectPool.createSkinObj(recycleNameList[j]);
                 list.push({
                     roleObj:item,
                     maxDistance:maxDiastance,
@@ -113,7 +63,7 @@ class CalculatePonitXY {  // 设计好关卡的点
     public createMonster(recycleName:string,monsterType:string,maxDiastance:number,minDistance:number){
         let list = [];
         let item = null;
-        item = this.createSkinObj(recycleName,monsterType);
+        item = this.objectPool.createSkinObj(recycleName,monsterType);
         list.push({
                 roleObj:item,
                 maxDistance:maxDiastance,
@@ -131,8 +81,8 @@ class CalculatePonitXY {  // 设计好关卡的点
         let list = [];
         if(listLength) {
             for(let i=0; i<createNum;i++) {
-             item = this.createSkinObj(recycleNameList[0]);
-             propItem = this.createSkinObj(recycleNameList[1],item);
+             item = this.objectPool.createSkinObj(recycleNameList[0]);
+             propItem = this.objectPool.createSkinObj(recycleNameList[1],item);
              item.addChild(propItem);
             list.push({
                 roleObj:item,
@@ -146,9 +96,9 @@ class CalculatePonitXY {  // 设计好关卡的点
     /**
      * 存入回收的数据
      */
-    public recycleObj(obj,typeName){
-        this.allPropsPool[typeName].push(obj);
-    }
+    // public recycleObj(obj,typeName){
+    //     this.allPropsPool[typeName].push(obj);
+    // }
 
     /**
      *设计关卡点的XY
@@ -241,7 +191,68 @@ class CalculatePonitXY {  // 设计好关卡的点
         }
         return pointList;
     }
+
+    /**
+     * 设置mu
+     */
+
+
+    /**
+     * 测试增加关卡
+     */
  
+    //  public addNewCheckPoint(){
+    //      let pointJson = RES.getRes('oneSticket_json');
+    //      let maxW = pointJson.width;
+    //      let maxH = pointJson.height;
+    //      let maxHeight = pointJson.height_maxDistance;
+    //      let minHeight = pointJson.height_minDistance;
+    //      let widthDistance = pointJson.width_distance;
+    //      let list = [];
+    //      let startX = 0;
+    //      let startY = 600;
+    //      let sticket=null;
+    //      let childrenProp = null;
+    //      let sticketList = null;
+    //      let sticketHeight = null;
+    //      let sticketWidth = null;
+
+    //      for(let i=0;i<maxW;i++) {
+    //          for(let j=0;j<maxH;j++) {
+    //              if(pointJson.content[i][j] !=="N") {
+    //                  sticketList = pointJson.content[i][j].split(',');
+    //                  if(sticketList.length>1) {
+    //                     sticket = this.objectPool.createSkinObj(sticketList[0]);
+    //                     childrenProp = this.objectPool.createSkinObj(sticketList[1],sticket);
+    //                     sticket.addChild(childrenProp);
+    //                  }else {
+    //                     sticket = this.objectPool.createSkinObj(sticketList[0]);
+    //                  }
+    //                  startY=startY-sticket.height;
+    //                  sticket.$x = startX;
+    //                  sticket.$y = startY;
+    //                  sticketHeight = sticket.height;
+    //                  sticketWidth = sticket.width;
+    //                 //  console.log();
+    //                  console.log('xheY',startY,sticketHeight);
+    //                  list.push({
+    //                      roleObj:sticket
+    //                  });
+    //              }else {
+    //                  sticketHeight = 60;
+    //                  sticketWidth = 60;
+    //              }
+    //              startY = startY-minHeight;
+                
+    //          }
+    //             startY = 600;
+    //             startX = startX+sticketWidth+widthDistance;
+
+    //      }
+
+    //      return list;
+
+    //  }
 
 
 }

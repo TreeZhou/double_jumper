@@ -1,11 +1,11 @@
 {
 	"groups": [
 		{
-			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,gameEui_json,longBg_png,Federoffen_png,Federzu_png,beginBtn_png,diamond_png,rankBtn_png,shopBtn_png,firstPageBG_png,bean_face_normal_png,bean_left_normal_png,bean_right_normal_png,bean_face_normal_down2_png,bean_left_normal_down2_png,bean_right_normal_down2_png,stoneStick_png,leafStick_png,soilStick_png,waterDefaultMove_png,waterDefaultMove_json,woodDefaultMove_png,woodDefaultMove_json,rocket_stage_default_png,wing_stage_default_png,mushroom2_png,mushroom1_png,protectionCover_png,bean_rocket_default_png,bean_right_wing_default_png,bean_left_wing_default_png,bean_face_wing_default_png,protection_stage_default_png,normalSpringMove_json,normalSpringMove_png,cloud_default_png,spiderWeb_png,bean_face_spring_down_normal_png,bean_face_spring_up_normal_png,bean_left_spring_down_normal_png,bean_left_spring_up_normal_png,bean_right_spring_down_normal_png,bean_right_spring_up_normal_png,bigGreenMonster_png,smallPurpleMonster_png,springShoe_png,bullet2_png",
+			"keys": "checkbox_select_disabled_png,checkbox_select_down_png,checkbox_select_up_png,checkbox_unselect_png,selected_png,border_png,header_png,radiobutton_select_disabled_png,radiobutton_select_down_png,radiobutton_select_up_png,radiobutton_unselect_png,roundthumb_png,thumb_png,track_png,tracklight_png,handle_png,off_png,on_png,button_down_png,button_up_png,thumb_pb_png,track_pb_png,track_sb_png,bg_jpg,egret_icon_png,description_json,gameEui_json,longBg_png,Federoffen_png,Federzu_png,beginBtn_png,diamond_png,rankBtn_png,shopBtn_png,firstPageBG_png,bean_face_normal_png,bean_left_normal_png,bean_right_normal_png,bean_face_normal_down2_png,bean_left_normal_down2_png,bean_right_normal_down2_png,stoneStick_png,leafStick_png,soilStick_png,waterDefaultMove_png,waterDefaultMove_json,woodDefaultMove_png,woodDefaultMove_json,rocket_stage_default_png,wing_stage_default_png,mushroom2_png,mushroom1_png,protectionCover_png,bean_rocket_default_png,bean_right_wing_default_png,bean_left_wing_default_png,bean_face_wing_default_png,protection_stage_default_png,normalSpringMove_json,normalSpringMove_png,cloud_default_png,spiderWeb_png,bean_face_spring_down_normal_png,bean_face_spring_up_normal_png,bean_left_spring_down_normal_png,bean_left_spring_up_normal_png,bean_right_spring_down_normal_png,bean_right_spring_up_normal_png,bigGreenMonster_png,smallPurpleMonster_png,springShoe_png,bullet2_png,oneSticket_json",
 			"name": "preload"
 		},
 		{
-			"keys": "longBg_png,Federoffen_png,Federzu_png",
+			"keys": "longBg_png,Federoffen_png,Federzu_png,oneSticket_json",
 			"name": "gamePage"
 		},
 		{
@@ -444,6 +444,11 @@
 			"url": "assets/playerImg/magicWang.png",
 			"type": "image",
 			"name": "magicWang_png"
+		},
+		{
+			"url": "assets/checkPointJson/oneSticket.json",
+			"type": "json",
+			"name": "oneSticket_json"
 		}
 	]
 }

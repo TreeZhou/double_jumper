@@ -272,7 +272,7 @@ class GamePage extends BasePage{
 	 * 检测是否撞击了豆丁
 	 */
 	private checkIsHitDoodle(list, callback, propCallback) {
-		let item, itemMinX, itemMaxX, itemMaxY, itemMinY;
+		let item, itemMinX, itemMaxX, itemMaxY, itemMinY,childrenOne;
 		let listLen = list.length;
 		let playerData = this.player.getDoudingPosition();
 		let playerMaxY = playerData.playerMaxY;
@@ -290,10 +290,11 @@ class GamePage extends BasePage{
 			if(isHitPop) {
 				break;
 			}
+			// childrenOne = item.$children[0]; +childrenOne.$y
 			itemMaxX = item.$x + item.width;
 			itemMinX = item.$x;
 			itemMinY = item.$y;
-			itemMaxY = item.$y + item.height;
+			itemMaxY = itemMinY + item.height;
 			if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible) {
 				callback(item);
 				break;
