@@ -11,6 +11,11 @@ class VerticalSticket extends Stickets {
 	{
 		super.childrenCreated();
         this.setStickNormalMoveStatus(this.MOVE_VERTICAL);
+        this.setSkinPosition();
 	}
     public TYPE_NAME = 'verticalSticket';
+    public setSkinPosition(){
+        let positionY = Math.random()*this.verDistance;
+        this.mySticketSkin.$y = positionY;
+    }
 }

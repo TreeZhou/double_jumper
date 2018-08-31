@@ -31,7 +31,7 @@ var GamePage = (function (_super) {
     GamePage.prototype.beginGame = function () {
         this.createLongBg();
         this.setInitDataGame(); // 设置游戏的开始数据
-        this.beginAnimateEvent(); // 开始动画监听
+        // this.beginAnimateEvent();  // 开始动画监听
         this.listenClickStageEvent(); // 屏幕点击事件
     };
     /**
@@ -126,6 +126,9 @@ var GamePage = (function (_super) {
         if (this.player.isJumperTopStop) {
             this.mapObjectMove();
         }
+        if (this.player.isDown) {
+            this.checkIsHitDoodle(this.stickList.$children, this.checkDouDingHitType.bind(this), this.douDingHitProp.bind(this));
+        }
         if (this.endGame) {
             this.gotoMoveBg();
         }
@@ -137,9 +140,6 @@ var GamePage = (function (_super) {
             this.bulletMoveObj.removeBullet(this.bulletMoveObj);
             this.player.setIsNoHitMonster();
             this.checkIsHitOverBar(this.stickList.$children, this.afterHitBarrier.bind(this));
-        }
-        if (this.player.isDown) {
-            this.checkIsHitDoodle(this.stickList.$children, this.checkDouDingHitType.bind(this), this.douDingHitProp.bind(this));
         }
     };
     /**
@@ -277,10 +277,10 @@ var GamePage = (function (_super) {
             if (isHitPop) {
                 break;
             }
-            // childrenOne = item.$children[0]; +childrenOne.$y
+            childrenOne = item.$children[0];
             itemMaxX = item.$x + item.width;
             itemMinX = item.$x;
-            itemMinY = item.$y;
+            itemMinY = item.$y + childrenOne.$y;
             itemMaxY = itemMinY + item.height;
             if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerMaxY <= itemMaxY && playerMaxY >= itemMinY && item.visible) {
                 callback(item);

@@ -9,8 +9,8 @@ class GameLevel extends CalculatePonitXY{
         stageW:number
     }){
         let objNum = 10;
-        let list = this.getCreateClassList(['verticalSticket'],objNum,obj.maxDistance,obj.minDistance);
-        let waterList = this.getCreateClassList(['verticalSticket','verticalSticket'],objNum/2,obj.maxDistance,obj.minDistance);
+        let list = this.getCreateClassList(['normalSticket'],objNum,obj.maxDistance,obj.minDistance);
+        let waterList = this.getCreateClassList(['normalSticket','waterSticket'],objNum/2,obj.maxDistance,obj.minDistance);
         let concatList = list.concat(waterList);
         let pointList = this.randomPointXY(concatList,obj.lastY,obj.stageW);
         return pointList;
@@ -258,18 +258,18 @@ class GameLevel extends CalculatePonitXY{
     
 
     /**
-     * 测试关卡
+     * 上下移动踏板的设置
      */
 
-    // public testPonit(obj:{
-    //     maxDistance:number,
-    //     minDistance:number,
-    //     lastY:number,
-    //     stageW:number
-    // }){
-    //     let list  = this.addNewCheckPoint();
-    //     return list;
-    // }
+    public upDownSticketMove(obj:{
+        maxDistance:number,
+        minDistance:number,
+        lastY:number,
+        stageW:number
+    }){
+        let list  = this.upDownMoveTwo(obj.lastY,obj.stageW);
+        return list;
+    }
     
 
 

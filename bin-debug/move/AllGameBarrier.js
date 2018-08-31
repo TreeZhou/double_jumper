@@ -30,9 +30,9 @@ var AllGameBarrier = (function (_super) {
      */
     AllGameBarrier.prototype.initSticket = function (groupBox) {
         var pedalObj = null;
-        var list = this.gameLevel.normalInitSticketLevel({
-            maxDistance: 120,
-            minDistance: 120,
+        var list = this.gameLevel.upDownSticketMove({
+            maxDistance: 40,
+            minDistance: 30,
             lastY: this.stage.$stageHeight,
             stageW: this.stage.$stageWidth
         });

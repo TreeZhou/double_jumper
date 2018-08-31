@@ -91,11 +91,55 @@ var CalculatePonitXY = (function () {
         return list;
     };
     /**
-     * 存入回收的数据
-     */
-    // public recycleObj(obj,typeName){
-    //     this.allPropsPool[typeName].push(obj);
-    // }
+    * JSON设置好的关卡
+    */
+    CalculatePonitXY.prototype.jsonPointList = function (obj) {
+        var pointJson = RES.getRes(obj.jsonName);
+        var maxW = pointJson.width;
+        var maxH = pointJson.height;
+        var maxHeight = pointJson.height_maxDistance;
+        var minHeight = pointJson.height_minDistance;
+        var widthDistance = pointJson.width_distance;
+        var list = [];
+        var startX = 0;
+        var startY = obj.lastY;
+        var sticket = null;
+        var childrenProp = null;
+        var sticketList = null;
+        var sticketHeight = pointJson.sticketHeight;
+        var sticketWidth = pointJson.sticketWidth;
+        for (var i = 0; i < maxW; i++) {
+            for (var j = 0; j < maxH; j++) {
+                if (pointJson.content[i][j] !== "N") {
+                    sticketList = pointJson.content[i][j].split(',');
+                    if (sticketList.length > 1) {
+                        sticket = this.objectPool.createSkinObj(sticketList[0]);
+                        childrenProp = this.objectPool.createSkinObj(sticketList[1], sticket);
+                        sticket.addChild(childrenProp);
+                    }
+                    else {
+                        sticket = this.objectPool.createSkinObj(sticketList[0]);
+                    }
+                    startY = startY - sticket.height;
+                    sticket.$x = startX;
+                    sticket.$y = startY;
+                    sticketHeight = sticket.height;
+                    sticketWidth = sticket.width;
+                    list.push({
+                        roleObj: sticket
+                    });
+                }
+                else {
+                    sticketHeight = pointJson.sticketHeight;
+                    sticketWidth = pointJson.sticketWidth;
+                }
+                startY = startY - minHeight;
+            }
+            startY = obj.lastY;
+            startX = startX + sticketWidth + widthDistance;
+        }
+        return list;
+    };
     /**
      *设计关卡点的XY
      */
@@ -185,6 +229,16 @@ var CalculatePonitXY = (function () {
                 }
             }
         }
+        return pointList;
+    };
+    /**
+     * 上下移动的关卡点
+     */
+    CalculatePonitXY.prototype.upDownMoveTwo = function (lastY, stageW) {
+        var pointList = this.jsonPointList({
+            lastY: lastY,
+            jsonName: 'oneSticket_json',
+        });
         return pointList;
     };
     return CalculatePonitXY;

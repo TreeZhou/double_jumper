@@ -4,7 +4,7 @@ class ProbabilityClass {
             minHeight:0,
             maxHeight:400,
             levelName:[
-                'normalSticketLevel',
+                'upDownSticketMove',
                 'norHorSticketLevel',
                 'norWaterSticketLevel',
             ],

@@ -22,6 +22,11 @@ var VerticalSticket = (function (_super) {
     VerticalSticket.prototype.childrenCreated = function () {
         _super.prototype.childrenCreated.call(this);
         this.setStickNormalMoveStatus(this.MOVE_VERTICAL);
+        this.setSkinPosition();
+    };
+    VerticalSticket.prototype.setSkinPosition = function () {
+        var positionY = Math.random() * this.verDistance;
+        this.mySticketSkin.$y = positionY;
     };
     return VerticalSticket;
 }(Stickets));

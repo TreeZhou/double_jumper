@@ -93,12 +93,63 @@ class CalculatePonitXY {  // 设计好关卡的点
         }
         return list;
     }
-    /**
-     * 存入回收的数据
+     /**
+     * JSON设置好的关卡
      */
-    // public recycleObj(obj,typeName){
-    //     this.allPropsPool[typeName].push(obj);
-    // }
+ 
+     public jsonPointList(obj:{
+         lastY:number,
+         jsonName:string,
+     }){
+         let pointJson = RES.getRes(obj.jsonName);
+         let maxW = pointJson.width;
+         let maxH = pointJson.height;
+         let maxHeight = pointJson.height_maxDistance;
+         let minHeight = pointJson.height_minDistance;
+         let widthDistance = pointJson.width_distance;
+         let list = [];
+         let startX = 0;
+         let startY = obj.lastY;
+         let sticket=null;
+         let childrenProp = null;
+         let sticketList = null;
+         let sticketHeight = pointJson.sticketHeight;
+         let sticketWidth = pointJson.sticketWidth;
+
+         for(let i=0;i<maxW;i++) {
+             for(let j=0;j<maxH;j++) {
+                 if(pointJson.content[i][j] !=="N") {
+                     sticketList = pointJson.content[i][j].split(',');
+                     if(sticketList.length>1) {
+                        sticket = this.objectPool.createSkinObj(sticketList[0]);
+                        childrenProp = this.objectPool.createSkinObj(sticketList[1],sticket);
+                        sticket.addChild(childrenProp);
+                     }else {
+                        sticket = this.objectPool.createSkinObj(sticketList[0]);
+                     }
+                     startY=startY-sticket.height;
+                     sticket.$x = startX;
+                     sticket.$y = startY;
+                     sticketHeight = sticket.height;
+                     sticketWidth = sticket.width;
+                     list.push({
+                         roleObj:sticket
+                     });
+                 }else {
+                     sticketHeight=pointJson.sticketHeight;
+                     sticketWidth = pointJson.sticketWidth;
+                 }
+                 startY = startY-minHeight;
+                
+             }
+                startY = obj.lastY;
+                startX = startX+sticketWidth+widthDistance;
+
+         }
+
+         return list;
+
+     }
 
     /**
      *设计关卡点的XY
@@ -193,66 +244,18 @@ class CalculatePonitXY {  // 设计好关卡的点
     }
 
     /**
-     * 设置mu
+     * 上下移动的关卡点
      */
+    public upDownMoveTwo(lastY:number,stageW:number) {
+        let pointList = this.jsonPointList({
+            lastY:lastY,
+            jsonName:'oneSticket_json',
+        });
 
+        return pointList;
+    } 
 
-    /**
-     * 测试增加关卡
-     */
- 
-    //  public addNewCheckPoint(){
-    //      let pointJson = RES.getRes('oneSticket_json');
-    //      let maxW = pointJson.width;
-    //      let maxH = pointJson.height;
-    //      let maxHeight = pointJson.height_maxDistance;
-    //      let minHeight = pointJson.height_minDistance;
-    //      let widthDistance = pointJson.width_distance;
-    //      let list = [];
-    //      let startX = 0;
-    //      let startY = 600;
-    //      let sticket=null;
-    //      let childrenProp = null;
-    //      let sticketList = null;
-    //      let sticketHeight = null;
-    //      let sticketWidth = null;
-
-    //      for(let i=0;i<maxW;i++) {
-    //          for(let j=0;j<maxH;j++) {
-    //              if(pointJson.content[i][j] !=="N") {
-    //                  sticketList = pointJson.content[i][j].split(',');
-    //                  if(sticketList.length>1) {
-    //                     sticket = this.objectPool.createSkinObj(sticketList[0]);
-    //                     childrenProp = this.objectPool.createSkinObj(sticketList[1],sticket);
-    //                     sticket.addChild(childrenProp);
-    //                  }else {
-    //                     sticket = this.objectPool.createSkinObj(sticketList[0]);
-    //                  }
-    //                  startY=startY-sticket.height;
-    //                  sticket.$x = startX;
-    //                  sticket.$y = startY;
-    //                  sticketHeight = sticket.height;
-    //                  sticketWidth = sticket.width;
-    //                 //  console.log();
-    //                  console.log('xheY',startY,sticketHeight);
-    //                  list.push({
-    //                      roleObj:sticket
-    //                  });
-    //              }else {
-    //                  sticketHeight = 60;
-    //                  sticketWidth = 60;
-    //              }
-    //              startY = startY-minHeight;
-                
-    //          }
-    //             startY = 600;
-    //             startX = startX+sticketWidth+widthDistance;
-
-    //      }
-
-    //      return list;
-
-    //  }
+   
 
 
 }

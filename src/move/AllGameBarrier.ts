@@ -25,9 +25,9 @@ class AllGameBarrier extends eui.Component{
      */
     public initSticket(groupBox:eui.Group){
         let pedalObj = null;
-        let list = this.gameLevel.normalInitSticketLevel({
-            maxDistance:120,
-            minDistance:120,
+        let list = this.gameLevel.upDownSticketMove({
+            maxDistance:40,
+            minDistance:30,
             lastY:this.stage.$stageHeight,
             stageW:this.stage.$stageWidth
         });

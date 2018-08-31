@@ -33,7 +33,7 @@ class GamePage extends BasePage{
 	public beginGame() {  // 开始游戏的入口
 		this.createLongBg();
 		this.setInitDataGame();  // 设置游戏的开始数据
-		this.beginAnimateEvent();  // 开始动画监听
+		// this.beginAnimateEvent();  // 开始动画监听
 		this.listenClickStageEvent();  // 屏幕点击事件
 	}
 	/**
@@ -131,7 +131,9 @@ class GamePage extends BasePage{
 		if(this.player.isJumperTopStop){
 			this.mapObjectMove();
 		}
-
+		if (this.player.isDown) {
+			this.checkIsHitDoodle(this.stickList.$children, this.checkDouDingHitType.bind(this),this.douDingHitProp.bind(this));
+		}
 		if (this.endGame) {
 			this.gotoMoveBg();
 		} else {
@@ -143,9 +145,7 @@ class GamePage extends BasePage{
 			this.player.setIsNoHitMonster();
 			this.checkIsHitOverBar(this.stickList.$children,this.afterHitBarrier.bind(this));
 		}
-		if (this.player.isDown) {
-			this.checkIsHitDoodle(this.stickList.$children, this.checkDouDingHitType.bind(this),this.douDingHitProp.bind(this));
-		}
+
 
 
 
@@ -290,11 +290,12 @@ class GamePage extends BasePage{
 			if(isHitPop) {
 				break;
 			}
-			// childrenOne = item.$children[0]; +childrenOne.$y
+			childrenOne = item.$children[0]; 
 			itemMaxX = item.$x + item.width;
 			itemMinX = item.$x;
-			itemMinY = item.$y;
+			itemMinY = item.$y+childrenOne.$y;
 			itemMaxY = itemMinY + item.height;
+			
 			if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible) {
 				callback(item);
 				break;

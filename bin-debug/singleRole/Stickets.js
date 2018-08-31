@@ -19,8 +19,8 @@ var Stickets = (function (_super) {
         _this.MOVE_VERTICAL = 'vertical'; // 垂直移动
         _this.addSpeed = 2; //左右恒定的加速度 
         _this.nowSpeed = 2; //左右的速度
-        _this.verAddSpeed = 3; // 垂直恒定加速度
-        _this.verNowSpeed = 3; // 垂直速度
+        _this.verAddSpeed = 2; // 垂直恒定加速度
+        _this.verNowSpeed = 2; // 垂直速度
         _this.verDistance = 150; // 垂直的位移
         _this.JUMP_DISTANCE = 80;
         return _this;
@@ -70,16 +70,13 @@ var Stickets = (function (_super) {
     Stickets.prototype.verticalMove = function () {
         var item = this.$children[0];
         if (this.MOVE_STATUS === this.MOVE_VERTICAL) {
-            if (!this.initY && this.initY !== 0) {
-                this.initY = item.y;
-            }
-            if ((item.y + item.height) >= (this.initY + this.verDistance)) {
+            if (item.$y >= this.verDistance) {
                 this.verNowSpeed = -this.verAddSpeed;
             }
-            else if (item.y <= (this.initY - this.verDistance)) {
+            else if (item.$y <= 0) {
                 this.verNowSpeed = this.verAddSpeed;
             }
-            item.y = item.y + this.verNowSpeed;
+            item.$y = item.$y + this.verNowSpeed;
         }
     };
     /**
@@ -102,10 +99,10 @@ var Stickets = (function (_super) {
      * 生成无序列帧跳板皮肤
      */
     Stickets.prototype.createSticketSkin = function (skinName) {
-        var sticket = new SticketSkin(skinName);
-        this.addChild(sticket);
-        this.width = sticket.width;
-        this.height = sticket.height;
+        this.mySticketSkin = new SticketSkin(skinName);
+        this.addChild(this.mySticketSkin);
+        this.width = this.mySticketSkin.width;
+        this.height = this.mySticketSkin.height;
     };
     /**
       * 生成有序列帧的跳板水皮肤

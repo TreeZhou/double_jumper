@@ -23,13 +23,13 @@ class Stickets extends BasePage  {
     private addSpeed:number=2; //左右恒定的加速度 
 	private nowSpeed:number=2; //左右的速度
 
-    private verAddSpeed:number=3;  // 垂直恒定加速度
-    private verNowSpeed:number=3; // 垂直速度
+    private verAddSpeed:number=2;  // 垂直恒定加速度
+    private verNowSpeed:number=2; // 垂直速度
     public  verDistance:number=150; // 垂直的位移
-    private initY:number; // 垂直移动时的初始位置
     public JUMP_DISTANCE:number = 80;
 
     public myClipSkinObj:any;
+    public mySticketSkin:any;
 
 
     private setInitData(){
@@ -68,15 +68,13 @@ class Stickets extends BasePage  {
     public verticalMove(){ 
         let item = this.$children[0];
         if(this.MOVE_STATUS ===  this.MOVE_VERTICAL) {
-            if(!this.initY && this.initY!==0) {
-                this.initY = item.y;
-            }
-            if((item.y+item.height)>=(this.initY+this.verDistance)) {
+            if(item.$y>=this.verDistance) {
                 this.verNowSpeed = - this.verAddSpeed;
-            }else if(item.y<=(this.initY-this.verDistance)) {
+            }else if(item.$y<=0) {
                 this.verNowSpeed = this.verAddSpeed;
             }
-            item.y = item.y+this.verNowSpeed;
+            item.$y = item.$y+this.verNowSpeed;
+    
         }
     }
     /**
@@ -100,10 +98,10 @@ class Stickets extends BasePage  {
      * 生成无序列帧跳板皮肤
      */
      public createSticketSkin(skinName){
-        let sticket = new SticketSkin(skinName);
-        this.addChild(sticket);
-        this.width = sticket.width;
-        this.height = sticket.height;
+        this.mySticketSkin = new SticketSkin(skinName);
+        this.addChild(this.mySticketSkin);
+        this.width = this.mySticketSkin.width;
+        this.height = this.mySticketSkin.height;
      }
     /**
       * 生成有序列帧的跳板水皮肤
