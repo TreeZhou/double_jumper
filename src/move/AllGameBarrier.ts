@@ -25,7 +25,7 @@ class AllGameBarrier extends eui.Component{
      */
     public initSticket(groupBox:eui.Group){
         let pedalObj = null;
-        let list = this.gameLevel.upDownSticketMove({
+        let list = this.gameLevel.normalInitSticketLevel({
             maxDistance:40,
             minDistance:30,
             lastY:this.stage.$stageHeight,
@@ -84,11 +84,11 @@ class AllGameBarrier extends eui.Component{
         let list = allStickList
 		let len = list.length;
 		let item;
-        if(list.length) {
-            list = list.filter((item,index)=>{
-                return (item.$y+item.height)>=0;
-            });
-        }
+        // if(list.length) {
+        //     list = list.filter((item,index)=>{
+        //         return (item.$y+item.height)>=-100;
+        //     });
+        // }
 		for (let i = 0; i < list.length; i++) {
 			item = list[i];
             if(item.horzontalMove) {

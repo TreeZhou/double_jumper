@@ -33,7 +33,7 @@ class GamePage extends BasePage{
 	public beginGame() {  // 开始游戏的入口
 		this.createLongBg();
 		this.setInitDataGame();  // 设置游戏的开始数据
-		// this.beginAnimateEvent();  // 开始动画监听
+		this.beginAnimateEvent();  // 开始动画监听
 		this.listenClickStageEvent();  // 屏幕点击事件
 	}
 	/**
@@ -297,6 +297,7 @@ class GamePage extends BasePage{
 			itemMaxY = itemMinY + item.height;
 			
 			if (playerMaxX >= itemMinX && playerMinX <= itemMaxX&&playerMaxY<=itemMaxY  && playerMaxY>=itemMinY && item.visible) {
+				// debugger
 				callback(item);
 				break;
 
@@ -392,8 +393,8 @@ class GamePage extends BasePage{
 			}else {
 				// this.removeClickAndFrameListen();
 				item.sticketSelfSkill();
-				this.player.$y = item.$y-this.player.anchorOffsetY;
-				this.player.jumpStartY = item.$y;
+				// this.player.$y = item.$y-this.player.anchorOffsetY;
+				// this.player.jumpStartY = item.$y;
 				this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum*1.5);
 				this.player.changeDouDingSkin(false);
 		
@@ -429,8 +430,8 @@ class GamePage extends BasePage{
 	private checkDouDingHitType(item) {
 		
 		if(item.TYPE_NAME !== 'waterSticket') {
-			this.player.$y = item.$y-this.player.anchorOffsetY;
-			this.player.jumpStartY = item.$y;
+			// this.player.$y = item.$y-this.player.anchorOffsetY;
+			// this.player.jumpStartY = item.$y;
 			if(this.player.isWearSpringShoes) {
 				this.player.setStartJumpeSpeed(item.JUMP_DISTANCE*1.5,this.player.frameNum*1.5);
 			}else {
@@ -461,8 +462,8 @@ class GamePage extends BasePage{
 			this.player.setStartJumpeSpeed(item.JUMP_DISTANCE,this.player.frameNum*1.7);
 		}
 		this.swichChangeDoudingSkin(item.TYPE_NAME);
-		this.player.$y = item.$y+sticketItem.$y-this.player.anchorOffsetY;
-		this.player.jumpStartY = item.$y+sticketItem.$y;
+		// this.player.$y = item.$y+sticketItem.$y-this.player.anchorOffsetY;
+		// this.player.jumpStartY = item.$y+sticketItem.$y;
 		this.player.changeDouDingSkin(false);
 		item.sticketSelfSkill();
 	}

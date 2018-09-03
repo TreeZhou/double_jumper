@@ -21,7 +21,7 @@ var Stickets = (function (_super) {
         _this.nowSpeed = 2; //左右的速度
         _this.verAddSpeed = 2; // 垂直恒定加速度
         _this.verNowSpeed = 2; // 垂直速度
-        _this.verDistance = 150; // 垂直的位移
+        _this.verDistance = 600; // 垂直的位移
         _this.JUMP_DISTANCE = 80;
         return _this;
     }

@@ -151,7 +151,7 @@ var DouDing = (function (_super) {
     DouDing.prototype.setInitJumperData = function () {
         this.jumpMaxHeight = this.stage.$stageHeight * 0.6;
         this.jumpDistance = this.stage.$stageHeight * 0.4;
-        this.jumpStartY = this.stage.$stageHeight;
+        // this.jumpStartY = this.stage.$stageHeight;
         this.setStartJumpeSpeed(this.jumpDistance, this.frameNum);
         this.setDownAddSpeed(this.jumpDistance, this.frameNum);
     };
@@ -250,7 +250,7 @@ var DouDing = (function (_super) {
             setTimeout(function () {
                 _this.doudingSkin.changeBaseImg2(_this.JUMP_UP_STATUS, _this.SIDE_STATUS);
                 _this.setMagicWangUpPosition();
-            }, 100);
+            }, 200);
         }
     };
     /**

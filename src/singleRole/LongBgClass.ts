@@ -17,13 +17,16 @@ class LongBgClass extends eui.Component {
     // public bmp2:egret.Bitmap;
     public bmpSkin1:LongBgSkin;
     public bmpSkin2:LongBgSkin;
+    public bmpSkin3:LongBgSkin;
     public bgHeight:number;
 
     public createrLongSkin(){
         this.bmpSkin1 = new LongBgSkin('longBg_default');
         this.bmpSkin2 = new LongBgSkin('longBg_default');
+        this.bmpSkin3 = new LongBgSkin('longBg_default');
         this.addChild(this.bmpSkin1);
         this.addChild(this.bmpSkin2);
+        this.addChild(this.bmpSkin3);
     }
 
     /**
@@ -33,6 +36,7 @@ class LongBgClass extends eui.Component {
     public setLongBgSkin(skinName:string):void {
         this.bmpSkin1.changeBaseImg(skinName);
         this.bmpSkin2.changeBaseImg(skinName);
+        this.bmpSkin3.changeBaseImg(skinName);
         this.bgHeight = this.bmpSkin1.height;
     } 
     /**
@@ -41,19 +45,24 @@ class LongBgClass extends eui.Component {
     public setInitSkinPosition(){
         this.bmpSkin1.$y = 0;
         this.bmpSkin2.$y = -this.bgHeight;
+        this.bmpSkin3.$y = this.bgHeight;
     }
     /**
      * 序列帧移动
      */
     public run(_moveNum){
-        if(this.bmpSkin1.$y>this.bgHeight) {
-            this.bmpSkin1.$y = this.bmpSkin2.$y - this.bgHeight;
+        if(this.bmpSkin3.$y>this.bgHeight) {
+            this.bmpSkin3.$y = this.bmpSkin2.$y - this.bgHeight;
+        }
+        if(this.bmpSkin1.y >this.bgHeight) {
+            this.bmpSkin1.y = this.bmpSkin3.y - this.bgHeight;
         }
         if(this.bmpSkin2.y >this.bgHeight) {
             this.bmpSkin2.y = this.bmpSkin1.y - this.bgHeight;
         }
         this.bmpSkin1.y += _moveNum;
         this.bmpSkin2.y += _moveNum;
+        this.bmpSkin3.y += _moveNum;
     }
     /**
      * 游戏结束时的移动
@@ -63,9 +72,13 @@ class LongBgClass extends eui.Component {
             this.bmpSkin1.$y = this.bmpSkin2.$y+this.bgHeight;
         }
         if(this.bmpSkin2.y <-this.bgHeight) {
-            this.bmpSkin2.y = this.bmpSkin1.y+this.bgHeight;
+            this.bmpSkin2.y = this.bmpSkin3.y+this.bgHeight;
+        }
+        if(this.bmpSkin3.y <-this.bgHeight) {
+            this.bmpSkin3.y = this.bmpSkin1.y+this.bgHeight;
         }
         this.bmpSkin1.y -= _moveNum;
         this.bmpSkin2.y -= _moveNum;
+        this.bmpSkin3.y -= _moveNum;
     }
 }

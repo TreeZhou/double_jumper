@@ -65,7 +65,7 @@ var GameLevel = (function (_super) {
      */
     GameLevel.prototype.waterOneHitLeftRight = function (obj) {
         var objNum = 3;
-        var list = this.getCreateClassList(['waterSticket', 'cloudSticket', 'cloudSticket', 'waterSticket'], objNum, obj.maxDistance, obj.minDistance);
+        var list = this.getCreateClassList(['normalSticket', 'cloudSticket', 'cloudSticket', 'waterSticket'], objNum, obj.maxDistance, obj.minDistance);
         var pointList = this.leftAndRightPointXY(list, obj.lastY, obj.stageW);
         return pointList;
     };

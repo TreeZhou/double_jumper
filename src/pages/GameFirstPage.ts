@@ -63,7 +63,6 @@ class GameFirstPage extends BasePage {
 		// var image = new eui.Image();
         // image.source = "bean_face_normal_png";
 
-		// console.log(image.width,image.height,image);
 	
 	}
 

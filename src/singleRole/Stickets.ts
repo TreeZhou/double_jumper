@@ -23,9 +23,9 @@ class Stickets extends BasePage  {
     private addSpeed:number=2; //左右恒定的加速度 
 	private nowSpeed:number=2; //左右的速度
 
-    private verAddSpeed:number=2;  // 垂直恒定加速度
-    private verNowSpeed:number=2; // 垂直速度
-    public  verDistance:number=150; // 垂直的位移
+    public verAddSpeed:number=2;  // 垂直恒定加速度
+    public verNowSpeed:number=2; // 垂直速度
+    public verDistance:number=600; // 垂直的位移
     public JUMP_DISTANCE:number = 80;
 
     public myClipSkinObj:any;
@@ -62,6 +62,7 @@ class Stickets extends BasePage  {
             this.x = this.x+this.nowSpeed;
         }
     }
+
     /**
      * 垂直移动
      */

@@ -31,7 +31,7 @@ var GamePage = (function (_super) {
     GamePage.prototype.beginGame = function () {
         this.createLongBg();
         this.setInitDataGame(); // 设置游戏的开始数据
-        // this.beginAnimateEvent();  // 开始动画监听
+        this.beginAnimateEvent(); // 开始动画监听
         this.listenClickStageEvent(); // 屏幕点击事件
     };
     /**
@@ -283,6 +283,7 @@ var GamePage = (function (_super) {
             itemMinY = item.$y + childrenOne.$y;
             itemMaxY = itemMinY + item.height;
             if (playerMaxX >= itemMinX && playerMinX <= itemMaxX && playerMaxY <= itemMaxY && playerMaxY >= itemMinY && item.visible) {
+                // debugger
                 callback(item);
                 break;
             }
@@ -371,8 +372,8 @@ var GamePage = (function (_super) {
             else {
                 // this.removeClickAndFrameListen();
                 item.sticketSelfSkill();
-                this.player.$y = item.$y - this.player.anchorOffsetY;
-                this.player.jumpStartY = item.$y;
+                // this.player.$y = item.$y-this.player.anchorOffsetY;
+                // this.player.jumpStartY = item.$y;
                 this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum * 1.5);
                 this.player.changeDouDingSkin(false);
             }
@@ -408,8 +409,8 @@ var GamePage = (function (_super) {
      */
     GamePage.prototype.checkDouDingHitType = function (item) {
         if (item.TYPE_NAME !== 'waterSticket') {
-            this.player.$y = item.$y - this.player.anchorOffsetY;
-            this.player.jumpStartY = item.$y;
+            // this.player.$y = item.$y-this.player.anchorOffsetY;
+            // this.player.jumpStartY = item.$y;
             if (this.player.isWearSpringShoes) {
                 this.player.setStartJumpeSpeed(item.JUMP_DISTANCE * 1.5, this.player.frameNum * 1.5);
             }
@@ -445,8 +446,8 @@ var GamePage = (function (_super) {
             this.player.setStartJumpeSpeed(item.JUMP_DISTANCE, this.player.frameNum * 1.7);
         }
         this.swichChangeDoudingSkin(item.TYPE_NAME);
-        this.player.$y = item.$y + sticketItem.$y - this.player.anchorOffsetY;
-        this.player.jumpStartY = item.$y + sticketItem.$y;
+        // this.player.$y = item.$y+sticketItem.$y-this.player.anchorOffsetY;
+        // this.player.jumpStartY = item.$y+sticketItem.$y;
         this.player.changeDouDingSkin(false);
         item.sticketSelfSkill();
     };

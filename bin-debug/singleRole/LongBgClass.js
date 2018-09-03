@@ -26,8 +26,10 @@ var LongBgClass = (function (_super) {
     LongBgClass.prototype.createrLongSkin = function () {
         this.bmpSkin1 = new LongBgSkin('longBg_default');
         this.bmpSkin2 = new LongBgSkin('longBg_default');
+        this.bmpSkin3 = new LongBgSkin('longBg_default');
         this.addChild(this.bmpSkin1);
         this.addChild(this.bmpSkin2);
+        this.addChild(this.bmpSkin3);
     };
     /**
      * 改变皮肤
@@ -36,6 +38,7 @@ var LongBgClass = (function (_super) {
     LongBgClass.prototype.setLongBgSkin = function (skinName) {
         this.bmpSkin1.changeBaseImg(skinName);
         this.bmpSkin2.changeBaseImg(skinName);
+        this.bmpSkin3.changeBaseImg(skinName);
         this.bgHeight = this.bmpSkin1.height;
     };
     /**
@@ -44,19 +47,24 @@ var LongBgClass = (function (_super) {
     LongBgClass.prototype.setInitSkinPosition = function () {
         this.bmpSkin1.$y = 0;
         this.bmpSkin2.$y = -this.bgHeight;
+        this.bmpSkin3.$y = this.bgHeight;
     };
     /**
      * 序列帧移动
      */
     LongBgClass.prototype.run = function (_moveNum) {
-        if (this.bmpSkin1.$y > this.bgHeight) {
-            this.bmpSkin1.$y = this.bmpSkin2.$y - this.bgHeight;
+        if (this.bmpSkin3.$y > this.bgHeight) {
+            this.bmpSkin3.$y = this.bmpSkin2.$y - this.bgHeight;
+        }
+        if (this.bmpSkin1.y > this.bgHeight) {
+            this.bmpSkin1.y = this.bmpSkin3.y - this.bgHeight;
         }
         if (this.bmpSkin2.y > this.bgHeight) {
             this.bmpSkin2.y = this.bmpSkin1.y - this.bgHeight;
         }
         this.bmpSkin1.y += _moveNum;
         this.bmpSkin2.y += _moveNum;
+        this.bmpSkin3.y += _moveNum;
     };
     /**
      * 游戏结束时的移动
@@ -66,10 +74,14 @@ var LongBgClass = (function (_super) {
             this.bmpSkin1.$y = this.bmpSkin2.$y + this.bgHeight;
         }
         if (this.bmpSkin2.y < -this.bgHeight) {
-            this.bmpSkin2.y = this.bmpSkin1.y + this.bgHeight;
+            this.bmpSkin2.y = this.bmpSkin3.y + this.bgHeight;
+        }
+        if (this.bmpSkin3.y < -this.bgHeight) {
+            this.bmpSkin3.y = this.bmpSkin1.y + this.bgHeight;
         }
         this.bmpSkin1.y -= _moveNum;
         this.bmpSkin2.y -= _moveNum;
+        this.bmpSkin3.y -= _moveNum;
     };
     return LongBgClass;
 }(eui.Component));

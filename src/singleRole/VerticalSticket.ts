@@ -15,7 +15,16 @@ class VerticalSticket extends Stickets {
 	}
     public TYPE_NAME = 'verticalSticket';
     public setSkinPosition(){
-        let positionY = Math.random()*this.verDistance;
+        let randomY = Math.random();
+        let positionY;
+
+        this.verAddSpeed = Math.random()*this.verAddSpeed+this.verAddSpeed/2;
+        this.verNowSpeed =  this.verAddSpeed;
+        if(randomY>0.5) {
+            positionY = Math.random()*this.verDistance;
+        }else {
+            positionY = this.verDistance;
+        }
         this.mySticketSkin.$y = positionY;
     }
 }

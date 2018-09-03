@@ -21,7 +21,7 @@ class DouDing extends eui.Component {
     public magicWangSkin:MagicWangSkin;
 
     public jumpMaxHeight:number; //跳跃的最高高度,
-    public jumpStartY:number;  // 起跳的高度
+    // public jumpStartY:number;  // 起跳的高度
     public jumpDistance:number; // 正常跳跃时的路程
 
     public nowUpAddSpeed:number;  // 上升的加速度
@@ -168,7 +168,7 @@ class DouDing extends eui.Component {
     public setInitJumperData(){
         this.jumpMaxHeight = this.stage.$stageHeight*0.6;
 		this.jumpDistance = this.stage.$stageHeight*0.4
-		this.jumpStartY = this.stage.$stageHeight;
+		// this.jumpStartY = this.stage.$stageHeight;
         this.setStartJumpeSpeed(this.jumpDistance,this.frameNum);
 		this.setDownAddSpeed(this.jumpDistance,this.frameNum);
     }
@@ -270,7 +270,7 @@ class DouDing extends eui.Component {
             setTimeout(()=>{
                 this.doudingSkin.changeBaseImg2(this.JUMP_UP_STATUS,this.SIDE_STATUS);
                 this.setMagicWangUpPosition();
-			}, 100);
+			}, 200);
         }
     }
 

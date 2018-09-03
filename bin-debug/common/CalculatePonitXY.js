@@ -138,6 +138,15 @@ var CalculatePonitXY = (function () {
             startY = obj.lastY;
             startX = startX + sticketWidth + widthDistance;
         }
+        list = list.sort(function (a, b) {
+            if (a.roleObj.$y < b.roleObj.$y) {
+                return 1;
+            }
+            if (a.roleObj.$y > b.roleObj.$y) {
+                return -1;
+            }
+            return 0;
+        });
         return list;
     };
     /**

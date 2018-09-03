@@ -4,7 +4,7 @@ class ProbabilityClass {
             minHeight:0,
             maxHeight:400,
             levelName:[
-                'upDownSticketMove',
+                'normalSticketLevel',
                 'norHorSticketLevel',
                 'norWaterSticketLevel',
             ],
@@ -25,16 +25,27 @@ class ProbabilityClass {
             minDistance:50
         },
         {
-            minHeight:700,
+            minHeight:600,
+            maxHeight:650,
+            levelName:[
+                'upDownSticketMove'
+            ],
+            levelRate:[1],
+            maxDistance:60,
+            minDistance:40
+        },
+        {
+            minHeight:650,
             maxHeight:1000,
             levelName:[
                 'norWaterSticketLevel',
                 'norHorSticketLevel',
                 'waterOneHitLeftRight',
                 'norSpringPropLevel',
-                'norSpringShoePropLevel'
+                'norSpringShoePropLevel',
+                'upDownSticketMove'
             ],
-            levelRate:[0.4,0.2,0.2,0.1,0.1],
+            levelRate:[0.3,0.2,0.2,0.1,0.1,0.1],
             maxDistance:60,
             minDistance:40
         },

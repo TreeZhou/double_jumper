@@ -107,7 +107,7 @@ class CalculatePonitXY {  // 设计好关卡的点
          let maxHeight = pointJson.height_maxDistance;
          let minHeight = pointJson.height_minDistance;
          let widthDistance = pointJson.width_distance;
-         let list = [];
+         let list:any[]=[];
          let startX = 0;
          let startY = obj.lastY;
          let sticket=null;
@@ -146,11 +146,20 @@ class CalculatePonitXY {  // 设计好关卡的点
                 startX = startX+sticketWidth+widthDistance;
 
          }
+         list = list.sort(function(a,b){
+             if(a.roleObj.$y<b.roleObj.$y) {
+                 return 1;
+             }
+             if(a.roleObj.$y>b.roleObj.$y) {
+                 return -1;
+             }
 
+             return 0;
+
+         })
          return list;
 
      }
-
     /**
      *设计关卡点的XY
      */

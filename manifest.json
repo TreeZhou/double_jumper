@@ -10,11 +10,11 @@
 	],
 	"game": [
 		"bin-debug/pages/BasePage.js",
+		"bin-debug/common/CalculatePonitXY.js",
+		"bin-debug/propMove/BasePoprs.js",
 		"bin-debug/singleRole/Stickets.js",
 		"bin-debug/skin/BaseMovieClip.js",
 		"bin-debug/skin/BaseSkin.js",
-		"bin-debug/common/CalculatePonitXY.js",
-		"bin-debug/propMove/BasePoprs.js",
 		"bin-debug/singleRole/DouDing.js",
 		"bin-debug/common/ObjectPool.js",
 		"bin-debug/common/ProbabilityClass.js",

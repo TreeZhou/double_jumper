@@ -1,17 +1,17 @@
 {
   "namea": "pointOne",
   "width": 5,
-  "height": 5,
-  "height_minDistance": 40,
-  "height_maxDistance": 50,
+  "height": 8,
+  "height_minDistance": 100,
+  "height_maxDistance": 800,
   "width_distance": 30,
-  "sticketWidth": 122,
+  "sticketWidth": 90,
   "sticketHeight": 33,
   "content": [
-    ["N", "N", "N", "N", "verticalSticket"],
-    ["N", "N", "N", "N", "N"],
-    ["N", "N", "N", "N", "verticalSticket"],
-    ["normalSticket", "waterSticket", "normalSticket", "N", "normalSticket"],
-    ["N", "N", "normalSticket", "N", "N"]
+    ["normalSticket", "N", "N", "N", "N", "N", "N", "N"],
+    ["N", "N", "N", "N", "N", "N", "N", "verticalSticket"],
+    ["N", "N", "N", "N", "N", "N", "N", "verticalSticket"],
+    ["N", "N", "N", "normalSticket", "N", "N", "N", "cloudSticket"],
+    ["N", "N", "N", "N", "N", "normalSticket", "N", "N"]
   ]
 }

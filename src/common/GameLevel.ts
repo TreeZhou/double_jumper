@@ -83,7 +83,7 @@ class GameLevel extends CalculatePonitXY{
         stageW:number
     }){
         let objNum = 3;
-        let list = this.getCreateClassList(['waterSticket','cloudSticket','cloudSticket','waterSticket'],objNum,obj.maxDistance,obj.minDistance);
+        let list = this.getCreateClassList(['normalSticket','cloudSticket','cloudSticket','waterSticket'],objNum,obj.maxDistance,obj.minDistance);
         let pointList = this.leftAndRightPointXY(list,obj.lastY,obj.stageW);
         return pointList;
     }

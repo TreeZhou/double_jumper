@@ -30,7 +30,7 @@ var AllGameBarrier = (function (_super) {
      */
     AllGameBarrier.prototype.initSticket = function (groupBox) {
         var pedalObj = null;
-        var list = this.gameLevel.upDownSticketMove({
+        var list = this.gameLevel.normalInitSticketLevel({
             maxDistance: 40,
             minDistance: 30,
             lastY: this.stage.$stageHeight,
@@ -85,11 +85,11 @@ var AllGameBarrier = (function (_super) {
         var list = allStickList;
         var len = list.length;
         var item;
-        if (list.length) {
-            list = list.filter(function (item, index) {
-                return (item.$y + item.height) >= 0;
-            });
-        }
+        // if(list.length) {
+        //     list = list.filter((item,index)=>{
+        //         return (item.$y+item.height)>=-100;
+        //     });
+        // }
         for (var i = 0; i < list.length; i++) {
             item = list[i];
             if (item.horzontalMove) {

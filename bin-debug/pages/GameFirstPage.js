@@ -58,7 +58,6 @@ var GameFirstPage = (function (_super) {
         // }
         // var image = new eui.Image();
         // image.source = "bean_face_normal_png";
-        // console.log(image.width,image.height,image);
     };
     GameFirstPage.prototype.eventListen = function () {
         this.beginPlayBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.showPlayGamePage, this);
